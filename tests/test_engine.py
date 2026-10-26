@@ -248,6 +248,23 @@ def test_simplest_cubics_lpl():
         assert f[2] == 2, (t, f)
 
 
+def test_komatsu_watanabe():
+    """Komatsu--Watanabe, IJNT 10 (2014), Thms 3.1-3.2: for K = Q(v), v^3 + l v - 1 = 0, l >= 2 and
+    4 l^3 + 27 squarefree, n_K = 1, the perfect form is a_0 = ((v^-1 - 1)/l, (1 - v^2)/(2l)) up to
+    units, and S(a_0) = {+-1, +-v}."""
+    from engine.complexcubic import ComplexCubicVoronoi
+    for l in (2, 4, 5, 7, 10):
+        V = ComplexCubicVoronoi('x^3+%d*x-1' % l).run()
+        assert len(V.classes) == 1 and len(V.edges) == 2 and V.unit_index() == 1, l
+        K = V.K
+        A, S, _ = V.classes[0]
+        v = K.from_alg(pari.Mod(pari('x'), K.pol))
+        assert sorted(S) == sorted([K.one, tuple(int(c) for c in v)]), (l, S)
+        a1 = pari('(v,l)->lift((1/v - 1)/l)')(pari.Mod(pari('x'), K.pol), l)
+        a2 = pari('(v,l)->lift((1 - v^2)/(2*l))')(pari.Mod(pari('x'), K.pol), l)
+        assert pari.lift(K.to_alg(A[0])) == a1 and pari.lift(K.to_alg(A[1])) == a2, l
+
+
 def test_census_legacy(slow=False):
     """All 832 totally real cubic fields with D <= 20000 against the certified GP census."""
     if not slow:
