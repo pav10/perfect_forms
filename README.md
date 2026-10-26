@@ -77,11 +77,13 @@ python -m engine summary data/census/deg3_D2e4.jsonl.xz
 | relative minima | extreme squares are relative minima, mu <= ell, unit index 1 |
 | gamma_K | Q(sqrt 3): gamma^2 = 16 (Leibak's bound attained); D = 1708: gamma^3 = 2D |
 
-| binary forms over Q(sqrt d), d = 2, 3, 5, 13 | class counts 2, 2, 3, 9; edge balance and mass formula; random GL_2(O_K) transforms identified |
+| binary forms over Q(sqrt d) vs Gunnells--Yasaki Table 1 (`--slow`: all D <= 44) | identical class counts (2, 2, 3, 9, 34, 16, 22, 30, 39, 149, 97, 52, 144, 66); Leibak's 22 classes over Q(sqrt 6); edge balance and mass formula |
+| real quadratic, d < 400: Leibak--Porter--Ling Thm 1.2 and Yasaki's bound | n_K = 1 exactly for the types T1--T4; l_d/2 <= n_K <= l_d |
+| simplest cubics with monogenic O_K (Leibak--Porter--Ling Thm 1.5) | n_K = 2 |
+| complex cubic v^3 + l v - 1 (Komatsu--Watanabe Thms 3.1--3.2), l = 2, 4, 5, 7, 10 | n_K = 1, the form is a_0, S(a_0) = {+-1, +-v}, unit index 1 |
 
-Not yet covered: complex cubic fields (Komatsu--Watanabe, plan E2: needs non-totally-real
-signatures), Yasaki's tables and the Leibak--Porter--Ling list, Ong's and Leibak's binary
-lists (reference data not in the project files).
+Not covered: Yasaki's own table (paper not in the project files) and the multiplicative
+(Pohst--Wagner) binary benchmark, which belongs to pav10/hermite-humbert.
 
 ## Binary forms (additive normalisation, plan H1)
 
@@ -133,8 +135,9 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 | E1: degree m (maximal orders) | done, tested m = 2..5 |
 | E3: relative minima | done (`--relmin`), cross-checks mu <= ell |
 | E4: eutaxy, gamma_K | done, exact |
-| E2: non-totally-real signatures | not started |
-| B2: cubic census | D <= 20000 done; larger ranges next |
+| E2: non-totally-real signatures | signature (1,1) done (`engine/complexcubic.py`, Komatsu--Watanabe reproduced); (2,1), (1,2), (0,3) not started |
+| B2: cubic census | D <= 10^5 done (4804 fields, analysis/FINDINGS.md); D <= 10^6 needs a go-ahead |
+| B1: real quadratic census | D <= 10^5 running; LPL and Yasaki's bound confirmed on all fields so far |
 | H1: binary forms | additive normalisation done (complete lists, two certificates); literature benchmarks pending [REF?] |
 | sails link (cubic) | D <= 20000 done (analysis/FINDINGS.md §1); D <= 10^5 next |
 
@@ -144,6 +147,7 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 engine/      field.py (orders, exact arithmetic, exact signs), qfmin.py (exact LLL + Fincke-Pohst),
              polyface.py (face lattices), unary.py (Voronoi), certify.py, extreme.py (eutaxy, gamma_K),
              relmin.py (relative minima), walk.py (exact neighbour walk), binary.py (binary forms),
+             complexcubic.py (signature (1,1)),
              record.py, fieldlists.py, summary.py, cli.py,
              voronoi_unary.gp (reference cubic GP code)
 fields/      field lists        data/      results        analysis/  scripts reading data/
