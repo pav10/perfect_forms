@@ -257,3 +257,7 @@ numerical (Reg/2 in degree 2), so these are numerical checks, not certificates.
   the bound and the conjectured bound hold in every field.  log(bound/n_K) has median 102
   (min 1.77 at D = 5); the conjectured bound is tightest for D = 5, 8, 13, 12, 17
   (log slack 0.96, 1.76, 2.39, 2.92, 3.21).
+* Totally real cubic, D <= 10^5 (4804 fields, `data/derived/porter_mendelsohn_deg3_D1e5.jsonl.xz`):
+  the bound and the conjectured bound hold in every field.  log(bound/n_K) has median 38
+  (min 4.18 at D = 49); the conjectured bound is tightest for D = 49, 81, 169, 148, 257 (log
+  slack 2.24, 2.68, 3.85, 4.23, 4.78), i.e. for the smallest fields, as in degree 2.
