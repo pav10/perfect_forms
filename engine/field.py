@@ -227,13 +227,17 @@ class Order:
         return self.E @ np.array([float(t) for t in x])
 
     def log_embed(self, x):
-        """log|sigma_i(x)| in floating point (heuristic; mpmath fallback for tiny values)."""
-        e = self.embed(x)
-        scale = np.abs(self.E) @ np.abs(np.array([float(t) for t in x]))
-        if np.all(np.abs(e) > 1e-8 * scale):
-            return np.log(np.abs(e))
-        a = self.to_alg(x)
-        return np.array([math.log(abs(float(pari.subst(pari.lift(a), 'x', r)))) for r in self._hp_roots()])
+        """log|sigma_i(x)| in floating point (heuristic).  Falls back to PARI at a
+        precision adapted to the size of the coordinates (huge units, tiny embeddings)."""
+        bits = max(max(Fraction(t).numerator.bit_length(), Fraction(t).denominator.bit_length()) for t in x)
+        if bits < 900:
+            e = self.embed(x)
+            scale = np.abs(self.E) @ np.abs(np.array([float(t) for t in x]))
+            if np.all(np.abs(e) > 1e-8 * scale):
+                return np.log(np.abs(e))
+        a = pari.lift(self.to_alg(x))
+        prec = max(2048, 2 * self.m * bits + 256)
+        return np.array([float(pari.log(pari.abs(pari.subst(a, 'x', r)))) for r in self._hp_roots(prec)])
 
     def _hp_roots(self, bits=2048):
         if getattr(self, '_hproots_bits', 0) < bits:
@@ -294,6 +298,14 @@ class Order:
                             u = self.mul(u, self.power(units[i], U[i][j]))
                     self._red_units.append(self.as_int(u))
         return self._red_units
+
+    def embed_hp(self, x):
+        """sigma_i(x) as PARI reals at a precision adapted to the coordinates (heuristic
+        use: estimates only)."""
+        bits = max(max(Fraction(t).numerator.bit_length(), Fraction(t).denominator.bit_length()) for t in x)
+        a = pari.lift(self.to_alg(x))
+        prec = max(256, 2 * self.m * bits + 256)
+        return [pari.subst(a, 'x', r) for r in self._hp_roots(prec)]
 
     def solve_embeddings(self, targets, bits):
         """Coordinates c (PARI reals, `bits` of precision) with sigma_i(sum c_j w_j) =

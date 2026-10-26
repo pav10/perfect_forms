@@ -135,8 +135,10 @@ class Voronoi:
         alpha + rho beta at which a vector outside F attains the minimum 1 (walk.py)."""
         O = self.O
         self.stats['walks'] += 1
-        ea, eb = O.embed_accurate(alpha), O.embed_accurate(beta)
-        neg = [(-a / b) for a, b in zip(ea, eb) if b < 0]
+        # estimate of the positivity boundary min_{sigma_i(beta) < 0} sigma_i(alpha)/|sigma_i(beta)|,
+        # in log space (coordinates can exceed the float range when the regulator is large)
+        ea, eb = O.embed_hp(alpha), O.embed_hp(beta)
+        neg = [float(-a / b) for a, b in zip(ea, eb) if b < 0]
         if not neg:
             raise VoronoiError('walk: unbounded direction')
         try:
