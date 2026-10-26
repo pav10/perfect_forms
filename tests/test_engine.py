@@ -189,6 +189,65 @@ def test_binary_additive():
         assert j == i and len(V.classes) == n0
 
 
+# Gunnells--Yasaki, Perfect forms over totally real number fields (arXiv:0908.3130), Table 1:
+# number of GL_2(O)-classes of perfect binary forms over Q(sqrt d), by discriminant D
+GY_TABLE = {5: 2, 8: 2, 12: 3, 13: 9, 17: 34, 21: 16, 24: 22, 28: 30, 29: 39, 33: 149, 37: 97, 40: 52,
+            41: 144, 44: 66, 53: 93, 56: 144, 57: 515, 60: 89, 61: 206, 65: 301, 76: 404, 88: 645, 92: 343,
+            104: 326, 120: 524, 124: 1473, 136: 1135, 140: 487, 152: 995, 156: 941, 168: 918, 172: 2683,
+            184: 4306, 188: 1358, 204: 1992, 220: 2397, 232: 3042, 236: 2977, 248: 2360, 264: 3139}
+
+
+def _quadratic_pol(D):
+    return 'x^2-x-%d' % ((D - 1) // 4) if D % 4 == 1 else 'x^2-%d' % (D // 4)
+
+
+def test_gunnells_yasaki_binary(slow=False):
+    """Binary perfect forms (additive) vs Gunnells--Yasaki Table 1; the slow run covers
+    every D <= 44, the fast one the smallest fields."""
+    from engine.binary import BinaryVoronoi, mass_formula
+    Ds = [D for D in GY_TABLE if D <= (44 if slow else 13)]
+    for D in Ds:
+        V = BinaryVoronoi(Order(_quadratic_pol(D))).run()
+        assert len(V.classes) == GY_TABLE[D], (D, len(V.classes))
+        assert mass_formula(V)[0] == 0, D
+
+
+def test_leibak_porter_ling_and_yasaki():
+    """Leibak--Porter--Ling, JTNB 35 (2023), Thm 1.2: for real quadratic K = Q(sqrt d),
+    n_K = 1 iff d = m^2+1 (m odd), m^2-1 (m even), m^2+4 (m odd) or m^2-4 (m > 3 odd).
+    Yasaki, JTNB 25 (2013) (as quoted by Porter--Mendelsohn): l_d/2 <= n_K <= l_d with l_d the
+    period length of the continued fraction of omega_d."""
+    import math
+    from engine.relmin import quadratic_relmin_count
+
+    def lpl(d):
+        for m in range(1, math.isqrt(d) + 3):
+            if (d == m * m + 1 and m % 2) or (d == m * m - 1 and m % 2 == 0) or \
+                    (d == m * m + 4 and m % 2) or (d == m * m - 4 and m % 2 and m > 3):
+                return True
+        return False
+    for d in range(2, 400):
+        if not int(pari.issquarefree(d)):
+            continue
+        D = d if d % 4 == 1 else 4 * d
+        O = Order(_quadratic_pol(D))
+        n = len(Voronoi(O).run().classes)
+        assert (n == 1) == lpl(d), (d, n)
+        ell = quadratic_relmin_count(D)
+        assert ell <= 2 * n and n <= ell, (d, n, ell)
+
+
+def test_simplest_cubics_lpl():
+    """Leibak--Porter--Ling, Thm 1.5: n_K = 2 for x^3 - t x^2 - (t+3) x - 1 (t >= 0) when O_K is
+    monogenic (Z[theta] = O_K)."""
+    for t in range(0, 12):
+        pol = 'x^3-(%d)*x^2-(%d)*x-1' % (t, t + 3)
+        if int(pari.nfdisc(pari(pol))) != int(pari.poldisc(pari(pol))):
+            continue
+        O, V, f = run(pol)
+        assert f[2] == 2, (t, f)
+
+
 def test_census_legacy(slow=False):
     """All 832 totally real cubic fields with D <= 20000 against the certified GP census."""
     if not slow:
@@ -217,7 +276,7 @@ def main():
     for name, fn in tests:
         t = time.time()
         try:
-            if name == 'test_census_legacy':
+            if name in ('test_census_legacy', 'test_gunnells_yasaki_binary'):
                 fn(slow=slow)
             else:
                 fn()
