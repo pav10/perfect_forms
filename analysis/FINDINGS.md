@@ -20,6 +20,12 @@ key HNF(xO)).
   lattice point with |sigma_i(y)| <= |sigma_i(v)| for all i (strictly, since equality at
   one place forces y = +-v).  Then v + y and v - y lie in the open orthant of v, and v is
   their midpoint, so v is not a vertex.  []
+  *Prior art.*  The relation between Klein polyhedra and relative minima is the subject of
+  V. A. Bykovskii, "Local minima of lattices and vertices of Klein polyhedra", Funktsional.
+  Anal. i Prilozhen. 40 (2006) 69-71, and O. N. German, "Klein polyhedra and relative minima
+  of lattices", Math. Notes 79 (2006) 505-510, cited for exactly this connection by
+  Karpenkov--Ustinov (JNT 176 (2017), refs. [10], [23]); this statement is presumably
+  among their results [REF?: texts not in the project files].
 * **PROVED** ([M, Lemma 6.3]).  Every extreme square is a relative minimum: mu <= ell.
 * **CERTIFIED** (D <= 20000).  mu <= V <= ell in every field; hence (Euler bound
   [M, Thm 4.3]) n <= 2 mu <= 2 V.  V = ell in 658 of 832 fields; V/ell in [0.5, 1].
@@ -35,9 +41,14 @@ key HNF(xO)).
   triangular sail facet at integer distance 1 (all 832 fields).  Such barycentres are
   rarely extreme: of the 190 classes of triangular distance-1 facets containing their
   barycentre, 7 give extreme squares.
-* **CONJECTURE.**  For every totally real cubic field, every extreme square is a vertex of
-  the sail of its sign class or the barycentre of a triangular sail facet at integer
-  distance 1.
+* **Refuted** (the conjecture of the previous version).  "Every extreme square is a sail
+  vertex or the barycentre of a triangular facet at distance 1" fails for 3.3.61108.1
+  (x^3 - x^2 - 63x - 167): the extreme square x = 8 - t^2 (norm 53) lies in a 5-point
+  triangular facet at distance 1 of the totally positive sail with barycentric
+  coordinates (2/5, 2/5, 1/5) (data/ERRATA.md).
+* **CONJECTURE.**  For every totally real cubic field, every relative minimum (hence every
+  extreme square) that is not a sail vertex lies in the relative interior of a triangular
+  sail facet at integer distance 1.
 * **PROVED** (relative minima on a sail).  A lattice point x in the open orthant C is a
   relative minimum iff no w != 0 has x + w and x - w both in C, iff
   K ∩ (2x - K) ∩ L = {x} for the Klein polyhedron K of C.  Consequently (i) a lattice point
@@ -60,6 +71,44 @@ key HNF(xO)).
   cyclic ones (D = 49, 81, 169, 361, 1369, 3969, 6241, 9409, 13689, 19321), (3, 4) for
   the 7 Ennola fields a = 4..10 (D = 697, ..., 16609), and (4, 4) for the other 10
   (D = 985, 2597, 5521, 6809, 7249, 10309, 13801, 14945, 16357, 17609).
+
+### Three hulls of one point set
+
+Let P = {(|sigma_i(y)|)_i : y in O \ 0} in R^3_{>0} (all orthants folded together);
+O^x acts on it by the diagonal maps diag(|sigma_i(eps)|).
+
+1. *Klein sails*: for each orthant C, the boundary of conv(O cap C); vertices V, facets F.
+2. *The squared sail* Q = conv(P^2) + R^3_{>=0} (P^2 = coordinatewise squares).  The Ryshkov
+   polyhedron {a : sum a_i p_i >= 1 for all p in P^2} is its polar, so the extreme squares
+   are the vertices of Q and the perfect forms its facets (a perfect form alpha is the facet
+   {p : sum sigma_i(alpha) p_i = 1}): dQ/O^x is a polyhedral torus with (V, E, F) =
+   (mu, e, n).
+3. *The Minkowski staircase* dS, S = P + R^3_{>=0} (Karpenkov--Ustinov, JNT 176 (2017),
+   Def. 2.8): its outer corners are the relative minima, its inner corners the minimal
+   triples {x, y, z} (the box max(|x_i|, |y_i|, |z_i|) contains no other lattice point
+   and each of x, y, z attains one of the maxima).  These are the vertices of the
+   Minkowski--Voronoi complex MV(O) of KU, Def. 2.5 (2-faces = relative minima, edges =
+   adjacent pairs).  A minimal triple is a box -- a tropical linear form max_i X_i/c_i --
+   supporting P at three points, as a perfect form is a linear form supporting P^2.
+
+* **PROVED.**  Every vertex of the folded hull conv(P) + R^3_{>=0} is an extreme square.
+  *Proof.*  If x^2 is not extreme, q(x) = (sigma_i(x)^2) lies in conv(P^2 \ {q(x)}) +
+  R^3_{>=0}: sigma_i(x)^2 >= sum_k lambda_k p_{k,i}^2 >= (sum_k lambda_k p_{k,i})^2 for each
+  i (Jensen), so |sigma(x)| lies in conv(P \ {|sigma(x)|}) + R^3_{>=0} and is not a
+  vertex.  []  So: vertices of the folded hull are in {extreme squares} and in {sail
+  vertices}, and both are in {relative minima}.
+* **PROVED.**  MV(O)/O^x has (V, E, F) = (2 ell, 3 ell, ell).
+  *Proof.*  For totally real K, |sigma_i(y)| = |sigma_i(z)| forces y = +-z (sigma_i(y/z) =
+  +-1), so P is in general position in KU's sense and every minimal triple has exactly
+  three neighbouring triples (KU, Sec. 2.3.1): 2E = 3V.  Radial projection maps dS
+  homeomorphically onto the trace-zero plane H (S is closed under scaling up, and every
+  ray t*e^h enters S since the box of e^h contains lattice points for t large and none for
+  N(t e^h) < 1), and units act on H by the translations Log(eps); so dS/O^x is the torus
+  H/Log(O^x) and V - E + F = 0 with F = ell.  []
+* **PROVED.**  n <= 2 mu <= 2 ell = V(MV): the number of perfect forms is at most the number
+  of vertices of the Minkowski--Voronoi complex.  In degree 2, MV(O)/O^x is a circle with
+  ell vertices and Yasaki's Thm 5.1 reads V(MV)/2 <= n <= V(MV); in degree 3 the data give
+  (2/9) V(MV) <= n <= V(MV) (section 6).
 
 ## 2. Perfect unary forms, cubic census D <= 20000 (CERTIFIED)
 

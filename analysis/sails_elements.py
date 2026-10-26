@@ -10,6 +10,8 @@ and the inclusions between the three sets.
 
 usage: python analysis/sails_elements.py FIELDLIST.jsonl[.xz] DISC_MAX [OUT.jsonl] [--jobs J] [--disc-min D]
        python analysis/sails_elements.py --census CENSUS.jsonl[.xz] OUT.jsonl [JOBS]   (extreme squares from the records)
+       python analysis/sails_elements.py --facets CENSUS.jsonl[.xz] CENSUS_OUT.jsonl OUT.jsonl
+           (facets and barycentric coordinates of the extreme squares that are not sail vertices)
 """
 import json
 import os
@@ -126,6 +128,55 @@ def one_from_census(rec):
             'ext_in_vertices': ekk <= vks, 'seconds': round(time.time() - t, 2)}
 
 
+def facet_data(rec):
+    """For each extreme square of a census record that is not a sail vertex: the facets of
+    the sails containing it (number of vertices, integer distance d, number of lattice
+    points) and its exact barycentric coordinates when the facet is a triangle."""
+    from fractions import Fraction
+    from engine import linalg
+    O = Order(rec['pol'])
+    ek = {}
+    for F in rec['forms']:
+        for x, e in zip(F['minvecs'], F['extreme']):
+            if e:
+                ek.setdefault(O.ideal_key(tuple(x)), tuple(x))
+    coeffs = [int(c) for c in reversed(list(pari.Vec(pari(rec['pol']))))]
+    r = compute_field(coeffs).record()
+    basis = [pari(b.replace('a', 'x')) for b in r['integral_basis']]
+
+    def key(v):
+        a = sum(int(c) * b for c, b in zip(v, basis))
+        return O.ideal_key(O.as_int(O.from_alg(pari.Mod(a, O.pol))))
+    verts = {key(v) for orth in r['orthants'] for F in orth['facets'] for v in F['vertices']}
+    out = []
+    for orth in r['orthants']:
+        for F in orth['facets']:
+            for v in F['lattice_points']:
+                k = key(v)
+                if k in ek and k not in verts:
+                    row = {'x': list(ek[k]), 'norm': str(O.norm(ek[k])), 'facet_vertices': len(F['vertices']),
+                           'd': F['d'], 'lattice_points': len(F['lattice_points'])}
+                    if len(F['vertices']) == 3:
+                        M = [[Fraction(F['vertices'][j][i]) for j in range(3)] for i in range(3)]
+                        row['barycentric'] = [str(t) for t in linalg.solve(M, [Fraction(t) for t in v])]
+                    out.append(row)
+    return {'label': rec['label'], 'D': rec['disc'], 'non_vertex_extreme': out}
+
+
+def main_facets(census, se_out, out):
+    """facet_data() for the fields of a --census output with extreme squares off the vertices."""
+    import lzma
+    with open(se_out) as fh:
+        flagged = {json.loads(l)['label'] for l in fh if json.loads(l)['ext_position']['facet'] or
+                   json.loads(l)['ext_position']['edge'] or json.loads(l)['ext_position']['off']}
+    op = lzma.open if census.endswith('.xz') else open
+    with op(census, 'rt') as fh, open(out, 'w') as fo:
+        for line in fh:
+            rec = json.loads(line)
+            if rec['label'] in flagged:
+                fo.write(json.dumps(facet_data(rec)) + '\n')
+
+
 def main_census(census, out, jobs=1):
     import lzma
     import multiprocessing as mp
@@ -164,6 +215,10 @@ def main(fields, disc_max, out=None, jobs=1, disc_min=None):
 
 if __name__ == '__main__':
     import argparse
+    if len(sys.argv) > 1 and sys.argv[1] == '--facets':
+        # python analysis/sails_elements.py --facets CENSUS.jsonl[.xz] CENSUS_OUT.jsonl OUT.jsonl
+        main_facets(sys.argv[2], sys.argv[3], sys.argv[4])
+        sys.exit(0)
     if len(sys.argv) > 1 and sys.argv[1] == '--census':
         # python analysis/sails_elements.py --census CENSUS.jsonl[.xz] OUT.jsonl [JOBS]
         main_census(sys.argv[2], sys.argv[3], sys.argv[4] if len(sys.argv) > 4 else 1)

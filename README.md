@@ -119,7 +119,11 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 * `analysis/sails_elements.py FIELDS DISC_MAX [OUT] [--jobs J]`: element-level comparison
   (extreme squares, relative minima, sail vertices, modulo units); imports pav10/sails
   read-only from `SAILS_PATH` (default `../sails`) without writing bytecode there.
-  `--census CENSUS OUT [JOBS]` reads the extreme squares from census records instead.
+  `--census CENSUS OUT [JOBS]` reads the extreme squares from census records instead;
+  `--facets CENSUS CENSUS_OUT OUT` lists the facets (shape, distance, exact barycentric
+  coordinates) of the extreme squares that are not sail vertices.
+* `analysis/minkowski_voronoi.py CENSUS [LIMIT] [OUT] [JOBS]`: cells (V, E, F) of the
+  Minkowski--Voronoi complex modulo units (relative minima, adjacent pairs, minimal triples).
 * `analysis/cubic_census.py CENSUS...`: census statistics (Markdown).
 * `analysis/binary_census.py D_MIN D_MAX OUT [--jobs J]`: certified census of perfect binary
   forms over Q(sqrt d).
