@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+*.egg-info/
+/build/
+/dist/
+# uncompressed run outputs (commit the .xz versions)
+data/census/*.jsonl
+data/census/*.errors
+data/census/*.quarantine
+fields/*.jsonl
+*.log

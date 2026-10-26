@@ -1,0 +1,939 @@
+\documentclass[11pt,reqno]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=blue!55!black,citecolor=blue!55!black,urlcolor=blue!55!black]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{observation}[theorem]{Computational Observation}
+\newtheorem{program}[theorem]{Program}
+
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Nm}{\operatorname{Nm}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\conv}{\operatorname{conv}}
+\newcommand{\Reg}{\operatorname{Reg}}
+\newcommand{\sail}{\mathcal{S}^{\sqsupset}}
+\newcommand{\Ok}{\mathfrak{o}}
+\newcommand{\GL}{\mathrm{GL}}
+\newcommand{\HH}{\mathcal{H}}
+\newcommand{\PP}{\mathcal{P}}
+\newcommand{\rk}{\operatorname{rank}}
+\newcommand{\disc}{\operatorname{disc}}
+\DeclareMathOperator{\Stab}{Stab}
+\DeclareMathOperator{\aff}{aff}
+\DeclareMathOperator{\spann}{span}
+\newcommand{\bdy}{\partial}
+\newcommand{\rO}{r}
+\newcommand{\nK}{n_K}
+\newcommand{\muK}{\mu_K}
+
+\begin{document}
+
+\title[Perfect unary forms over cubic fields]
+{Perfect unary forms over totally real cubic fields:\\ an Euler bound, a regulator sandwich,\\ and exact computations}
+
+\author{}
+\date{\today}
+
+\begin{abstract}
+Let $K$ be a totally real cubic field (more generally a number field with $r_1+r_2=3$), let $\nK$ be the number
+of classes of perfect unary Humbert forms over $K$ modulo homothety and units, and let $\muK$ be the number of
+unit--classes of vertices of the \emph{squared sail} $\bdy\big(\conv\{q(x)\}+\R^3_{\ge0}\big)$, where
+$q(x)=(\sigma_i(x)^2)_i$. We prove three things. First, the Ryshkov polyhedron modulo units is a $2$--torus,
+and Euler's formula gives $\tfrac12\muK\le\nK\le2\muK$, together with the exact identity
+$\nK=2\muK-\sum_v(\deg v-3)$. Second, for every order $\Ok$ in a totally real cubic field,
+\[
+\frac{4\,\Reg_\Ok}{(\log 2D_\Ok)^2}\ \le\ \muK\ \le\ \frac{4\,\Reg_\Ok}{(\log2)^2},
+\]
+by an elementary argument in the geometry of numbers: extreme squares are relative minima of the lattice
+$\Ok$, which are separated in logarithmic space, and Hermite's inequality forces an extreme square near every
+point of the log--unit torus. The lower bound is sharp up to a constant for the simplest cubic fields. Hence
+$\nK\asymp\Reg_K$ up to a factor $(\log D_K)^2$, and $\sup\nK=\infty$ as soon as $\Reg_K/(\log D_K)^2$ is
+unbounded. This holds unconditionally along suitable orders $\Z+p\mathcal O_K$, and conditionally on the
+Cohen--Martinet heuristics for a positive proportion of maximal orders. Third, we compute $\nK$ and $\muK$ by
+Voronoi's algorithm in exact arithmetic, with an Euler--characteristic check and a certificate for the unit
+group. This covers all $832$ totally real cubic fields with $D_K\le20000$ and fields with $\nK$ up to $3534$.
+We find $\muK/\Reg_K\approx0.5$--$0.6$ typically, while Ennola's and Shanks' families sit at $\muK=1$.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+\subsection{The problem}
+Fix a number field $K$ of degree $n=[K:\Q]$ with $r_1$ real and $r_2$ complex places, and let
+$d:=r_1+r_2$. Voronoi's reduction theory of positive definite quadratic forms over $\Q$~\cite{Voronoi} was extended to
+arithmetic minima over number fields by Koecher, Ash, Coulangeon, Okuda--Yano and Watanabe--Yano--Hayashi.
+In the unary ($1\times1$) case the objects are positive \emph{Humbert forms}
+$a=(a_\sigma)_\sigma\in P_1(K_\R)=\prod_{\sigma\mid\infty}P_1(K_\sigma)$, and one studies the finite set of
+\emph{perfect} unary forms up to homothety and the action of the unit group. Write
+\[
+\nK \;:=\; \#\big(\bdy^0K_1(m_\Ok)/\Gamma_\Ok\big)
+\]
+for the number of these classes (notation recalled in \S\ref{sec:framework}). The question motivating this
+note is: \emph{how large is $\nK$, and in particular what can be proved from below?}
+
+\subsection{Known cases}
+For real quadratic fields ($d=2$), Yasaki~\cite{Yasaki} bounds the number $h_d$ of classes of perfect unary
+forms above and below in terms of the period of an associated continued fraction \cite[Thm.~5.1]{Yasaki}.
+He shows that $h_d=1$ for the fields $\Q(\sqrt d)$ with $d=(2k+1)^2+1$ squarefree, and that $h_d$ is unbounded.
+Leibak, Porter and Ling~\cite{LPL} determine all real quadratic fields with $h_d=1$, answering a question
+of Yasaki. The first cubic case is due to Komatsu and Watanabe~\cite{KW}: for $\ell\ge2$ with $4\ell^3+27$
+squarefree, the cubic field $\Q(v)$, $v^3+\ell v-1=0$, has a single real place ($r_1=r_2=1$, so $d=2$), and
+over it there is exactly one perfect unary form up to homothety and units, i.e.\ $\nK=1$. For arbitrary totally real $K$, Porter and Mendelsohn~\cite{PM} give an upper bound in terms of
+the additive Hermite--Humbert constant and the covering radius of the log--unit lattice. For $d\ge3$ the
+other systematic inputs are the construction of perfect forms by Gunnells--Yasaki~\cite{GY} and the
+finiteness theorem of Okuda--Yano~\cite{OY}.
+
+\subsection{Results}
+After recalling the framework (\S\ref{sec:framework}) we prove the following.
+
+\begin{itemize}[leftmargin=1.4em]
+\item \textbf{Squared--sail duality} (Lemma~\ref{lem:affine}, Proposition~\ref{prop:duality}). Perfect
+forms are the facets of the squared sail, and the facets of the Ryshkov polyhedron are its vertices, the
+\emph{extreme squares}. Perfection is affine independence of squared minimal vectors in the supporting
+hyperplane; on that hyperplane linear and affine independence coincide.
+\item \textbf{The Euler bound} (Theorem~\ref{thm:main}). If $r_1+r_2=3$, the quotient
+$\bdy K_1(m_\Ok)/\Gamma_\Ok$ is a $2$--torus, $\tfrac12\muK\le\nK\le2\muK$, and $\nK=2\muK-\sum_v(\deg v-3)$.
+\item \textbf{The regulator sandwich} (Theorem~\ref{thm:sandwich}). For totally real cubic $K$,
+$4\Reg_K/(\log2D_K)^2\le\muK\le4\Reg_K/(\log2)^2$. The consequences for $\sup\nK$ are in
+Corollary~\ref{cor:unbounded}, and the analogue in all degrees is~\eqref{eq:general}.
+\item \textbf{Exact computation} (\S\ref{sec:comp}). Voronoi's algorithm in exact arithmetic, with two
+certificates, applied to all totally real cubic fields with $D_K\le20000$ and to large--regulator examples.
+\end{itemize}
+
+\subsection*{Conventions}
+$K_\sigma$ denotes the completion of $K$ at the archimedean place $\sigma$, with
+$e_\sigma:=[K_\sigma:\R]\in\{1,2\}$. We embed $K\hookrightarrow K_\R=\prod_\sigma K_\sigma$ by
+$\iota(\lambda)=(\sigma(\lambda))_\sigma$, fixing one embedding per place. $\Ok$ denotes an order in $K$;
+the reader may take $\Ok=\mathcal O_K$. ``Form'' always means \emph{unary} Humbert form. We write
+$\langle\,\cdot\,,\cdot\,\rangle$ for the standard inner product on $\R^d$.
+
+\section{The Ryshkov polyhedron and the squared embedding}\label{sec:framework}
+
+\subsection{Forms, minima, perfection}
+For a real place $\sigma$ the cone $P_1(K_\sigma)$ is $\R_{>0}$; for a complex place it is the cone of
+positive $1\times1$ Hermitian matrices, again $\R_{>0}$. Hence
+\[
+P_1(K_\R)=\R^d_{>0},\qquad d=r_1+r_2 ,
+\]
+the open positive orthant indexed by the archimedean places. For $a=(a_\sigma)\in P_1(K_\R)$ the arithmetic
+minimum and the set of shortest vectors are
+\[
+m_\Ok(a)=\min_{0\ne x\in\Ok}\ \sum_{\sigma}e_\sigma\,a_\sigma\,|\sigma(x)|^2 ,
+\qquad
+S_\Ok(a)=\Big\{x\in\Ok:\ \textstyle\sum_\sigma e_\sigma a_\sigma|\sigma(x)|^2=m_\Ok(a)\Big\}.
+\]
+Introduce the \emph{squared embedding}
+\begin{equation}\label{eq:q}
+q:\Ok\longrightarrow \R^d_{\ge0},\qquad q(x)=\big(e_\sigma\,|\sigma(x)|^2\big)_\sigma ,
+\end{equation}
+so that $\sum_\sigma e_\sigma a_\sigma|\sigma(x)|^2=\langle a,q(x)\rangle$ and
+$m_\Ok(a)=\min_{0\ne x}\langle a,q(x)\rangle$. Since each $\sigma$ is injective, $q(x)$ has \emph{strictly
+positive} coordinates for $x\ne0$. A form $a$ is \emph{$\Ok$--perfect} if
+$\{q(x):x\in S_\Ok(a)\}$ spans $\R^d$ over $\R$.
+
+\subsection{The Ryshkov polyhedron}
+Following Ryshkov~\cite{Ryshkov} and Watanabe--Yano--Hayashi~\cite{WYH},
+set
+\[
+K_1(m_\Ok)=\{a\in P_1(K_\R): m_\Ok(a)\ge1\}
+=\bigcap_{0\ne x\in\Ok}\{a\in\R^d_{>0}:\ \langle a,q(x)\rangle\ge1\}.
+\]
+We collect the structural facts we use. The discrete group acting is
+$\Gamma_\Ok=\{g\in\GL_1(K_\R):g\Ok=\Ok\}=\Ok^\times$, acting by $a\cdot u=(|\sigma(u)|^2a_\sigma)_\sigma$;
+this preserves $m_\Ok$ and hence $K_1(m_\Ok)$.
+
+\begin{theorem}[Ryshkov; Watanabe--Yano--Hayashi; Okuda--Yano]\label{thm:wyh}
+The set $K_1(m_\Ok)$ is a closed convex \emph{locally finite} polyhedron of full dimension $d$ in
+$P_1(K_\R)$. Its set of vertices $\bdy^0K_1(m_\Ok)$ equals the set of perfect forms with $m_\Ok=1$. Any two
+vertices are joined by a finite edge--path along $1$--faces. Finally, $\Gamma_\Ok$ acts on the face complex
+of $K_1(m_\Ok)$ with finitely many orbits of faces in each dimension.
+\end{theorem}
+
+\begin{proof}
+For local finiteness, the identification of vertices with perfect forms, and edge--connectivity, see
+Watanabe--Yano--Hayashi~\cite[Thm.~2.4]{WYH} (totally real case), as quoted in
+Komatsu--Watanabe~\cite[Thm.~2.2]{KW}, and Okuda--Yano~\cite[Thm.~5.1]{OY} (general algebraic lattices).
+For finiteness of the orbits of faces, see~\cite{OY}. The theorem numbers are those verified in the text
+of~\cite{KW}.
+\end{proof}
+
+\begin{definition}\label{def:counts}
+Let $K$ have $d=r_1+r_2$. We set
+\[
+\nK:=\#\big(\bdy^0K_1(m_\Ok)/\Gamma_\Ok\big),\qquad
+\muK:=\#\big(\{\text{facets of }K_1(m_\Ok)\}/\Gamma_\Ok\big).
+\]
+Thus $\nK$ counts perfect forms up to homothety and units, and $\muK$ counts classes of \emph{extreme
+squares}, i.e.\ of minimal vectors $x$ for which $q(x)$ is a vertex of the squared sail
+(Proposition~\ref{prop:duality}); in general not every minimal vector is extreme. Both are finite by Theorem~\ref{thm:wyh}.
+\end{definition}
+
+\section{The affine criterion and the squared sail}
+
+\subsection{An affine perfection criterion}
+The definition of perfection asks the squared vectors $q(x)$, $x\in S_\Ok(a)$, to span $\R^d$
+\emph{linearly}. The next lemma replaces this by the more transparent --- and dimension--correct ---
+condition of \emph{affine} independence.
+
+\begin{lemma}\label{lem:affine}
+Let $a\in P_1(K_\R)$ and put $m=m_\Ok(a)>0$. All squared minimal vectors lie on the affine hyperplane
+\[
+\Pi_a=\{w\in\R^d:\langle a,w\rangle=m\},\qquad 0\notin\Pi_a .
+\]
+Consequently the following are equivalent:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em]
+\item $a$ is $\Ok$--perfect, i.e.\ $\{q(x):x\in S_\Ok(a)\}$ spans $\R^d$;
+\item $\{q(x):x\in S_\Ok(a)\}$ contains $d$ affinely independent points;
+\item $\{q(x):x\in S_\Ok(a)\}$ affinely spans $\Pi_a$.
+\end{enumerate}
+In particular a perfect form has at least $d$ minimal vectors up to roots of unity. On $\Pi_a$, which
+misses the origin, linear and affine independence of the $q(x)$ \emph{coincide}; the content of the lemma
+is the geometric statement that perfection means the squares affinely fill the supporting hyperplane. What
+is \emph{not} equivalent to perfection is linear independence of the underlying field elements $x$, because
+the map $q$ is non--linear.
+\end{lemma}
+
+\begin{proof}
+By definition every $x\in S_\Ok(a)$ satisfies $\langle a,q(x)\rangle=m$, so $q(x)\in\Pi_a$. As $m>0$ we have
+$0\notin\Pi_a$, and $\Pi_a$ is an affine hyperplane of dimension $d-1$.
+
+(iii)$\Rightarrow$(i): if a subset $S\subseteq\Pi_a$ affinely spans the $(d-1)$--flat $\Pi_a$, then its
+linear span contains the linear span of $\Pi_a$. Since $\Pi_a$ is a hyperplane not through the origin, its
+linear span is all of $\R^d$; hence $S$ spans $\R^d$.
+
+(i)$\Rightarrow$(iii): suppose the affine span of $S$ were a proper flat $\Pi'\subsetneq\Pi_a$, of dimension
+$\le d-2$. Then $\spann_\R S\subseteq\spann_\R\Pi'$, which has dimension $\le d-1$, contradicting
+$\spann_\R S=\R^d$.
+
+(ii)$\Leftrightarrow$(iii): a subset of a $(d-1)$--flat affinely spans it iff it contains $d$ affinely
+independent points (an affine basis of $\Pi_a$ has $d$ elements).
+
+The final sentence is immediate from (ii): $d$ affinely independent points require at least $d$ distinct
+$q(x)$; since $q(\zeta x)=q(x)$ exactly for roots of unity $\zeta$ (Lemma~\ref{lem:hadamard}\,(a) below),
+these are $d$ distinct classes. Finally, on $\Pi_a$ linear and affine independence agree: if
+$\sum_i c_i\,q(x_i)=0$ is a linear relation among points of $\Pi_a$, pairing with $a$ gives
+$m\sum_i c_i=0$, whence $\sum_i c_i=0$ as $m\ne0$, which is an affine relation; the converse is trivial.
+Thus a subset of $d$ of the squares is linearly independent in $\R^d$ iff it is affinely independent in
+$\Pi_a$, and either detects perfection. By contrast the underlying field elements $x_1,\dots,x_d$ may be
+linearly independent over $\Q$ while $q(x_1),\dots,q(x_d)$ are affinely dependent, and conversely; this is
+why linear independence of the $x$ is not the right criterion.
+\end{proof}
+
+\begin{remark}
+Lemma~\ref{lem:affine} clarifies a subtlety in passing from a set of $m$ linearly independent minimal
+vectors $\eta_1,\dots,\eta_m$ to perfection: what must be independent are not the $\eta_i$ but the squares
+$q(\eta_i)$, and the relevant independence is affine in the hyperplane $\Pi_a$. For $d=2$ (real quadratic,
+complex cubic) the hyperplane $\Pi_a$ is a line, and any two distinct points on it are affinely independent;
+so the phenomenon first has content at $d=3$.
+\end{remark}
+
+\subsection{The squared sail and polar duality}
+Let $Q:=q(\Ok\setminus\{0\})\subset\R^d_{>0}$ and define the \emph{squared--sail body} and \emph{sail}
+\[
+C:=\conv(Q)+\R^d_{\ge0},\qquad \sail:=\bdy C .
+\]
+Because every $q(x)$ has positive coordinates and the lattice $\iota(\Ok)$ is discrete, $C$ is a closed
+convex set with nonempty interior and recession cone $\R^d_{\ge0}$; $\sail$ is the part of $\bdy C$ visible
+from the origin. We record the basic equivariance.
+
+\begin{lemma}\label{lem:hadamard}
+For $u\in\Ok^\times$ let $D_u=\operatorname{diag}(|\sigma(u)|^2)_\sigma$ act on $\R^d$. Then:
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
+\item $q(ux)=D_u\,q(x)$ and $q(\zeta x)=q(x)$ for every root of unity $\zeta\in\Ok^\times$; moreover
+$D_u=\mathrm{Id}$ iff $u$ is a root of unity.
+\item $D_u$ preserves $Q$, $C$, $\sail$ and the cone $\R^d_{>0}$, and is dual to the $\Gamma_\Ok$--action on
+forms: $\langle a\cdot u,\,q(x)\rangle=\langle a,\,q(ux)\rangle$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) From \eqref{eq:q}, $q(ux)_\sigma=e_\sigma|\sigma(u)|^2|\sigma(x)|^2=(D_uq(x))_\sigma$. If $u$ is a root
+of unity then $|\sigma(u)|=1$ for all $\sigma$, so $D_u=\mathrm{Id}$ and $q(\zeta x)=q(x)$. Conversely
+$D_u=\mathrm{Id}$ forces $|\sigma(u)|=1$ for every archimedean $\sigma$; by Kronecker's theorem $u$ is a root
+of unity. (b) is immediate since $D_u$ is a positive diagonal map permuting $Q=q(\Ok^\times\cdot\Ok)$ and
+fixing $\R^d_{\ge0}$, and $\langle a\cdot u,q(x)\rangle=\sum_\sigma e_\sigma|\sigma(u)|^2a_\sigma|\sigma(x)|^2
+=\langle a,q(ux)\rangle$.
+\end{proof}
+
+\begin{proposition}[Squared--sail duality]\label{prop:duality}
+With the notation above,
+\[
+K_1(m_\Ok)=\{a\in\R^d_{>0}:\ \langle a,w\rangle\ge1\ \text{for all }w\in C\}.
+\]
+The face lattices of $K_1(m_\Ok)$ and of the sail $\sail$ are anti--isomorphic; explicitly:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em]
+\item the facets of $K_1(m_\Ok)$ are exactly the sets $K_1(m_\Ok)\cap\{\langle a,w\rangle=1\}$ for $w$ a
+vertex of $C$ (equivalently, a vertex of $\sail$, equivalently an extreme point of $\conv Q$); distinct
+vertices give distinct facets;
+\item the vertices of $K_1(m_\Ok)$ --- the perfect forms --- are exactly the facets of $\sail$.
+\end{enumerate}
+Consequently $\muK$ equals the number of $\Ok^\times$--classes of vertices of $\sail$ (\emph{extreme
+squares}), and $\nK$ equals the number of $\Ok^\times$--classes of facets of $\sail$.
+\end{proposition}
+
+\begin{proof}
+For $a\in\R^d_{>0}$ we have $\langle a,w\rangle\ge1$ for all $w\in Q$ iff for all $w\in\conv Q$ (the
+constraint is affine in $w$) iff for all $w\in C$ (adding any $v\in\R^d_{\ge0}$ only increases
+$\langle a,w\rangle$ since $a>0$). This proves the displayed identity, exhibiting $K_1(m_\Ok)$ as the
+polar dual (intersected with the open cone) of the closed convex body $C$ with recession cone
+$\R^d_{\ge0}$.
+
+By Theorem~\ref{thm:wyh}, $K_1(m_\Ok)$ is a locally finite polyhedron, so polarity restricts to a face--wise
+anti--isomorphism between the bounded faces of $K_1(m_\Ok)$ and the faces of $C$ supported by functionals
+$a\in\R^d_{>0}$ (the ``lower'', origin--facing faces, i.e.\ the faces of $\sail$), by standard polarity for
+polyhedra. Under this anti--isomorphism a facet (codimension--$1$ face) of
+$K_1(m_\Ok)$ corresponds to a $0$--face (vertex) of $C$, and a $0$--face (vertex) of $K_1(m_\Ok)$ corresponds
+to a facet of $C$. A facet of $K_1(m_\Ok)$ is cut out by an \emph{irredundant} inequality
+$\langle a,w\rangle\ge1$; irredundancy means precisely that $w$ is an extreme point of $C$ not dominated by a
+convex combination of the others, i.e.\ a vertex of $C$, which because $\R^d_{\ge0}$ is the recession cone is
+a vertex of $\conv Q$ lying on $\sail$. Distinct vertices $w\neq w'$ produce distinct facet normals, hence
+distinct facets. This is (i); (ii) is the dual statement, using that perfect forms are the vertices of
+$K_1(m_\Ok)$ (Theorem~\ref{thm:wyh}). The last sentence follows by passing to $\Gamma_\Ok$--orbits via
+Lemma~\ref{lem:hadamard}(b) and Definition~\ref{def:counts}.
+\end{proof}
+
+Thus ``count perfect forms'' ($\nK$) and ``count extreme squares'' ($\muK$) are the two natural enumerative
+invariants attached to the same sail; the next section relates them.
+
+\section{The Euler bound}\label{sec:euler}
+
+Throughout this section $K$ is a number field with $d=r_1+r_2=3$. The signatures are
+$(r_1,r_2)=(3,0),(2,1),(1,2),(0,3)$, i.e.\ totally real cubic, mixed quartic, quintic with one real place,
+and totally complex sextic fields; the unit rank is $2$ in every case. We first set up a uniform logarithmic chart.
+
+\begin{lemma}\label{lem:chart}
+Let $H_0=\{t\in\R^d:\sum_\sigma t_\sigma=0\}$ and let $\mathbf e=(e_\sigma)_\sigma$. The map
+\[
+\Phi:\R^d_{>0}\to\R^d,\qquad \Phi(a)_\sigma=e_\sigma\log a_\sigma ,
+\]
+is a homeomorphism carrying the radial scaling $a\mapsto ta$ to the translation
+$t\mapsto t+(\log t)\,\mathbf e$, and carrying the $\Ok^\times$--action $a\mapsto a\cdot u$ to the translation
+\[
+t\mapsto t+2\,L(u),\qquad L(u):=\big(e_\sigma\log|\sigma(u)|\big)_\sigma\in H_0 .
+\]
+The set $L(\Ok^\times)\subset H_0$ is a full lattice of rank $d-1=2$ (Dirichlet's unit theorem), with
+covolume in $H_0$ equal to the regulator $\Reg_K$ up to the fixed normalizing constant of $H_0$. Finally
+$\mathbf e\notin H_0$ (since $\sum_\sigma e_\sigma=n>0$), so $\R^d=H_0\oplus\R\mathbf e$.
+\end{lemma}
+
+\begin{proof}
+$\Phi$ is a homeomorphism with inverse $t\mapsto(e^{t_\sigma/e_\sigma})_\sigma$. The scaling statement is
+$\Phi(ta)_\sigma=e_\sigma\log(ta_\sigma)=\Phi(a)_\sigma+e_\sigma\log t$. For the unit action,
+$\Phi(a\cdot u)_\sigma=e_\sigma\log(|\sigma(u)|^2a_\sigma)=\Phi(a)_\sigma+2e_\sigma\log|\sigma(u)|$. We have
+$\sum_\sigma e_\sigma\log|\sigma(u)|=\log\prod_\sigma|\sigma(u)|^{e_\sigma}=\log|\Nm(u)|=0$, so $L(u)\in H_0$,
+and $u\mapsto L(u)$ is the standard Dirichlet logarithmic embedding, whose image is a lattice of rank
+$r_1+r_2-1=2$ with covolume $\Reg_K$. The decomposition is clear.
+\end{proof}
+
+\begin{lemma}\label{lem:plane}
+$\bdy K_1(m_\Ok)=\{a\in\R^d_{>0}:m_\Ok(a)=1\}$ is homeomorphic to $\R^2$, and projection along
+$\R\mathbf e$ gives a homeomorphism $\pi:\bdy K_1(m_\Ok)\xrightarrow{\ \sim\ }H_0$ that is equivariant for
+the $\Ok^\times$--action on the source and the translation action $t\mapsto t+2L(u)$ on $H_0$.
+\end{lemma}
+
+\begin{proof}
+The function $a\mapsto m_\Ok(a)=\min_{x\ne0}\langle a,q(x)\rangle$ is concave (a pointwise minimum of linear
+functions), positively homogeneous of degree $1$, and strictly positive on $\R^d_{>0}$: indeed for fixed
+$a\gg0$ each $\langle a,q(x)\rangle>0$, and the infimum is attained and positive because $\iota(\Ok)$ is a
+full discrete lattice and $\langle a,q(\cdot)\rangle$ is an anisotropic positive form on it. Hence each ray
+$\R_{>0}\cdot a$ meets the level set $\{m_\Ok=1\}$ in exactly one point, so radial projection identifies
+$\{m_\Ok=1\}$ with the cross--section $\R^d_{>0}/\R_{>0}$. In the chart $\Phi$ of Lemma~\ref{lem:chart} the
+radial direction is $\R\mathbf e$, transverse to $H_0$; thus $\R^d_{>0}/\R_{>0}\cong H_0\cong\R^2$, and the
+composite $\pi=(\text{project along }\R\mathbf e)\circ\Phi$ is a homeomorphism $\{m_\Ok=1\}\to H_0$. It is
+equivariant because the unit action is the translation $t\mapsto t+2L(u)$ with $2L(u)\in H_0$
+(Lemma~\ref{lem:chart}), which commutes with projection along $\R\mathbf e$.
+\end{proof}
+
+\begin{theorem}[Euler bound]\label{thm:main}
+Let $K$ be a number field with $r_1+r_2=3$ \textup{(}e.g.\ any totally real cubic field\textup{)}, and let
+$\Ok$ be an order in $K$. Then $\bdy K_1(m_\Ok)/\Gamma_\Ok$ is a $2$--torus, and
+\[
+\boxed{\ \tfrac12\,\muK\ \le\ \nK\ \le\ 2\,\muK\ }
+\]
+where $\nK,\muK$ are as in Definition~\ref{def:counts}. Moreover:
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
+\item $\nK=2\muK$ if and only if every perfect form is \emph{simplicial}, i.e.\ its dual polygon
+$\conv\{q(x):x\in S_\Ok(a)\}$ is a triangle \textup{(}equivalently, every vertex of $K_1(m_\Ok)$ lies on
+exactly three facets\textup{)}. More precisely,
+\begin{equation}\label{eq:defect}
+\nK\;=\;2\muK-\sum_{v}\big(\deg v-3\big),
+\end{equation}
+the sum running over the vertex classes;
+\item $\nK=\tfrac12\muK$ if and only if every facet of $K_1(m_\Ok)$ is a triangle.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:plane}, $X:=\bdy K_1(m_\Ok)\cong\R^2$, and $\Gamma_\Ok=\Ok^\times$ acts on $X$ through the
+translation action of $L(\Ok^\times)$ on $H_0\cong\R^2$. By Lemma~\ref{lem:hadamard}(a) the kernel of this
+action is exactly the group of roots of unity, so the effective action is by
+$\Ok^\times/\mu(K)\cong\Z^2$ (Lemma~\ref{lem:chart}) and is \emph{free}; it is properly discontinuous and
+cocompact because $L(\Ok^\times)$ is a full lattice in $H_0$ of covolume $\Reg_K<\infty$. A free, properly
+discontinuous, cocompact action of $\Z^2$ on $\R^2$ has quotient a closed aspherical surface with
+fundamental group $\Z^2$, namely the $2$--torus $T$; in particular $\chi(T)=0$.
+
+The polyhedral face complex of $K_1(m_\Ok)$ restricts to $X$ as a locally finite regular CW decomposition
+(Theorem~\ref{thm:wyh}), invariant under $\Gamma_\Ok$ and with finitely many orbits of cells in each
+dimension (Theorem~\ref{thm:wyh}). As the action is free, this descends to a finite CW decomposition of $T$
+with
+\[
+V=\nK\ \ (\text{$0$--cells: perfect forms}),\quad
+E=e_K\ \ (\text{$1$--cells: edges}),\quad
+F=\muK\ \ (\text{$2$--cells: facets}),
+\]
+the identification $F=\muK$ being Proposition~\ref{prop:duality} and Definition~\ref{def:counts}. To see
+that the descent produces exactly these cell counts with no folding, note that no cell is set--stabilized by
+a nontrivial unit. Indeed each facet of $K_1(m_\Ok)$ is supported by some $q(x)$ and is cut from
+$\R^d_{>0}$ by an equation $\sum_\sigma e_\sigma a_\sigma|\sigma(x)|^2=1$ with strictly positive
+coefficients, hence is contained in the bounded simplex $\{a\ge0:\sum_\sigma e_\sigma a_\sigma|\sigma(x)|^2
+=1\}$; each facet, and therefore each of its edges and vertices, is a bounded set. The unit group acts on
+the logarithmic chart $H_0$ by the translations $L(u)$, and a nonzero translation cannot preserve a bounded
+set. Thus no facet, edge, or vertex is fixed setwise by a nontrivial $u\in\Ok^\times/\mu(K)$, the
+$2$--cells of $T$ are genuine disks and its $0$--cells genuine points, and the quotient has exactly $\muK$
+two--cells, $e_K$ one--cells, and $\nK$ zero--cells. Euler's formula gives
+\begin{equation}\label{eq:euler}
+V-E+F=\chi(T)=0 .
+\end{equation}
+
+Now use the polytopal structure of $K_1(m_\Ok)$, a $3$--dimensional convex polyhedron. Each vertex (a
+$0$--face of a $3$--polyhedron) is incident to at least three edges and three facets; hence in the surface
+$X$ every vertex has degree $\ge3$, and the same holds for the $0$--cells of $T$. Each facet (a $2$--face)
+is a convex polygon, hence is bounded by at least three edges; the same holds for the $2$--cells of $T$.
+Counting edge--incidences in $T$ two ways,
+\begin{equation}\label{eq:counts}
+2E=\sum_{v}\deg(v)\ \ge\ 3V,\qquad 2E=\sum_{f}(\#\text{sides of }f)\ \ge\ 3F .
+\end{equation}
+From \eqref{eq:euler}, $E=V+F$. Substituting into the two inequalities of \eqref{eq:counts}:
+\[
+2(V+F)\ge 3V\ \Longrightarrow\ F\ge\tfrac12 V\ \Longrightarrow\ V\le 2F ,
+\]
+\[
+2(V+F)\ge 3F\ \Longrightarrow\ V\ge\tfrac12 F\ \Longrightarrow\ V\ge\tfrac12 F .
+\]
+Together, $\tfrac12 F\le V\le 2F$, i.e.\ $\tfrac12\muK\le\nK\le 2\muK$.
+
+For (a): the upper bound $V\le 2F$ is an equality iff $2(V+F)=2E=3V$, i.e.\ iff every vertex has degree
+exactly $3$. A degree--$3$ vertex of $K_1(m_\Ok)$ lies on exactly three facets, i.e.\ its dual polygon has
+three vertices (Proposition~\ref{prop:duality}); this is the definition of simplicial. Identity
+\eqref{eq:defect} is $2E=\sum_v\deg v$ combined with $E=V+F$. (When all vertices have degree $3$ one has $E=\tfrac32 V$ and then $F=\tfrac12 V$,
+forcing the average face to be a hexagon: the hexagonal tiling of the torus.) For (b): the lower bound
+$V\ge\tfrac12 F$ is an equality iff $2E=3F$, i.e.\ iff every facet is a triangle. In the totally real case a
+vertex has degree at most $6$, because $x\mapsto\Tr(\alpha x^2)$ is a positive definite ternary form and so
+has at most $6$ minimal vectors up to sign. Hence equality in (b) forces every perfect form to have six extreme
+minimal vectors up to sign.
+\end{proof}
+
+\begin{remark}\label{rem:yasaki}
+In the real quadratic case $d=2$ the quotient $\bdy K_1/\Ok^\times$ is a circle, $\chi=0$ gives $V=E$, and
+the cells are indexed by a continued fraction; this is the setting of~\cite{Yasaki}. Theorem~\ref{thm:main}
+is its two--dimensional analogue, with $\muK$ in the role of the period. As in the quadratic case, where the
+period $\ell_d$ and $\log\varepsilon_d$ agree up to a factor $\log d$, $\muK$ is comparable to $\Reg_K$ up
+to a factor $(\log D_K)^2$ (Theorem~\ref{thm:sandwich}).
+\end{remark}
+
+\begin{corollary}\label{cor:floor}
+For $K$ with $r_1+r_2=3$ one always has $\muK\ge1$, hence $\nK\ge1$; and $\nK\le 2\muK$. If
+$\muK=1$ then $\nK\in\{1,2\}$. The value $(\muK,\nK)=(1,2)$ is realized by a single hexagonal $2$--cell on
+$T$ \textup{(}$V=2,E=3,F=1$\textup{)}.
+\end{corollary}
+
+\begin{proof}
+$K_1(m_\Ok)$ is full--dimensional and unbounded with at least one vertex (a perfect form exists,
+Theorem~\ref{thm:wyh}), hence has at least one facet; so $\muK\ge1$. The remaining assertions are the bound
+of Theorem~\ref{thm:main} with $F=1$: then $E=V+1$ and $2(V+1)\ge3V$ give $V\le2$, while $2E\ge3F=3$ gives
+$E\ge2$, so $V\ge1$. The realizing complex is the standard one--face hexagonal torus.
+\end{proof}
+
+\section{Exact computations}\label{sec:comp}
+
+We begin with Ennola's totally real cubic fields~\cite{Ennola}
+\[
+K=\Q(\rho),\qquad f_a(x)=x^3+(a-1)x^2-ax-1=0,\qquad a\ge2,
+\]
+which are totally real with $\Z[\rho]\subseteq\mathcal O_K$ and (for $a\ge3$) fundamental units
+$\rho,\rho-1$; the member $a=2$ is the cyclic cubic field of conductor $7$ and discriminant $49$. These are
+``simplest''--type families in the sense of Shanks~\cite{Shanks} and Lemmermeyer--Peth\H o~\cite{LP}.
+
+\subsection{An exact norm identity}
+The following elementary identity governs which non--unit elements can reach the sail.
+
+\begin{lemma}\label{lem:enola-norm}
+For $K=\Q(\rho)$ as above,
+\[
+\Nm(\rho)=1,\qquad \Nm(\rho-1)=1,\qquad \Nm(1+\rho)=3-2a .
+\]
+In particular $\rho$ and $\rho-1$ are units, while $1+\rho$ has norm $3-2a$. For $a\ge3$ the least
+absolute norm of a non--unit of the form $\rho-c$ \textup{(}$c\in\Z$\textup{)} is $2a-3$, attained at $c=-1$. The case $a=2$ is exceptional: there $|3-2a|=1$, so $1+\rho$ is itself a unit and
+$K=\Q(\zeta_7)^+$ has discriminant $49$; the rational primes $2,3,5$ are inert, and the least non--unit
+norm is $7$, attained at $\Nm(2-\rho)=-7$.
+\end{lemma}
+
+\begin{proof}
+Writing $f_a(x)=\prod_{i}(x-\rho_i)$ over the conjugates, for $c\in\Z$ we have
+$\Nm(\rho-c)=\prod_i(\rho_i-c)=(-1)^3\prod_i(c-\rho_i)=-f_a(c)$. Hence
+\[
+\Nm(\rho)=-f_a(0)=-(-1)=1,\quad
+\Nm(\rho-1)=-f_a(1)=-(1+(a-1)-a-1)=1,
+\]
+\[
+\Nm(1+\rho)=\Nm(\rho-(-1))=-f_a(-1)=-(-1+(a-1)+a-1)=-(2a-3)=3-2a. \qedhere
+\]
+\end{proof}
+
+\subsection{Exact computation of $\nK$ and $\muK$}\label{sec:voronoi}
+All values below were computed by Voronoi's neighbour algorithm run in exact arithmetic. We record the
+ingredients, since they are what make the numbers trustworthy.
+
+\begin{lemma}\label{lem:rational}
+Let $K$ be totally real of degree $3$ and $\Ok$ an order. Every perfect form with $m_\Ok(a)=1$ is of the
+shape $a=(\sigma_1(\alpha),\sigma_2(\alpha),\sigma_3(\alpha))$ for a totally positive $\alpha\in K$, i.e.\
+$a[x]=\Tr_{K/\Q}(\alpha x^2)$. Two such forms $\alpha,\alpha'$ are $\Gamma_\Ok$--equivalent iff
+$\alpha'/\alpha=u^2$ with $u\in\Ok^\times$.
+\end{lemma}
+
+\begin{proof}
+Every $a\in\R^3$ is $\sigma(\alpha)$ for a unique $\alpha\in K\otimes\R$, and then
+$\langle a,q(x)\rangle=\Tr(\alpha x^2)$. If $a$ is perfect with minimal vectors $x_1,x_2,x_3$ whose squares
+are linearly independent, $\alpha$ is the unique solution of $\Tr(\alpha x_i^2)=1$ $(i=1,2,3)$. In a
+$\Q$--basis $(b_k)$ of $K$ this is a linear system with rational coefficients $\Tr(b_kx_i^2)$, so $\alpha\in K$.
+The second assertion is Lemma~\ref{lem:hadamard}(b).
+\end{proof}
+
+Thus every vertex of $K_1(m_\Ok)$ is represented exactly. The algorithm starts from the trace form
+$\alpha=1/3$ and walks inside faces until the minimal vectors have full rank. At a perfect form it lists the
+edges of the dual polygon $\conv\{q(x):x\in S_\Ok(a)\}$ and walks along each edge to the neighbouring perfect
+form. It stops when every neighbour is equivalent to a form already found. Three points are essential.
+
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em]
+\item \emph{Minimal vectors are computed exactly.} The Gram matrix of $x\mapsto\Tr(\alpha x^2)$ on a
+$\Z$--basis is rational. After an LLL change of basis we enumerate $\{x:\Tr(\alpha x^2)\le B\}$ from the
+exact rational Gauss decomposition. Floating point is used only to widen loop ranges, never to decide
+membership.
+\item \emph{Equivalences are tested exactly.} $\alpha\sim\alpha'$ is decided by checking that
+$\alpha'/\alpha$ is integral, of norm $1$, and a square of an element of $\Ok$; $x\sim x'$ by checking that
+$x'/x$ is integral of norm $\pm1$. No unit group computed by \texttt{bnfinit} (which is conditional on GRH)
+enters any decision; fundamental units are used only to keep heights small.
+\item \emph{Two certificates.} The output must satisfy $V-E+F=0$ (Theorem~\ref{thm:main}). Moreover the
+units $u$ produced by the equivalences found along edges must generate the unit group, by the next
+proposition.
+\end{enumerate}
+
+\begin{proposition}\label{prop:sidepair}
+Let $r_1,\dots,r_{\nK}$ be representatives of the perfect forms modulo $\Gamma_\Ok$, and let $S$ be the set of
+$u\in\Ok^\times/\{\pm1\}$ such that some neighbour of some $r_i$ equals $r_j\cdot u$. Then $S$ generates
+$\Ok^\times/\{\pm1\}$.
+\end{proposition}
+
+\begin{proof}
+The group $G=\Ok^\times/\{\pm1\}$ acts freely on the $1$--skeleton $X^{(1)}$ of $\bdy K_1(m_\Ok)$, which is
+connected because $\bdy K_1(m_\Ok)\cong\R^2$ carries a locally finite polyhedral structure. Let $g\in G$ and
+choose an edge path $r_1=v_0,v_1,\dots,v_N=g\cdot r_1$. Write $v_k=g_k\cdot r_{i_k}$ with $g_0=1$. Since
+$v_{k+1}$ is a neighbour of $v_k$, the form $g_k^{-1}v_{k+1}$ is a neighbour of $r_{i_k}$ and equals
+$(g_k^{-1}g_{k+1})\cdot r_{i_{k+1}}$, so $g_k^{-1}g_{k+1}\in S$. By induction $g=g_N\in\langle S\rangle$.
+\end{proof}
+
+In every computation reported below, the elements of $S$ lie in the subgroup generated by the fundamental
+units returned by PARI's \texttt{bnfinit} and generate it with index $1$. By
+Proposition~\ref{prop:sidepair} this proves that those units are fundamental, so every regulator quoted
+below is certified without GRH.
+
+\subsection{The simplest families}
+
+\begin{observation}[Ennola and Shanks families]\label{obs:ennola}
+For Ennola's fields with $2\le a\le 12$ the exact computation gives
+\[
+\renewcommand{\arraystretch}{1.15}
+\begin{array}{c|ccccccccccc}
+a & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12\\\hline
+\disc & 49 & 257 & 697 & 1489 & 2777 & 4729 & 7537 & 11417 & 16609 & 23377 & 32009\\
+\Reg_K & 0.525 & 1.975 & 2.712 & 3.361 & 3.949 & 4.491 & 4.995 & 5.467 & 5.912 & 6.334 & 6.734\\
+(\muK,\nK) & (1,2) & (2,4) & (1,2) & (1,2) & (1,2) & (1,2) & (1,2) & (1,2) & (1,2) & (1,2) & (1,2)
+\end{array}
+\]
+At $a=3$ the second extreme square is $1+\rho$, of norm $3-2a=-3$ (Lemma~\ref{lem:enola-norm}). For Shanks'
+simplest cubic fields $x^3-ax^2-(a+3)x-1$ with $-1\le a\le 11$ one finds $(\muK,\nK)=(1,2)$ throughout. In all
+these cases the torus carries the one--hexagon structure $V=2$, $E=3$, $F=1$ of Corollary~\ref{cor:floor}.
+We have not proved that $\muK=1$ for all $a\ge4$; by Remark~\ref{rem:sharp} the lower bound of
+Theorem~\ref{thm:sandwich} does not exclude it.
+\end{observation}
+
+\begin{observation}\label{obs:404}
+For the field of discriminant $404$ \textup{(}$x^3-5x^2+x+1$\textup{)} one has $(\muK,\nK)=(4,7)$. The degrees
+of the seven vertices are $3,3,3,3,3,3,4$, in accordance with the defect formula~\eqref{eq:defect}.
+\end{observation}
+
+\subsection{All fields of discriminant at most $20000$}
+By Hunter's theorem (see \cite{Cohen}), every totally real cubic field of discriminant $D\le20000$ is
+generated by a root of $x^3+ax^2+bx+c$ with $a\in\{0,-1\}$ and $a^2-2b\le\tfrac13+(4/3)^{1/2}(D/3)^{1/2}$.
+Hence $b\ge-47$, $|c|\le178$, and the polynomial discriminant is at most $(a^2-2b)^3<9\cdot10^5$. Enumerating
+this box and reducing with \texttt{polredabs} yields $832$ fields. This is therefore the complete list.
+
+\begin{observation}[Census]\label{obs:census}
+For all $832$ totally real cubic fields with $D\le20000$:
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
+\item both certificates of \S\ref{sec:voronoi} hold, and the inequalities of Theorem~\ref{thm:sandwich}
+hold;
+\item $\muK=1$ for exactly $27$ fields; the maximum is $\nK=152$, $\muK=77$, attained at $D=16689$
+\textup{(}$x^3-x^2-26x+24$, $\Reg_K=110.63$\textup{)};
+\item $68\%$ of the fields are simplicial; the maximal vertex degree is $6$, attained in $10$ fields;
+\item among the $686$ fields with $h_K=1$ and $\Reg_K>10$, the ratio $\muK/\Reg_K$ has median $0.62$ and
+lies in $[0.24,0.95]$.
+\end{enumerate}
+\end{observation}
+
+Larger regulators are equally accessible; the run time grows roughly linearly in $\nK$:
+\[
+\renewcommand{\arraystretch}{1.15}
+\begin{array}{c|c|c|c|c|c}
+\text{polynomial} & D_K & \Reg_K & \muK & \nK & \muK/\Reg_K\\\hline
+x^3-x^2-221x+29 & 676829 & 262.8 & 136 & 272 & 0.52\\
+x^3-x^2-244x+29 & 58271449 & 1186.7 & 546 & 1092 & 0.46\\
+x^3-x^2-382x+7 & 223164633 & 3741.8 & 1767 & 3534 & 0.47
+\end{array}
+\]
+In these three fields every perfect form is simplicial.
+
+\begin{remark}[Correction to an earlier draft]\label{rem:correction}
+An earlier version of this note computed $\muK$ by enumerating a box of lattice points and testing
+extremality by linear programming. Those values are superseded. Extremality relative to a finite subset is
+weaker than extremality in $C$, so that method can over--count as well as under--count; the earlier claim
+that it only under--counts was false. In addition, for $x^3-x^2-10x+1$, whose polynomial discriminant is
+$3^2\cdot473$, the earlier computation evidently used $\Z[\theta]$ instead of $\mathcal O_K$. The earlier
+values $(\muK,\nK)=(6,12)$ at $D=473$ and $\muK=3$ at $D=6856$ are wrong; the correct values are $(2,4)$ and
+$(23,46)$. The conclusion drawn from them, that $\muK$ is not controlled by the regulator, is also wrong:
+Theorem~\ref{thm:sandwich} shows that it is, up to a factor $(\log D_K)^2$.
+\end{remark}
+
+\section{The regulator sandwich}\label{sec:sandwich}
+
+Throughout this section $K$ is a totally real cubic field and $\Ok$ an order of $K$, with discriminant
+$D=D_\Ok>0$ and regulator $\Reg=\Reg_\Ok$ of $\Ok^\times$. For $x\in K^\times$ put
+$\ell(x)=(\log|\sigma_i(x)|)_{i=1}^3$. Let $H_0=\{p\in\R^3:\sum p_i=0\}$, let $\pi$ be the orthogonal projection
+onto $H_0$, and let $\Lambda=\ell(\Ok^\times)\subset H_0$, a lattice of covolume $\sqrt3\,\Reg$ for the Euclidean
+metric. On $H_0$ we use the \emph{range norm}
+\[
+r(p)=\max_ip_i-\min_ip_i .
+\]
+It is a norm on $H_0$ and is invariant under adding multiples of $(1,1,1)$, so $r(\pi(v))=r(v)$ for all
+$v\in\R^3$.
+
+\begin{lemma}\label{lem:rangeball}
+The ball $\{p\in H_0:r(p)\le\rho\}$ has area $\sqrt3\,\rho^2$.
+\end{lemma}
+
+\begin{proof}
+It is the orthogonal projection of the cube $[0,\rho]^3$ onto $H_0$. Indeed $p\in H_0$ with $r(p)\le\rho$
+is the projection of $p-(\min_ip_i)(1,1,1)\in[0,\rho]^3$, and conversely every point of the cube has range
+at most $\rho$. The projection of a unit cube onto a plane with unit normal $\nu$ has area
+$\sum|\nu_i|$, which is $\sqrt3$ here.
+\end{proof}
+
+\begin{definition}
+A nonzero $x\in\Ok$ is a \emph{relative minimum} of $\Ok$ if there is no $y\in\Ok\setminus\{0,\pm x\}$ with
+$|\sigma_i(y)|\le|\sigma_i(x)|$ for $i=1,2,3$. Let $\ell_\Ok$ be the number of $\Ok^\times$--classes of
+relative minima.
+\end{definition}
+
+Relative minima of the lattice $\psi(\Ok)$ are the objects enumerated by Voronoi's algorithm for cubic
+fields~\cite{Voronoi1896,DF}; see Buchmann~\cite{Buchmann85,Buchmann87} for its generalisations and period
+lengths. The following lemma is the precise link between the squared sail and that genuinely linear
+object. The map $q$ is not additive, but it preserves coordinatewise domination.
+
+\begin{lemma}\label{lem:relmin}
+If $q(x)$ is a vertex of $C$, then $x$ is a relative minimum of $\Ok$. Hence $\muK\le\ell_\Ok$.
+\end{lemma}
+
+\begin{proof}
+Suppose $y\ne0,\pm x$ satisfies $|\sigma_i(y)|\le|\sigma_i(x)|$ for all $i$. Then $v:=q(x)-q(y)\ge0$. Also
+$v\neq0$, since otherwise $y/x\in K$ would have all conjugates $\pm1$ and would therefore equal $\pm1$. Then
+$q(x)=\tfrac12q(y)+\tfrac12\big(q(y)+2v\big)$ is the midpoint of two distinct points of $C$, so it is not a
+vertex.
+\end{proof}
+
+\begin{lemma}[Separation]\label{lem:sep}
+Let $x\neq\pm y$ be relative minima such that $\sigma_i(x)\sigma_i(y)$ has the same sign for $i=1,2,3$. Then
+$r\big(\ell(x)-\ell(y)\big)\ge2\log2$.
+\end{lemma}
+
+\begin{proof}
+Replacing $y$ by $-y$ we may assume $\sigma_i(x)$ and $\sigma_i(y)$ have the same sign for every $i$.
+Suppose $|\sigma_i(y)|<2|\sigma_i(x)|$ for all $i$, and put $z=x-y$. Then $z\ne0$, and $z\neq -x$ because
+$y\neq2x$. For each $i$ we have $|\sigma_i(z)|=\big||\sigma_i(x)|-|\sigma_i(y)|\big|<|\sigma_i(x)|$: if
+$|\sigma_i(y)|\le|\sigma_i(x)|$ this uses $\sigma_i(y)\ne0$, and otherwise it uses
+$|\sigma_i(y)|<2|\sigma_i(x)|$. This contradicts the minimality of $x$. Hence
+$\max_i(\ell_i(y)-\ell_i(x))\ge\log2$. By symmetry $\min_i(\ell_i(y)-\ell_i(x))\le-\log2$.
+\end{proof}
+
+\begin{theorem}[Regulator sandwich]\label{thm:sandwich}
+Let $K$ be a totally real cubic field and $\Ok$ an order in $K$. Then
+\[
+\boxed{\ \frac{4\,\Reg}{(\log 2D)^2}\ \le\ \muK\ \le\ \ell_\Ok\ \le\ \frac{4\,\Reg}{(\log2)^2}\ }
+\qquad\text{and}\qquad
+\frac{2\,\Reg}{(\log 2D)^2}\ \le\ \nK\ \le\ \frac{8\,\Reg}{(\log 2)^2}.
+\]
+\end{theorem}
+
+\begin{proof}
+\emph{Upper bound.} Let $U^+\subseteq\Ok^\times$ be the subgroup of units whose three conjugates have the same
+sign, and let $\iota=[\Ok^\times:U^+]$. Since $\pm1\in U^+$, the lattice $\ell(U^+)$ has index $\iota$ in
+$\Lambda$, and hence covolume $\iota\sqrt3\,\Reg$. The sign vectors of nonzero elements, modulo $\pm1$,
+fall into four classes $c$, and $U^+$ preserves each class. Fix $c$ and let $P_c\subset H_0$ be the set of
+points $\pi\ell(x)$, where $x$ runs over relative minima of class $c$. By Lemma~\ref{lem:sep}, distinct points
+of $P_c$ are at range distance at least $2\log2$. Since $P_c$ is $\ell(U^+)$--invariant, the range balls of
+radius $\log2$ about its points are pairwise disjoint and embed in the torus $H_0/\ell(U^+)$. By
+Lemma~\ref{lem:rangeball} the number $N_c$ of $U^+$--orbits in class $c$ satisfies
+$N_c\sqrt3(\log2)^2\le\iota\sqrt3\,\Reg$. The group $\Ok^\times/\{\pm1\}$ acts freely on relative minima modulo
+sign, so each $\Ok^\times$--orbit consists of exactly $\iota$ orbits of $U^+$. Therefore
+$\iota\,\ell_\Ok=\sum_cN_c\le4\iota\Reg/(\log2)^2$. Together with Lemma~\ref{lem:relmin} this gives the upper
+bounds for $\muK$ and $\ell_\Ok$.
+
+\emph{Lower bound.} Let $a\in\R^3_{>0}$ with $a_1a_2a_3=1$. On a $\Z$--basis of $\Ok$, the form
+$x\mapsto\langle a,q(x)\rangle$ has Gram determinant $a_1a_2a_3\,D=D$. Since $\gamma_3^3=2$, Hermite's
+inequality gives $m_\Ok(a)\le B:=2^{1/3}D^{1/3}$. By Proposition~\ref{prop:duality} the face of $C$ exposed by
+$a$ is the polygon $\conv\{q(x):x\in S_\Ok(a)\}$, and its vertices are extreme squares. So there is an extreme
+square $q(x)$ with $\langle a,q(x)\rangle=m_\Ok(a)$. Each of the three terms $t_i=a_i\sigma_i(x)^2$ is therefore
+at most $B$, while $t_1t_2t_3=\Nm(x)^2\ge1$. Hence each $t_i\ge B^{-2}$, and
+\[
+r\big(2\ell(x)+\log a\big)=\max_i\log t_i-\min_i\log t_i\le3\log B=\log 2D .
+\]
+As $a$ ranges over the forms with $a_1a_2a_3=1$, the vector $-\tfrac12\log a$ ranges over all of $H_0$. Thus
+every point of $H_0$ lies within range distance $\tfrac12\log2D$ of $\pi\ell(x)$ for some extreme square
+$q(x)$. These points form finitely many $\Lambda$--orbits, at most $\muK$ of them. Their range balls of radius
+$\tfrac12\log2D$ therefore cover the torus $H_0/\Lambda$, of area $\sqrt3\Reg$, and Lemma~\ref{lem:rangeball}
+gives $\muK\cdot\tfrac{\sqrt3}{4}(\log2D)^2\ge\sqrt3\Reg$.
+
+Finally, $\tfrac12\muK\le\nK\le2\muK$ by Theorem~\ref{thm:main}.
+\end{proof}
+
+\begin{remark}[Sharpness]\label{rem:sharp}
+The lower bound is sharp up to a constant factor. In Ennola's and Shanks' families $\Reg_K\sim(\log a)^2$ and
+$D_K\asymp a^4$, so $4\Reg_K/(\log2D_K)^2\to\tfrac14$. The computed values are $0.22$ at $a=12$ in both
+families (Observation~\ref{obs:ennola}), while $\muK=1$. For such families the theorem only guarantees $\muK\ge1$, so it is consistent with, but does not
+explain, the observed floor $\muK=1$. The
+upper bound is of the right order in the generic case: in the census, $\muK/\Reg_K$ is typically about $0.6$
+(Observation~\ref{obs:census}). The constant $4/(\log2)^2\approx8.3$ is not optimal.
+\end{remark}
+
+\begin{remark}\label{rem:hermitehumbert}
+Replacing Hermite's inequality by the additive Hermite--Humbert constant
+$\gamma_K=\sup_a m(a)/(a_1a_2a_3)^{1/3}$ of Leibak~\cite{Leibak} in the proof gives
+$\muK\ge4\Reg_K/(3\log\gamma_K)^2$. In the other direction, Porter and Mendelsohn~\cite{PM} bound the number
+of classes of perfect unary forms over any totally real $K$ of degree $n$ by
+$|\Delta_K|^{-1/2}\gamma_K^n\exp(2n\rho_\infty(\Lambda_K))$, where $\rho_\infty$ is the $\ell^\infty$ covering
+radius of the log--unit lattice. For cubic fields the bound $\nK\le8\Reg_K/(\log2)^2$ is much stronger, being
+linear in $\Reg_K$ instead of exponential in the covering radius.
+\end{remark}
+
+\begin{corollary}\label{cor:unbounded}
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
+\item Over totally real cubic fields, $\sup\nK=\infty$ as soon as $\sup\Reg_K/(\log D_K)^2=\infty$.
+\item If $K$ ranges over totally real cubic fields with $h_K\le D_K^{1/2-\delta}$, then
+$\nK\ge D_K^{\delta-o(1)}$.
+\item For a fixed $K$ and for infinitely many primes $p$, the order $\Ok_p=\Z+p\mathcal O_K$ satisfies
+$\mu_{\Ok_p}\gg_K p^{1/3}/(\log p)^2$. In particular $\sup_p n_{\Ok_p}=\infty$ unconditionally.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(a) is immediate from Theorem~\ref{thm:sandwich}. (b) follows from the Brauer--Siegel theorem
+\cite{Brauer}, $h_K\Reg_K=D_K^{1/2+o(1)}$. For (c), let $\varepsilon$ be a fundamental unit of $\mathcal O_K$.
+Since $\ell(\Ok_p^\times)$ has index $[\mathcal O_K^\times:\Ok_p^\times]$ in $\ell(\mathcal O_K^\times)$, we have
+$\Reg_{\Ok_p}=[\mathcal O_K^\times:\Ok_p^\times]\Reg_K$, and $D_{\Ok_p}=p^4D_K$ because
+$[\mathcal O_K:\Ok_p]=p^2$. The index is at least the least $k\ge1$ with $\varepsilon^k\in\Ok_p$. For each $k$,
+the element $\varepsilon^k\notin\Z$ has a nonzero coordinate $c_k$ outside $1$ in a $\Z$--basis
+$1,\omega_1,\omega_2$ of $\mathcal O_K$, and $\varepsilon^k\in\Ok_p$ forces $p\mid c_k$. As $\log|c_k|\ll_Kk$,
+at most $O_K(k)$ primes divide $c_k$. Hence at most $O_K(Y^2)$ primes have index $\le Y$. Taking
+$Y=X^{1/3}$, all but $O(X^{2/3})$ of the $\gg X/\log X$ primes $p\le X$ have index $>p^{1/3}$, and
+Theorem~\ref{thm:sandwich} applies.
+\end{proof}
+
+Cohen and Martinet~\cite{CM} predict that a positive proportion of totally real cubic fields have $h_K=1$.
+Combined with Corollary~\ref{cor:unbounded}(b), this predicts $\nK=D_K^{1/2+o(1)}$ for a positive proportion of
+fields, which is consistent with Observation~\ref{obs:census}. In this sense the ``opposite extreme'' to the
+simplest cubic fields is the generic field. We do not know an unconditional proof that
+$\Reg_K/(\log D_K)^2$ is unbounded over maximal orders; see \S\ref{sec:forward}.
+
+\begin{remark}
+Unit--reducible fields in the sense of Leibak--Porter--Ling~\cite{LPL} have $\muK=1$, since every extreme square
+is a minimal vector. Theorem~\ref{thm:sandwich} therefore shows that a unit--reducible totally real cubic
+field satisfies $\Reg_K\le\tfrac14(\log2D_K)^2$.
+\end{remark}
+
+\section{Further directions}\label{sec:forward}
+
+\subsection{Other degrees}
+The proofs of Lemmas~\ref{lem:rangeball}--\ref{lem:sep} and of Theorem~\ref{thm:sandwich} use only the
+dimension of the log--unit torus. For a totally real field of degree $m$ they give
+\begin{equation}\label{eq:general}
+\frac{2^{m-1}\Reg_K}{(\log\gamma_m^mD_K)^{m-1}}\ \le\ \muK\ \le\ \ell_{\mathcal O_K}\ \le\
+\frac{2^{m-1}\Reg_K}{(\log2)^{m-1}} .
+\end{equation}
+Here the range ball of radius $\rho$ in $H_0$ has volume $\sqrt m\,\rho^{m-1}$, there are $2^{m-1}$ sign
+classes, and $\gamma_m$ is Hermite's constant.
+
+\begin{proposition}[General signature]\label{prop:general}
+Let $K$ be any number field with $d=r_1+r_2$ and $\Ok$ an order. Then $\bdy K_1(m_\Ok)/\Gamma_\Ok$ is a closed
+aspherical $(d-1)$--manifold with fundamental group $\Z^{d-1}$. It carries a finite regular CW structure whose
+face numbers $f_0=\nK,f_1,\dots,f_{d-1}=\muK$ satisfy $\sum_i(-1)^if_i=\chi(T^{d-1})=0$. If $K$ is totally real
+of degree $m$, then moreover
+\[
+\nK\ \ge\ \frac{2m}{\tau_m}\,\muK ,
+\]
+where $\tau_m$ is the lattice kissing number in dimension $m$.
+\end{proposition}
+
+\begin{proof}
+The first part is the proof of Theorem~\ref{thm:main} with $2$ replaced by $d-1$. For the inequality, count
+incidences between vertices and facets. Each facet of $K_1(m_\Ok)$ is an $(m-1)$--polytope and so has at least
+$m$ vertices. Each vertex lies on as many facets as it has extreme minimal vectors up to sign. The form
+$x\mapsto\Tr(\alpha x^2)$ is a positive definite quadratic form on $\Ok\cong\Z^m$, so it has at most
+$\tau_m/2$ minimal vectors up to sign. Hence $m\,\muK\le(\tau_m/2)\,\nK$.
+\end{proof}
+
+For $m=3$ one has $\tau_3=12$, and this recovers $\nK\ge\tfrac12\muK$. Consequently $\nK\gg_m\Reg_K/(\log
+D_K)^{m-1}$ in every degree. Only the upper bound $\nK\le2\muK$ uses the surface case $d=3$. For $d\ge4$ an
+upper bound for $\nK$ in terms of $\muK$ would need the Dehn--Sommerville relations of the torus complex
+together with a bound on the number of vertices per facet.
+
+\subsection{Relation to indecomposables}
+The extreme squares are a non--linear cousin of the additively indecomposable totally positive integers,
+whose sail is studied by Kala--Man~\cite{KalaMan} and Kala--Sgallov\'a--Tinkov\'a~\cite{KST}; see also
+Karpenkov~\cite{Karpenkov} for Klein sails. The set $q(\Ok)$ is not a lattice. By Lemma~\ref{lem:relmin},
+however, the squared sail is controlled by the relative minima of the genuine lattice $\psi(\Ok)$. This is
+Voronoi's multidimensional continued fraction, not the Jacobi--Perron algorithm, and it is the reason why
+lattice methods do apply, contrary to what an earlier draft suggested.
+
+\subsection{Open problems}
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.2em]
+\item Prove unconditionally that $\sup\nK=\infty$ over maximal orders of totally real cubic fields. By
+Corollary~\ref{cor:unbounded} it suffices to find fields with $\Reg_K/(\log D_K)^2$ unbounded. Alternatively,
+one could find a parametric family on which the Voronoi output has visible parametric structure with $\muK$
+growing, as in Yasaki's explicit long--period quadratic families. The explicit--unit families
+$x(x-a)(x-2a)-1$ and $x(x-a)(x+a+1)-1$ that we tested stay on or near the floor; when $\Reg_K\asymp(\log D_K)^2$ the lower bound of
+Theorem~\ref{thm:sandwich} is $O(1)$ and forces nothing. A successful family presumably needs fundamental
+units that are long products of elements of small norm.
+\item Determine $\lim\muK/\Reg_K$ in distribution, if it exists. The census median is $0.62$, and the three
+large fields above give about $0.47$. This is the cubic analogue of Lévy's constant for continued fractions.
+\item Prove $\muK=1$ for all Ennola fields with $a\ge4$ and all Shanks fields.
+\end{enumerate}
+
+\section*{Computational note}
+The code (PARI/GP, file \texttt{voronoi\_unary.gp}) implements \S\ref{sec:voronoi}; every value reported in
+\S\ref{sec:comp} passed both certificates. An independent reimplementation for totally real fields of any
+degree (Python on PARI, repository \texttt{pav10/perfect\_forms}) reproduces all $832$ census records
+(counts, vertex degrees and norms of the extreme squares) and the three large fields of
+\S\ref{sec:comp}, with both certificates.
+
+\begin{thebibliography}{99}
+
+\bibitem{Brauer}
+R.~Brauer, \emph{On the zeta--functions of algebraic number fields}, Amer. J. Math. \textbf{69} (1947),
+243--250.
+
+\bibitem{Buchmann85}
+J.~Buchmann, \emph{Absch\"atzung der Periodenl\"ange einer verallgemeinerten Kettenbruchentwicklung},
+J. Reine Angew. Math. \textbf{361} (1985), 27--34.
+
+\bibitem{Buchmann87}
+J.~Buchmann, \emph{On the period length of the generalized Lagrange algorithm}, J. Number Theory \textbf{26}
+(1987), 31--37.
+
+\bibitem{Cohen}
+H.~Cohen, \emph{A Course in Computational Algebraic Number Theory}, Grad. Texts in Math. \textbf{138},
+Springer, Berlin, 1993.
+
+\bibitem{CM}
+H.~Cohen and J.~Martinet, \emph{\'Etude heuristique des groupes de classes des corps de nombres},
+J. Reine Angew. Math. \textbf{404} (1990), 39--76.
+
+\bibitem{DF}
+B.~N.~Delone and D.~K.~Faddeev, \emph{The Theory of Irrationalities of the Third Degree}, Transl. Math.
+Monographs \textbf{10}, Amer. Math. Soc., Providence, RI, 1964.
+
+\bibitem{Ennola}
+V.~Ennola, \emph{Cubic number fields with exceptional units}, in: Computational Number Theory (Debrecen,
+1989), de Gruyter, Berlin, 1991, pp.~103--128.
+
+\bibitem{GY}
+P.~E.~Gunnells and D.~Yasaki, \emph{Perfect forms over totally real number fields}, arXiv:0908.3130.
+
+\bibitem{KalaMan}
+V.~Kala and S.~H.~Man, \emph{Sails for universal quadratic forms}, Selecta Math. (N.S.) \textbf{31} (2025),
+Paper No.~26.
+
+\bibitem{KST}
+V.~Kala, E.~Sgallov\'a and M.~Tinkov\'a, \emph{Arithmetic of cubic number fields: Jacobi--Perron,
+Pythagoras, and indecomposables}, J. Number Theory \textbf{273} (2025), 37--95.
+
+\bibitem{Karpenkov}
+O.~Karpenkov, \emph{Geometry of Continued Fractions}, Algorithms and Computation in Mathematics, vol.~26,
+Springer, Berlin, 2013.
+
+\bibitem{Leibak}
+A.~Leibak, \emph{On additive generalization of Vorono\"i's theory for algebraic number fields}, Proc.
+Estonian Acad. Sci. Phys. Math. \textbf{54} (2005), 195--211.
+
+\bibitem{KW}
+H.~Komatsu and T.~Watanabe, \emph{Perfect unary forms over certain cubic fields}, Int. J. Number Theory
+\textbf{10} (2014), no.~5, 1337--1342.
+
+\bibitem{LPL}
+A.~Leibak, C.~Porter and C.~Ling, \emph{Unit reducible fields and perfect unary forms}, J. Th\'eor. Nombres
+Bordeaux \textbf{35} (2023), 867--895.
+
+\bibitem{LP}
+F.~Lemmermeyer and A.~Peth\H o, \emph{Simplest cubic fields}, Manuscripta Math. \textbf{88} (1995),
+53--58.
+
+\bibitem{OY}
+K.~Okuda and S.~Yano, \emph{A generalization of Vorono\"i's theorem to algebraic lattices},
+J. Th\'eor. Nombres Bordeaux \textbf{22} (2010), 727--740.
+
+\bibitem{PM}
+C.~Porter and A.~Mendelsohn, \emph{An upper bound on the number of classes of perfect unary forms in totally
+real number fields}, Int. J. Number Theory (2024), doi:10.1142/S1793042124501008; arXiv:2208.03304.
+
+\bibitem{Ryshkov}
+S.~S.~Ryshkov, \emph{The polyhedron $\mu(m)$ and some extremal problems of the geometry of numbers},
+Soviet Math. Dokl. \textbf{11} (1970), 1240--1244.
+
+\bibitem{Shanks}
+D.~Shanks, \emph{The simplest cubic fields}, Math. Comp. \textbf{28} (1974), 1137--1152.
+
+\bibitem{Voronoi1896}
+G.~F.~Vorono\"i, \emph{On a generalization of the algorithm of continued fractions} (Russian), Doctoral
+dissertation, Warsaw, 1896.
+
+\bibitem{Voronoi}
+G.~Vorono\"i, \emph{Nouvelles applications des param\`etres continus \`a la th\'eorie des formes
+quadratiques. Premier m\'emoire}, J. Reine Angew. Math. \textbf{133} (1908), 97--178.
+
+\bibitem{WYH}
+T.~Watanabe, S.~Yano and T.~Hayashi, \emph{Vorono\"i's reduction theory of $\GL_n$ over a totally real
+number field}, in: Diophantine Methods, Lattices, and Arithmetic Theory of Quadratic Forms, Contemp. Math.
+\textbf{587}, Amer. Math. Soc., Providence, RI, 2013, pp.~213--232.
+
+\bibitem{Yasaki}
+D.~Yasaki, \emph{Perfect unary forms over real quadratic fields}, J. Th\'eor. Nombres Bordeaux \textbf{25}
+(2013), 759--775.
+
+\end{thebibliography}
+
+\end{document}

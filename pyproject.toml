@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "perfect-forms-engine"
+version = "0.1.0"
+description = "Exact Voronoi algorithm for perfect unary forms over totally real number fields"
+requires-python = ">=3.9"
+dependencies = ["cypari2>=2.1", "numpy"]
+
+[tool.setuptools]
+packages = ["engine"]
