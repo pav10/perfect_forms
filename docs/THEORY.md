@@ -90,6 +90,15 @@ log N(alpha + t beta) = log N(alpha) - (t^2/2) sum (sigma_i(beta)/sigma_i(alpha)
 For a perfect form the cone is full dimensional with facet normals beta_F, so eutaxy
 is the exact test <beta_F, alpha^{-1}> > 0 for all facets F.
 
+*Literature (checked against the text).*  Leibak's thesis (2006), Thm 2.1 (= [Lei05a,
+Thm 5]): an extreme Humbert tuple is perfect, and if its rank is > 1 it is *weakly*
+eutactic.  Weak eutaxy (thesis, Def. 2.2) allows the coefficients rho to depend on the
+place, so it is vacuous for unary forms (the abstract's footnote: the claim for weak eutaxy
+holds iff the number of variables is at least 2).  The unary equivalence above, with
+eutaxy in the strong sense (one coefficient rho_x per minimal vector, as for Coulangeon),
+is therefore not in the thesis; the proof above is self-contained.  Thesis Thm 2.3: for
+totally real K a critical unary form exists.
+
 **PROVED.**  gamma_K = max over the perfect classes of N(alpha)^(-1/m), so
 gamma_K^m = 1/min N(alpha) is rational.  Indeed gamma = N^(-1/m) on dK_1(m_O), a
 compact torus modulo units; on each face -log N is convex, so gamma is convex there
@@ -100,8 +109,10 @@ must be eutactic (checked in every record).
 invariant of the Z-lattice (O, q_alpha) is gamma(alpha)/D^(1/m) <= gamma_m, i.e.
 gamma_K^m <= gamma_m^m D, with equality iff some trace lattice is similar to a
 critical lattice of dimension m (A_2, A_3, D_4, ...).  The records store the exact
-ratio `leibak_ratio` = gamma_K^m / (gamma_m^m D).  (Leibak's paper is cited for the
-bound itself only after checking the statement [REF?].)
+ratio `leibak_ratio` = gamma_K^m / (gamma_m^m D).  This is Leibak's bound (thesis Thm 2.2
+= [Lei05a, Thm 6]: gamma_{m,K} <= gamma_{m[K:Q]} |disc K|^{1/[K:Q]}), which he notes is
+attained for gamma_{1,Q(sqrt 3)}, gamma_{2,Q(sqrt 2)}, gamma_{2,Q(sqrt 3)} and gamma_{2,Q(sqrt 6)};
+our computations agree (unary Q(sqrt 3): ratio 1; binary: gamma^4 = (2D)^2 for d = 2, 3, 6).
 
 ## 5. Relative minima (engine/relmin.py)
 

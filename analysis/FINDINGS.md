@@ -74,16 +74,24 @@ simplicial; mu/Reg median 0.616 in [0.238, 0.948] over h = 1, Reg > 10).  New:
 
 ## 3. Binary forms over real quadratic fields, additive normalisation (CERTIFIED)
 
+**Agreement with the literature.**  Every count computed so far equals Gunnells--Yasaki,
+*Perfect forms over totally real number fields* (arXiv:0908.3130), Table 1 (GL_2(O)-classes
+by discriminant D): D = 5, 8, 12, 13, 17, 24, 28, 40, 44 give 2, 2, 3, 9, 34, 22, 30, 52, 66;
+and Leibak's thesis Thm 3.1 (exactly 22 classes over Q(sqrt 6)).  Leibak's Thm 2.2 remark
+(the bound gamma_{2,K} <= gamma_4 D^(1/2) is attained for d = 2, 3, 6) agrees with
+gamma^4 = (2D)^2 below.
+
 Perfect binary forms Tr(v^T A v) modulo GL_2(O_K) (engine/binary.py; certificates: edge
 balance and the mass formula sum (-1)^dim/|Stab| = 0):
 
-| d | 5 | 2 | 3 | 13 | 17 | 6 | 7 | 10 (h = 2) |
-|---|---|---|---|---|---|---|---|---|
-| perfect classes mod GL_2(O_K) | 2 | 2 | 3 | 9 | 34 | 22 | 30 | 52 |
+| d | 5 | 2 | 3 | 13 | 17 | 6 | 7 | 10 (h = 2) | 11 |
+|---|---|---|---|---|---|---|---|---|---|
+| perfect classes mod GL_2(O_K) | 2 | 2 | 3 | 9 | 34 | 22 | 30 | 52 | 66 |
+| ... up to Galois as well | 2 | 2 | 3 | 6 | | 13 | 17 | 29 | 36 |
 
-Classes with equal invariants are Galois conjugates (Gal(K/Q) is not in GL_2(O_K)).  The
-comparison with Ong (d = 2, 3, 5), Leibak (d = 6) and Gunnells--Yasaki is pending: their
-tables are not in the project files [REF?].
+Classes with equal invariants are Galois conjugates (Gal(K/Q) is not in GL_2(O_K)).
+For d = 2 (mod 4) and 3 (mod 4) in this range the maximum is gamma^4 = (2D)^2, i.e.
+gamma_{2,K} = gamma_4 D^(1/2) (a trace lattice similar to D_4); not for d = 5, 13.
 
 ## 4. The floor: is n_K >= 2 for totally real cubic fields? (plan C1)
 
@@ -109,3 +117,31 @@ tables are not in the project files [REF?].
 * Open: exclude (a) and (b).  Positivity of the embeddings alone does not exclude the
   relation in (a) (it defines a curve through (1, 1) in the (log a, log b) plane), so a
   proof must use the arithmetic of the units or the minimality of alpha.
+
+## 5. Real quadratic fields (plan B1)
+
+Census of all real quadratic fields with D <= 10^5 (running; numbers below for the first
+24,023 fields, all certified), with ell = period length of the continued fraction of
+omega_d (= the relative minima count; checked against relmin.py for D < 200).
+
+* **CERTIFIED.**  n_K = 1 exactly for the d of Leibak--Porter--Ling's types T1-T4
+  (JTNB 35 (2023), Thm 1.2) -- 322 fields; this independently confirms their theorem in
+  this range and validates the engine.
+* **CERTIFIED.**  Yasaki's bound l_d/2 <= n_K <= l_d (JTNB 25 (2013), as quoted by
+  Porter--Mendelsohn) holds in every field; both ends are attained (n = l in 2142 fields,
+  n = l/2 in 842).  n/l has median 0.79.
+* ell/Reg has median 0.842 for Reg > 20: Levy's constant 12 log 2/pi^2 = 0.8428 of the
+  continued fraction algorithm.
+
+## 6. The cubic analogue of Yasaki's bound (plan Goal 1)
+
+In degree 2, ell is the continued fraction period and l/2 <= n <= l.  In degree 3, ell is
+Voronoi's period (relative minima mod units).  Cubic census D <= 10^5 (4804 fields):
+
+* **PROVED.**  n <= 2 mu <= 2 ell (Euler bound [M, Thm 4.3] and [M, Lemma 6.3]).
+* **CERTIFIED** (D <= 10^5).  (4/9) ell <= n <= 2 ell; n/ell has median 1.16 in every
+  discriminant window (0.444 .. 2.0); n < ell/2 only in 4 fields (n = 4, ell = 9:
+  D = 11197, 45684, 49897, 61825).  mu/ell in [2/9, 1], median 0.59.
+* ell/Reg drifts slowly: medians 1.02, 0.97, 0.95, 0.94, 0.93 over D windows of width 2*10^4
+  (Reg > 10) -- a "cubic Levy constant" for Voronoi's algorithm, if it converges.
+* **CONJECTURE.**  c ell <= n_K for an absolute c > 0 (the data suggest c = 4/9).
