@@ -37,10 +37,10 @@ def covering_radius_inf(B):
     while True:
         if b1 @ b1 > b2 @ b2:
             b1, b2 = b2, b1
-        mu = round((b1 @ b2) / (b1 @ b1))
-        if mu == 0:
+        ratio = (b1 @ b2) / (b1 @ b1)
+        if abs(ratio) <= 0.5 + 1e-9:          # reduced (a strict test cycles on hexagonal lattices)
             break
-        b2 = b2 - mu * b1
+        b2 = b2 - round(ratio) * b1
     pts = np.array([i * b1 + j * b2 for i in range(-3, 4) for j in range(-3, 4)])
 
     def f(st):
