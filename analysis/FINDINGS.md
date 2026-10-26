@@ -84,3 +84,28 @@ balance and the mass formula sum (-1)^dim/|Stab| = 0):
 Classes with equal invariants are Galois conjugates (Gal(K/Q) is not in GL_2(O_K)).  The
 comparison with Ong (d = 2, 3, 5), Leibak (d = 6) and Gunnells--Yasaki is pending: their
 tables are not in the project files [REF?].
+
+## 4. The floor: is n_K >= 2 for totally real cubic fields? (plan C1)
+
+* **CERTIFIED.**  n_K >= 2 for every totally real cubic field with D <= 68297 (the census
+  so far); the values n_K = 1 and n_K = 3 never occur.
+* **PROVED** (reduction).  If n_K = 1, then by the Euler identity n = 2 mu - sum(deg - 3)
+  and n >= mu/2 [M, Thm 4.3] either
+  (a) mu = 1 and the unique vertex has degree 4: the torus is one quadrilateral (V, E, F) =
+      (1, 2, 1); or
+  (b) mu = 2 and the unique vertex has degree 6: two triangles (V, E, F) = (1, 3, 2).
+  In case (b) the trace lattice (O, Tr(alpha x^2)) has 6 pairs of minimal vectors, so it is
+  similar to A_3 (the unique 3-dimensional lattice with kissing number 12), and gamma_K
+  attains Leibak's bound gamma_K^3 = 2 D.
+  In case (a), after multiplying alpha by x^2 for an extreme square x, the extreme minimal
+  vectors are +-1, +-e1, +-e2, +-e1 e2 for a basis e1, e2 of O^x/+-1 (the face of K_1 at
+  the extreme square 1 has the four vertices alpha, alpha e1^2, alpha e2^2, alpha e1^2 e2^2,
+  and the side pairings of the one-square torus are the two generators), and the Voronoi
+  polygon is the quadrilateral 1, e1^2, e1^2 e2^2, e2^2 (in this cyclic order).  Hence its
+  diagonals meet: mu + (1 - mu) a b = nu a + (1 - nu) b in K (x) R for a = e1^2, b = e2^2
+  and some mu, nu in (0, 1) -- a rational linear relation among 1, a, b, ab with
+  coefficient sum 0.  Moreover |Tr(alpha y)| <= 1/2 for y = e1, e2, e1 e2, e1^2 e2, e1 e2^2
+  (from Tr(alpha (z +- w)^2) >= 1 for the pairs z, w of minimal vectors).
+* Open: exclude (a) and (b).  Positivity of the embeddings alone does not exclude the
+  relation in (a) (it defines a curve through (1, 1) in the (log a, log b) plane), so a
+  proof must use the arithmetic of the units or the minimality of alpha.
