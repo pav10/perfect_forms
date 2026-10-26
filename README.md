@@ -77,9 +77,42 @@ python -m engine summary data/census/deg3_D2e4.jsonl.xz
 | relative minima | extreme squares are relative minima, mu <= ell, unit index 1 |
 | gamma_K | Q(sqrt 3): gamma^2 = 16 (Leibak's bound attained); D = 1708: gamma^3 = 2D |
 
+| binary forms over Q(sqrt d), d = 2, 3, 5, 13 | class counts 2, 2, 3, 9; edge balance and mass formula; random GL_2(O_K) transforms identified |
+
 Not yet covered: complex cubic fields (Komatsu--Watanabe, plan E2: needs non-totally-real
-signatures), Yasaki's tables and the Leibak--Porter--Ling list (reference data not in the
-project files), binary forms (plan H1).
+signatures), Yasaki's tables and the Leibak--Porter--Ling list, Ong's and Leibak's binary
+lists (reference data not in the project files).
+
+## Binary forms (additive normalisation, plan H1)
+
+`engine/binary.py`: perfect binary Humbert forms Tr(v^T A v), A in Sym_2(K), over the
+maximal order of a totally real field, modulo GL_2(O_K) and homothety (Koecher/Leibak
+additive normalisation; the multiplicative Icaza/BCIO normalisation of pav10/hermite-humbert
+is a different theory and is never mixed with this one).
+
+```python
+from engine.field import Order
+from engine.binary import BinaryVoronoi, edge_balance, mass_formula
+V = BinaryVoronoi(Order('x^2-x-3')).run()        # Q(sqrt 13)
+len(V.classes)                                   # 9 perfect classes mod GL_2(O_K)
+edge_balance(V), mass_formula(V)[0]              # [], 0   (certificates)
+V.summary()                                      # per class: minimal vectors, |Aut|, N(det A), gamma, eutaxy
+```
+
+Exact equivalence and stabilisers: PARI's `qfisom`/`qfauto` on the Z-forms
+Tr(theta^k v^T A v), k < m (theta a totally positive generator), which forces O_K-linearity.
+Certificates: edge balance N_ij/|Aut A_i| = N_ji/|Aut A_j|, and the mass formula
+sum over interior cells mod GL_2(O_K) of (-1)^dim/|Stab| = chi_orb(GL_2(O_K)) = 0.
+Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
+
+## Analysis
+
+* [`analysis/FINDINGS.md`](analysis/FINDINGS.md): labelled results (PROVED / CERTIFIED /
+  CONJECTURE), in particular the comparison of perfect forms with the sails of pav10/sails.
+* `analysis/sails_link.py CENSUS SAILS_SUMMARY.xz`: counts vs the sails summary data.
+* `analysis/sails_elements.py FIELDS DISC_MAX [OUT] [--jobs J]`: element-level comparison
+  (extreme squares, relative minima, sail vertices, modulo units); imports pav10/sails
+  read-only from `SAILS_PATH` (default `../sails`) without writing bytecode there.
 
 ## Data
 
@@ -89,6 +122,7 @@ project files), binary forms (plan H1).
 | `fields/deg2_D4e5.jsonl.xz`, `deg4_D1e6`, `deg5_D1e7` | real quadratic (D <= 4*10^5), quartic (D <= 10^6, 13,073), quintic (D <= 10^7, 9,494) |
 | `data/census/deg3_D2e4.jsonl.xz` | certified records (with forms and relative minima) of all 832 cubic fields with D <= 20000 |
 | `data/legacy/census_cubic_D20000_gp.jsonl` | output of `voronoi_unary.gp` on the same fields |
+| `data/derived/sails_vs_perfect_deg3_D2e4.jsonl.xz` | per field: n, e, mu, ell, sail vertices/edges/facets (all sign classes, mod units), positions of the extreme squares |
 | `data/ERRATA.md` | discrepancies between computations, and corrections |
 
 ## Status against the plan
@@ -101,14 +135,16 @@ project files), binary forms (plan H1).
 | E4: eutaxy, gamma_K | done, exact |
 | E2: non-totally-real signatures | not started |
 | B2: cubic census | D <= 20000 done; larger ranges next |
-| H1: binary forms | planned (additive normalisation first) |
+| H1: binary forms | additive normalisation done (complete lists, two certificates); literature benchmarks pending [REF?] |
+| sails link (cubic) | D <= 20000 done (analysis/FINDINGS.md §1); D <= 10^5 next |
 
 ## Layout
 
 ```
 engine/      field.py (orders, exact arithmetic, exact signs), qfmin.py (exact LLL + Fincke-Pohst),
              polyface.py (face lattices), unary.py (Voronoi), certify.py, extreme.py (eutaxy, gamma_K),
-             relmin.py (relative minima), record.py, fieldlists.py, summary.py, cli.py,
+             relmin.py (relative minima), walk.py (exact neighbour walk), binary.py (binary forms),
+             record.py, fieldlists.py, summary.py, cli.py,
              voronoi_unary.gp (reference cubic GP code)
 fields/      field lists        data/      results        analysis/  scripts reading data/
 docs/        THEORY.md          paper/     manuscript     attic/     superseded code

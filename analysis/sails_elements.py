@@ -8,7 +8,7 @@ elements are compared modulo units through the exact key HNF(xO).
 Reports per field: V_all (sail vertices mod O^x over all sign classes), F_all, ell, mu, n,
 and the inclusions between the three sets.
 
-usage: python analysis/sails_elements.py FIELDLIST.jsonl[.xz] DISC_MAX [OUT.jsonl]
+usage: python analysis/sails_elements.py FIELDLIST.jsonl[.xz] DISC_MAX [OUT.jsonl] [--jobs J] [--disc-min D]
 """
 import json
 import os
@@ -45,7 +45,7 @@ def sail_vertex_keys(O, pol):
             cache[v] = (O.ideal_key(x), x)
         return cache[v]
 
-    verts, edge_pts, lattice = {}, {}, {}
+    verts, edge_pts, lattice, bary = {}, {}, {}, {}
     facets = ridges = 0
     for orth in r['orthants']:
         facets += orth['num_facets']
@@ -61,40 +61,67 @@ def sail_vertex_keys(O, pol):
             for v in F['lattice_points']:
                 k, x = key(v)
                 lattice.setdefault(k, x)
-    return verts, facets, lattice, edge_pts, ridges // 2
+            if len(F['vertices']) == 3 and F['d'] == 1:
+                vs = [tuple(v) for v in F['vertices']]
+                for v in F['lattice_points']:
+                    if tuple(v) not in vs and all(3 * v[i] == sum(w[i] for w in vs) for i in range(len(v))):
+                        k, x = key(v)
+                        bary.setdefault(k, x)
+    return verts, facets, lattice, edge_pts, ridges // 2, bary
 
 
-def main(fields, disc_max, out=None):
-    rows = fieldlists.read(fields, disc_max=int(disc_max))
-    fh = open(out, 'w') if out else None
-    tot = {'relmin_in_vertices': 0, 'vertices_in_relmin': 0, 'ext_in_vertices': 0, 'relmin_on_sail': 0, 'n': 0}
-    for label, pol, D in rows:
-        t = time.time()
-        O = Order(pol)
-        V = Voronoi(O).run()
-        f = V.f_vector()
-        R = RelativeMinima(O).run()
-        rk = set(R.by_key)
-        ek = set(V.extreme_square_classes())
-        vk, F_all, lat, edg, E_all = sail_vertex_keys(O, pol)
-        vks = set(vk)
-        pos = {'vertex': 0, 'edge': 0, 'facet': 0, 'off': 0}
-        for k in ek:
-            pos['vertex' if k in vks else 'edge' if k in edg else 'facet' if k in lat else 'off'] += 1
-        rec = {'label': label, 'D': D, 'n': f[-1], 'e': f[1], 'mu': f[0], 'ell': len(rk), 'V_all': len(vks),
-               'F_all': F_all, 'E_all': E_all, 'L_all': len(lat), 'ext_position': pos,
-               'relmin_in_vertices': rk <= vks, 'vertices_in_relmin': vks <= rk,
-               'ext_in_vertices': ek <= vks, 'relmin_on_sail': rk <= set(lat),
-               'relmin_not_vertex': len(rk - vks), 'vertex_not_relmin': len(vks - rk),
-               'seconds': round(time.time() - t, 2)}
-        for k in ('relmin_in_vertices', 'vertices_in_relmin', 'ext_in_vertices', 'relmin_on_sail'):
-            tot[k] += rec[k]
-        tot['n'] += 1
-        print(json.dumps(rec), flush=True)
-        if fh:
-            fh.write(json.dumps(rec) + '\n')
-    print('TOTAL', json.dumps(tot))
+def one(args):
+    label, pol, D = args
+    t = time.time()
+    O = Order(pol)
+    V = Voronoi(O).run()
+    f = V.f_vector()
+    R = RelativeMinima(O).run()
+    rk = set(R.by_key)
+    ek = set(V.extreme_square_classes())
+    vk, F_all, lat, edg, E_all, bary = sail_vertex_keys(O, pol)
+    vks = set(vk)
+    pos = {'vertex': 0, 'edge': 0, 'facet': 0, 'off': 0}
+    for k in ek:
+        pos['vertex' if k in vks else 'edge' if k in edg else 'facet' if k in lat else 'off'] += 1
+    return {'label': label, 'D': D, 'h': O.class_number(), 'R': O.regulator(),
+            'n': f[-1], 'e': f[1], 'mu': f[0], 'ell': len(rk), 'V_all': len(vks),
+            'F_all': F_all, 'E_all': E_all, 'L_all': len(lat), 'ext_position': pos,
+            'barycentres': len(bary), 'barycentres_extreme': len(set(bary) & ek),
+            'ext_vertex_or_barycentre': ek <= (vks | set(bary)),
+            'relmin_eq_vertices_or_barycentres': rk == (vks | set(bary)),
+            'relmin_in_vertices': rk <= vks, 'vertices_in_relmin': vks <= rk,
+            'ext_in_vertices': ek <= vks, 'relmin_on_sail': rk <= set(lat),
+            'relmin_not_vertex': len(rk - vks), 'vertex_not_relmin': len(vks - rk),
+            'seconds': round(time.time() - t, 2)}
+
+
+def main(fields, disc_max, out=None, jobs=1, disc_min=None):
+    import multiprocessing as mp
+    rows = fieldlists.read(fields, disc_min=int(disc_min) if disc_min else None, disc_max=int(disc_max))
+    done = set()
+    if out and os.path.exists(out):
+        with open(out) as fh:
+            done = {json.loads(l)['label'] for l in fh if l.strip()}
+    todo = [r for r in rows if r[0] not in done]
+    fh = open(out, 'a') if out else None
+    with mp.get_context('fork').Pool(int(jobs), maxtasksperchild=100) as pool:
+        for rec in pool.imap_unordered(one, todo, chunksize=1):
+            line = json.dumps(rec)
+            if fh:
+                fh.write(line + '\n')
+                fh.flush()
+            else:
+                print(line, flush=True)
 
 
 if __name__ == '__main__':
-    main(*sys.argv[1:])
+    import argparse
+    p = argparse.ArgumentParser()
+    p.add_argument('fields')
+    p.add_argument('disc_max')
+    p.add_argument('out', nargs='?')
+    p.add_argument('--jobs', default=1)
+    p.add_argument('--disc-min')
+    a = p.parse_args()
+    main(a.fields, a.disc_max, a.out, a.jobs, a.disc_min)

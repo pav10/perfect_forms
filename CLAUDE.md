@@ -14,6 +14,9 @@
   `python tests/test_engine.py --slow` also re-derives the 832-field cubic census
   against `data/legacy/census_cubic_D20000_gp.jsonl`.
 - Runs expected to take much more than an hour need the user's go-ahead.
+- Run long jobs from a frozen worktree (`git worktree add <scratch>/wt HEAD`), never from
+  the working copy you are editing: worker processes import the engine when they start,
+  so edits during a run would change the code mid-run.
 
 ## Rules (PLAN.md section 8)
 
