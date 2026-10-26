@@ -133,6 +133,15 @@ def test_relmin_crosscheck():
             assert R.is_relative_minimum(x)
 
 
+def test_quadratic_relmin_continued_fraction():
+    from engine.relmin import quadratic_relmin_count
+    for D in range(5, 200):
+        if not int(pari.isfundamental(D)):
+            continue
+        O = Order('x^2-x-%d' % ((D - 1) // 4) if D % 4 == 1 else 'x^2-%d' % (D // 4))
+        assert RelativeMinima(O).run().count() == quadratic_relmin_count(D), D
+
+
 def test_gamma():
     O, V, f = run('x^2-3')                 # Q(sqrt 3) attains Leibak's bound: gamma^2 = (4/3) 12 = 16
     s = extreme.summary(O, V)

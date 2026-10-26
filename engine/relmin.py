@@ -244,3 +244,23 @@ class RelativeMinima:
             if not any(P.less(0, a, i) for i in range(O.m)):
                 return False
         return True
+
+
+def quadratic_relmin_count(D):
+    """ell for the maximal order of Q(sqrt D), D a fundamental discriminant: Voronoi's
+    algorithm in dimension 2 is the continued fraction algorithm, and the relative minima
+    of Z[w], w = (D mod 2 + sqrt D)/2, modulo units correspond to one period of the
+    (exact, integer) continued fraction expansion of w.  Checked against
+    RelativeMinima for all D < 200 (tests/test_engine.py)."""
+    from math import isqrt
+    s = isqrt(D)
+    P, Q = D % 2, 2
+    seen = {}
+    k = 0
+    while (P, Q) not in seen:
+        seen[(P, Q)] = k
+        a = (P + s) // Q
+        P = a * Q - P
+        Q = (D - P * P) // Q
+        k += 1
+    return k - seen[(P, Q)]

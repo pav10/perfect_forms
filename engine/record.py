@@ -96,6 +96,10 @@ def compute(pol, label=None, forms=True, relmin=False, certify_bnf=False):
     }
     if certify_bnf:
         rec['bnfcertify'] = O.certify_bnf()
+    if m == 2 and O.maximal and not relmin:
+        from .relmin import quadratic_relmin_count
+        rec['ell'] = quadratic_relmin_count(O.disc)
+        rec['ell_method'] = 'continued fraction'
     if relmin:
         from .relmin import RelativeMinima
         R = RelativeMinima(O).run()
