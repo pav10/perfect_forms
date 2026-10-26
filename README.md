@@ -145,6 +145,10 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 | `data/census/deg2_D1e5.jsonl.xz` | certified records (no forms; ell from the continued fraction) of all 30,394 real quadratic fields with D <= 10^5 |
 | `data/legacy/census_cubic_D20000_gp.jsonl` | output of `voronoi_unary.gp` on the same fields |
 | `data/derived/sails_vs_perfect_deg3_D2e4.jsonl.xz` | per field: n, e, mu, ell, sail vertices/edges/facets (all sign classes, mod units), positions of the extreme squares |
+| `data/derived/sails_vs_perfect_deg3_D1e5.jsonl.xz` | the same for all 4804 cubic fields with D <= 10^5 (`--census`; no relative minima as elements) |
+| `data/derived/sails_nonvertex_extreme_deg3_D1e5.jsonl.xz` | the 123 extreme squares (D <= 10^5) that are not sail vertices: facet shape, distance, exact barycentric coordinates |
+| `data/derived/minkowski_voronoi_deg3_D2e4.jsonl.xz` | (V, E, F) of the Minkowski--Voronoi complex mod units, all 832 cubic fields with D <= 20000 |
+| `data/derived/porter_mendelsohn_deg{2,3}_D1e5.jsonl.xz` | n_K against the Porter--Mendelsohn bound (covering radius numerical, 6 digits) |
 | `data/ERRATA.md` | discrepancies between computations, and corrections |
 
 ## Status against the plan
@@ -159,7 +163,7 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 | B2: cubic census | D <= 10^5 done (4804 fields, analysis/FINDINGS.md); D <= 10^6 needs a go-ahead |
 | B1: real quadratic census | D <= 10^5 done (30,394 fields): LPL Thm 1.2 and Yasaki Thm 5.1 confirmed in every field; Yasaki's count for d <= 200000 needs a go-ahead (~3 h) |
 | H1: binary forms | additive normalisation done (complete lists, two certificates); literature benchmarks pending [REF?] |
-| sails link (cubic) | D <= 20000 done (analysis/FINDINGS.md §1); D <= 10^5 next |
+| sails link (cubic) | D <= 10^5 done (analysis/FINDINGS.md §1): three hulls, Minkowski--Voronoi complex (V, E, F) = (2 ell, 3 ell, ell) |
 
 ## Layout
 

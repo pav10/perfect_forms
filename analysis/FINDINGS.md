@@ -10,10 +10,25 @@ sails this is the sum over the sign classes of pav10/sails of the counts modulo 
 positive units): n = n_K, mu = mu_K (extreme squares), ell = ell_O (relative minima),
 V, E, F = vertices, edges, facets of the sails (Klein polyhedra) of all sign classes.
 
-Data: `data/derived/sails_vs_perfect_deg3_D2e4.jsonl.xz` (all 832 fields with D <= 20000),
-produced by `analysis/sails_elements.py` (this engine for n, mu, ell; the sails code of
-pav10/sails, run read-only, for the sails; elements compared modulo units by the exact
-key HNF(xO)).
+Data: `data/derived/sails_vs_perfect_deg3_D2e4.jsonl.xz` (all 832 fields with D <= 20000,
+with relative minima as elements) and `sails_vs_perfect_deg3_D1e5.jsonl.xz` (all 4804
+fields with D <= 10^5; extreme squares from the census records, `--census`), produced by
+`analysis/sails_elements.py` (this engine for n, mu, ell; the sails code of pav10/sails,
+run read-only, for the sails; elements compared modulo units by the exact key HNF(xO));
+`sails_nonvertex_extreme_deg3_D1e5.jsonl.xz` lists the facets of the extreme squares that
+are not sail vertices (`--facets`).
+
+**Summary, D <= 10^5 (4804 fields, CERTIFIED).**  mu <= V <= ell in every field (V = ell in
+3054); n <= 2V and n <= E in every field, n <= F fails in 333.  Of the 202,071 classes of
+extreme squares, 201,948 are sail vertices and 123 lie in the relative interior of a
+triangular facet at integer distance 1 (none on an edge): 121 at the barycentre of a
+triangle with 4 lattice points, and 2 (3.3.61108.1, 3.3.75425.1) at barycentric
+coordinates (1/5, 2/5, 2/5) of a triangle with 5 lattice points.  Of the 2512 classes of
+4-point distance-1 triangles, 121 have an extreme barycentre.  Ratios (median [min, max]):
+mu/V 0.59 [0.22, 1], n/V 1.17 [0.44, 2], n/F 0.89 [0.33, 1.53], n/E 0.51 [0.19, 0.87],
+stable across discriminant windows of width 2*10^4 (mu/V 0.61, 0.59, 0.59, 0.59, 0.59).
+The statements below marked D <= 20000 use the relative minima as elements, which the
+D <= 10^5 run does not recompute.
 
 * **PROVED.**  Every sail vertex is a relative minimum, so V <= ell.
   *Proof.*  Let v be a vertex of the Klein polyhedron of its orthant and y != +-v a
@@ -48,7 +63,8 @@ key HNF(xO)).
   coordinates (2/5, 2/5, 1/5) (data/ERRATA.md).
 * **CONJECTURE.**  For every totally real cubic field, every relative minimum (hence every
   extreme square) that is not a sail vertex lies in the relative interior of a triangular
-  sail facet at integer distance 1.
+  sail facet at integer distance 1.  (Checked for relative minima up to D = 20000 and for
+  extreme squares up to D = 10^5.)
 * **PROVED** (relative minima on a sail).  A lattice point x in the open orthant C is a
   relative minimum iff no w != 0 has x + w and x - w both in C, iff
   K ∩ (2x - K) ∩ L = {x} for the Klein polyhedron K of C.  Consequently (i) a lattice point
@@ -105,6 +121,9 @@ O^x acts on it by the diagonal maps diag(|sigma_i(eps)|).
   ray t*e^h enters S since the box of e^h contains lattice points for t large and none for
   N(t e^h) < 1), and units act on H by the translations Log(eps); so dS/O^x is the torus
   H/Log(O^x) and V - E + F = 0 with F = ell.  []
+* **CERTIFIED** (D <= 20000, `analysis/minkowski_voronoi.py`,
+  `data/derived/minkowski_voronoi_deg3_D2e4.jsonl.xz`).  Counting the minimal triples
+  directly gives (V, E, F) = (2 ell, 3 ell, ell) in all 832 fields.
 * **PROVED.**  n <= 2 mu <= 2 ell = V(MV): the number of perfect forms is at most the number
   of vertices of the Minkowski--Voronoi complex.  In degree 2, MV(O)/O^x is a circle with
   ell vertices and Yasaki's Thm 5.1 reads V(MV)/2 <= n <= V(MV); in degree 3 the data give
@@ -226,3 +245,15 @@ Voronoi's period (relative minima mod units).  Cubic census D <= 10^5 (4804 fiel
   similar to A_3, so a cubic field with n_K = 1 of type (b) has 2O = p q^2 and p^2 d^-1
   narrowly principal.  Together with the observed D mod 16 this puts type (b) in a thin
   2-adic family; case (a) is not affected.
+
+## 8. The Porter--Mendelsohn bound (plan B4)
+
+Porter--Mendelsohn (IJNT 2024; arXiv:2208.03304), Thm 1: n_K <= e^{2 n rho} gamma_K^n /
+|Delta_K|^{1/2}, rho = rho_inf(Log O^x); their conjectured improvement replaces
+|Delta_K|^{1/2} by |Delta_K|.  `analysis/porter_mendelsohn.py`; gamma_K^n exact, rho
+numerical (Reg/2 in degree 2), so these are numerical checks, not certificates.
+
+* Real quadratic, D <= 10^5 (30,394 fields, `data/derived/porter_mendelsohn_deg2_D1e5.jsonl.xz`):
+  the bound and the conjectured bound hold in every field.  log(bound/n_K) has median 102
+  (min 1.77 at D = 5); the conjectured bound is tightest for D = 5, 8, 13, 12, 17
+  (log slack 0.96, 1.76, 2.39, 2.92, 3.21).

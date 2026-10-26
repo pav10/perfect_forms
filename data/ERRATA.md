@@ -36,5 +36,6 @@ The comparison over D <= 10^5 (`analysis/sails_elements.py --census`, then `--fa
 finds 3.3.61108.1, x^3 - x^2 - 63x - 167: the extreme square with coordinates (8, 0, -1) in
 the integral basis (norm 53) lies in the triangle with vertices (1, 0, 0), (5, 1, 0),
 (28, -2, -5) (distance 1, five lattice points) at barycentric coordinates (2/5, 2/5, 1/5).
-The certified data for D <= 20000 are unchanged; the conjecture is replaced by the weaker
-statement in FINDINGS section 1.
+The second counterexample in this range is 3.3.75425.1, of the same type; the other 121
+extreme squares off the sail vertices are barycentres.  The certified data for D <= 20000
+are unchanged; the conjecture is replaced by the weaker statement in FINDINGS section 1.
