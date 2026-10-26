@@ -31,9 +31,26 @@ key HNF(xO)).
   multiple of x is (1 + v2 + v3)/3 for the facet {1, v2, v3} of the totally positive sail,
   yet q(x) is a vertex of the squared sail (the centroid of the three perfect forms at x
   has x as its only minimal vector).  So "extreme squares are sail vertices" is false.
+* **CERTIFIED** (D <= 20000).  Every extreme square is a sail vertex or the barycentre of a
+  triangular sail facet at integer distance 1 (all 832 fields).  Such barycentres are
+  rarely extreme: of the 190 classes of triangular distance-1 facets containing their
+  barycentre, 7 give extreme squares.
 * **CONJECTURE.**  For every totally real cubic field, every extreme square is a vertex of
   the sail of its sign class or the barycentre of a triangular sail facet at integer
-  distance 1.  (Then mu <= V + #{such facets} and n <= 2 mu.)
+  distance 1.
+* **PROVED** (relative minima on a sail).  A lattice point x in the open orthant C is a
+  relative minimum iff no w != 0 has x + w and x - w both in C, iff
+  K ∩ (2x - K) ∩ L = {x} for the Klein polyhedron K of C.  Consequently (i) a lattice point
+  in the relative interior of a sail edge is never a relative minimum (its two lattice
+  neighbours on the edge are x +- w); (ii) a lattice point x in the relative interior of a
+  facet F is a relative minimum iff F ∩ (2x - F) contains no lattice point besides x
+  (if x +- w are both in C, then c.w = 0 for the facet functional c, since no lattice point
+  of C lies below the facet plane).
+* **CERTIFIED** (D <= 20000).  The relative minima that are not sail vertices lie in the
+  interior of triangular facets at distance 1; besides barycentres they occur e.g. at
+  barycentric coordinates (1/5, 2/5, 2/5) (3.3.404.1, a 5-point triangle) and
+  (1/7, 3/7, 3/7) (3.3.1257.1, a 6-point triangle).  "Relative minima = vertices and
+  barycentres" holds in 710 of 832 fields only.
 * **CERTIFIED** (D <= 20000).  Every relative minimum lies on the sail of its sign class
   (it is a lattice point of some facet).
 * **CERTIFIED** (D <= 20000), ratios: mu/V in [0.22, 1] (median 0.61); n/V in [0.44, 2]
