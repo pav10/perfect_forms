@@ -31,7 +31,7 @@ from fractions import Fraction
 
 import numpy as np
 
-from . import linalg, polyface, qfmin
+from . import linalg, polyface, qfmin, walk
 
 
 class VoronoiError(ArithmeticError):
@@ -48,18 +48,6 @@ def normalize(x):
         if t:
             return tuple(x) if t > 0 else _neg(x)
     return tuple(x)
-
-
-def _rational_between(lo, hi):
-    """A rational strictly between the Fractions/floats lo < hi, of small height."""
-    lo, hi = Fraction(lo), Fraction(hi)
-    mid = (lo + hi) / 2
-    B = 16
-    while True:
-        r = mid.limit_denominator(B)
-        if lo < r < hi:
-            return r
-        B *= 16
 
 
 class PerfectForm:
@@ -141,56 +129,23 @@ class Voronoi:
 
     # ------------------------------------------------------------------
 
-    def _min_below(self, G):
-        self.stats['enumerations'] += 1
-        return qfmin.short_vectors(G, 1, strict=True)
-
     def walk(self, alpha, beta, F):
         """From the form alpha (minimum 1) along beta (Tr(beta x^2) = 0 for x in F, > 0
         for the other minimal vectors; beta not totally nonnegative) to the first form
-        alpha + rho beta at which a vector outside F attains the minimum 1."""
+        alpha + rho beta at which a vector outside F attains the minimum 1 (walk.py)."""
         O = self.O
         self.stats['walks'] += 1
-        Ga, Gb = O.gram(alpha), O.gram(beta)
         ea, eb = O.embed_accurate(alpha), O.embed_accurate(beta)
         neg = [(-a / b) for a, b in zip(ea, eb) if b < 0]
         if not neg:
             raise VoronoiError('walk: unbounded direction')
-        tmax = min(neg)
-        if not tmax > 0:
-            raise VoronoiError('walk: bad estimate of the positivity boundary')
-
-        def G_at(t):
-            return [[Ga[i][j] + t * Gb[i][j] for j in range(O.m)] for i in range(O.m)]
-
-        lo = Fraction(0)
-        t = _rational_between(0, tmax)
-        steps = 0
-        while True:
-            G = G_at(t)
-            if not qfmin.is_positive_definite(G):
-                t = _rational_between(lo, t)
-                continue
-            S = self._min_below(G)
-            if S:
-                break
-            lo = t
-            steps += 1
-            # tmax is a float estimate of the boundary of positivity: approach it, and
-            # after many steps also allow t beyond it (positivity is re-checked exactly)
-            t = _rational_between(t, tmax) if t < tmax and steps < 60 else 2 * t
-        while S:
-            tn = t
-            for _, x in S:
-                s = O.sq(x)
-                a = O.trace_pair(alpha, s)
-                b = O.trace_pair(beta, s)
-                if b >= 0:
-                    raise VoronoiError('walk: vector below 1 with Tr(beta x^2) >= 0')
-                tn = min(tn, (a - 1) / (-b))
-            t = tn
-            S = self._min_below(G_at(t))
-        return tuple(Fraction(a) + t * b for a, b in zip(alpha, beta))
+        try:
+            rho = walk.walk(O.gram(alpha), O.gram(beta),
+                            lambda x: O.trace_pair(alpha, O.sq(x)), lambda x: O.trace_pair(beta, O.sq(x)),
+                            self.stats, tmax=min(neg))
+        except walk.WalkError as e:
+            raise VoronoiError(str(e))
+        return tuple(Fraction(a) + rho * b for a, b in zip(alpha, beta))
 
     def initial_perfect_form(self):
         O = self.O

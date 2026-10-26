@@ -142,6 +142,43 @@ def test_gamma():
     assert s['gamma_pow'] == 2 * 1708 and s['argmax_eutactic']
 
 
+def test_binary_additive():
+    """Binary forms (additive normalisation): equivalence under random GL_2(O) transforms,
+    Galois pairing, and the edge-balance certificate.  Class counts are regression values
+    of this code (not yet compared with Ong / Leibak / Gunnells--Yasaki [REF?])."""
+    from engine.binary import BinaryVoronoi, edge_balance
+    expected = {'x^2-x-1': 2, 'x^2-2': 2, 'x^2-3': 3, 'x^2-x-3': 9}
+    for pol, k in expected.items():
+        O = Order(pol)
+        V = BinaryVoronoi(O).run()
+        assert len(V.classes) == k, (pol, len(V.classes))
+        assert edge_balance(V) == [], pol
+        assert all(V.eutaxy(P) != 'no' for P in V.classes if P.normdet == min(Q.normdet for Q in V.classes))
+    random.seed(5)
+    O = Order('x^2-x-3')
+    V = BinaryVoronoi(O).run()
+    B = V.B
+    for i, P in enumerate(V.classes):
+        while True:
+            M = [[tuple(random.randint(-2, 2) for _ in range(2)) for _ in range(2)] for _ in range(2)]
+            d = tuple(s - t for s, t in zip(O.mul(M[0][0], M[1][1]), O.mul(M[0][1], M[1][0])))
+            if abs(O.norm(d)) == 1:
+                break
+        a, b, c = B.split(P.A)
+        Aa = [[a, b], [b, c]]
+
+        def entry(i_, j_):
+            out = tuple([Fraction(0)] * 2)
+            for k in range(2):
+                for l in range(2):
+                    out = tuple(s + t for s, t in zip(out, O.mul(O.mul(M[k][i_], Aa[k][l]), M[l][j_])))
+            return out
+        A2 = entry(0, 0) + entry(0, 1) + entry(1, 1)
+        n0 = len(V.classes)
+        j, _ = V._identify(A2)
+        assert j == i and len(V.classes) == n0
+
+
 def test_census_legacy(slow=False):
     """All 832 totally real cubic fields with D <= 20000 against the certified GP census."""
     if not slow:
