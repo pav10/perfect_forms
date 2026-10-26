@@ -9,6 +9,7 @@ Reports per field: V_all (sail vertices mod O^x over all sign classes), F_all, e
 and the inclusions between the three sets.
 
 usage: python analysis/sails_elements.py FIELDLIST.jsonl[.xz] DISC_MAX [OUT.jsonl] [--jobs J] [--disc-min D]
+       python analysis/sails_elements.py --census CENSUS.jsonl[.xz] OUT.jsonl [JOBS]   (extreme squares from the records)
 """
 import json
 import os
@@ -96,6 +97,52 @@ def one(args):
             'seconds': round(time.time() - t, 2)}
 
 
+_CENSUS = {}
+
+
+def one_from_census(rec):
+    """Like one(), but the extreme squares are read from a census record (forms with the
+    flag 'extreme') and ell from the record; relative minima are not recomputed."""
+    t = time.time()
+    O = Order(rec['pol'])
+    ek = {}
+    for F in rec['forms']:
+        for x, e in zip(F['minvecs'], F['extreme']):
+            if e:
+                ek.setdefault(O.ideal_key(tuple(x)), tuple(x))
+    if len(ek) != rec['mu']:
+        raise ArithmeticError('census record: extreme squares do not match mu')
+    vk, F_all, lat, edg, E_all, bary = sail_vertex_keys(O, rec['pol'])
+    vks = set(vk)
+    pos = {'vertex': 0, 'edge': 0, 'facet': 0, 'off': 0}
+    for k in ek:
+        pos['vertex' if k in vks else 'edge' if k in edg else 'facet' if k in lat else 'off'] += 1
+    ekk = set(ek)
+    return {'label': rec['label'], 'D': rec['disc'], 'h': rec['class_number'], 'R': rec['regulator'],
+            'n': rec['n'], 'e': rec['e'], 'mu': rec['mu'], 'ell': rec.get('ell'), 'V_all': len(vks),
+            'F_all': F_all, 'E_all': E_all, 'L_all': len(lat), 'ext_position': pos,
+            'barycentres': len(bary), 'barycentres_extreme': len(set(bary) & ekk),
+            'ext_vertex_or_barycentre': ekk <= (vks | set(bary)),
+            'ext_in_vertices': ekk <= vks, 'seconds': round(time.time() - t, 2)}
+
+
+def main_census(census, out, jobs=1):
+    import lzma
+    import multiprocessing as mp
+    op = lzma.open if census.endswith('.xz') else open
+    with op(census, 'rt') as fh:
+        recs = [json.loads(l) for l in fh if l.strip()]
+    done = set()
+    if os.path.exists(out):
+        with open(out) as fh:
+            done = {json.loads(l)['label'] for l in fh if l.strip()}
+    todo = [r for r in recs if r['label'] not in done and r['status'] == 'CERTIFIED']
+    with open(out, 'a') as fh, mp.get_context('fork').Pool(int(jobs), maxtasksperchild=100) as pool:
+        for rec in pool.imap_unordered(one_from_census, todo, chunksize=4):
+            fh.write(json.dumps(rec) + '\n')
+            fh.flush()
+
+
 def main(fields, disc_max, out=None, jobs=1, disc_min=None):
     import multiprocessing as mp
     rows = fieldlists.read(fields, disc_min=int(disc_min) if disc_min else None, disc_max=int(disc_max))
@@ -117,6 +164,10 @@ def main(fields, disc_max, out=None, jobs=1, disc_min=None):
 
 if __name__ == '__main__':
     import argparse
+    if len(sys.argv) > 1 and sys.argv[1] == '--census':
+        # python analysis/sails_elements.py --census CENSUS.jsonl[.xz] OUT.jsonl [JOBS]
+        main_census(sys.argv[2], sys.argv[3], sys.argv[4] if len(sys.argv) > 4 else 1)
+        sys.exit(0)
     p = argparse.ArgumentParser()
     p.add_argument('fields')
     p.add_argument('disc_max')
