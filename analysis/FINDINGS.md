@@ -68,7 +68,8 @@ simplicial; mu/Reg median 0.616 in [0.238, 0.948] over h = 1, Reg > 10).  New:
 
 * n_K takes the values 2, 4, 5, 6, 7, 8, ...; n_K = 1 and n_K = 3 do not occur.
 * Leibak's bound gamma_K^3 <= 2 D is attained (some trace lattice is similar to A_3) in
-  56 fields, all with D = 0 mod 4 (3.3.316.1, 940.1, 1708.1, ...).
+  56 fields, all with D = 0 mod 4 (3.3.316.1, 940.1, 1708.1, ...); explained in section 7
+  (2O = p q^2 is necessary).
 * The three large fields of [M, Sec. 5] are reproduced: D = 676829, 58271449, 223164633
   give (mu, n) = (136, 272), (546, 1092), (1767, 3534), all simplicial.
 
@@ -120,18 +121,30 @@ gamma_{2,K} = gamma_4 D^(1/2) (a trace lattice similar to D_4); not for d = 5, 1
 
 ## 5. Real quadratic fields (plan B1)
 
-Census of all real quadratic fields with D <= 10^5 (running; numbers below for the first
-24,023 fields, all certified), with ell = period length of the continued fraction of
-omega_d (= the relative minima count; checked against relmin.py for D < 200).
+Census of all 30,394 real quadratic fields with D <= 10^5 (`data/census/deg2_D1e5.jsonl.xz`,
+all CERTIFIED; 1,673,343 classes of perfect forms in total, max n = 522 at 2.2.95209.1).
+ell = period length of the continued fraction of omega = (D mod 2 + sqrt D)/2; omega differs
+from Yasaki's c_d by an integer, so ell = Yasaki's l_d (and = the relative minima count,
+checked against relmin.py for D < 200).
 
 * **CERTIFIED.**  n_K = 1 exactly for the d of Leibak--Porter--Ling's types T1-T4
-  (JTNB 35 (2023), Thm 1.2) -- 322 fields; this independently confirms their theorem in
+  (JTNB 35 (2023), Thm 1.2) -- 364 fields; this independently confirms their theorem in
   this range and validates the engine.
-* **CERTIFIED.**  Yasaki's bound l_d/2 <= n_K <= l_d (JTNB 25 (2013), as quoted by
-  Porter--Mendelsohn) holds in every field; both ends are attained (n = l in 2142 fields,
-  n = l/2 in 842).  n/l has median 0.79.
-* ell/Reg has median 0.842 for Reg > 20: Levy's constant 12 log 2/pi^2 = 0.8428 of the
-  continued fraction algorithm.
+* **CERTIFIED.**  Yasaki's bound l_d/2 <= h_d <= l_d (JTNB 25 (2013), Thm 5.1; checked against
+  the text) holds in every field; both ends are attained (n = l in 2497 fields, n = l/2 in
+  974).  n/l has median 0.79, the same (0.79) for d = 1, 2, 3 mod 4.
+* **CERTIFIED.**  Yasaki's examples (Sec. 5.4): Q(sqrt 19) has 4 classes, Q(sqrt 23) has 2, with
+  exactly the minimal vectors listed there (tests/test_engine.py); every class for d < 400
+  has 2 or 3 minimal vectors (his Cor. 3.1).
+* ell/Reg has median 0.841 over the 23,673 fields with Reg > 20: Levy's constant
+  12 log 2/pi^2 = 0.8428 of the continued fraction algorithm.  n/Reg has median 0.664.
+* n = mu in every field (Euler characteristic 0 of the circle).  The fraction of eutactic
+  classes per field has median 0.97; no weakly eutactic class occurs.
+* Leibak's bound gamma_K^2 = (4/3) D is attained in 983 fields, all with d = 3 mod 4; the
+  exact criterion is section 7.
+* Pending (needs a go-ahead, about 3 h): Yasaki's global count of 10,732,735 perfect forms
+  over the 121,580 fields Q(sqrt d), d <= 200000 squarefree (Sec. 4), the only tabulated
+  number in his paper (the rest are plots).
 
 ## 6. The cubic analogue of Yasaki's bound (plan Goal 1)
 
@@ -145,3 +158,22 @@ Voronoi's period (relative minima mod units).  Cubic census D <= 10^5 (4804 fiel
 * ell/Reg drifts slowly: medians 1.02, 0.97, 0.95, 0.94, 0.93 over D windows of width 2*10^4
   (Reg > 10) -- a "cubic Levy constant" for Voronoi's algorithm, if it converges.
 * **CONJECTURE.**  c ell <= n_K for an absolute c > 0 (the data suggest c = 4/9).
+
+## 7. Equality in Leibak's bound (plan E4)
+
+* **PROVED** (docs/THEORY.md section 4).  For 2 <= m <= 8, gamma_K^m = gamma_m^m D iff some
+  beta >> 0 in the codifferent d^-1 has N(beta d) = det Lambda_m (3, 4, 4, 4, 3, 2, 1) and
+  Tr(beta x^2) even for all x in O; then 2 ramifies in K.  For m = 2: iff O has a Z-basis
+  (u, v) with N(u) + N(v) + N(u - v) = 0 (so d = 3 mod 4); for m = 3: then 2O = p q^2 and
+  (beta) = p^2 d^-1.
+* **CERTIFIED** (D <= 10^5, `analysis/leibak_equality.py`).  The criterion and the exact
+  gamma_K of the census agree in all 30,394 quadratic fields (983 attain the bound; the
+  quadratic test is exact and unconditional) and all 4804 cubic fields (306 attain it, every
+  one with 2O = p q^2; 959 further fields with 2O = p q^2 do not; the cubic principal ideal
+  test uses bnfinit, so this half of the cross-check is GRH-conditional).
+* **CERTIFIED** (D <= 10^5).  Every field attaining the bound has D = 12 mod 16, in degree 2
+  (forced by the theorem) and in degree 3 (where 2O = p q^2 alone allows v_2(D) = 3 as well).
+* Consequence for section 4: in case (b) of the n_K = 1 reduction the trace lattice is
+  similar to A_3, so a cubic field with n_K = 1 of type (b) has 2O = p q^2 and p^2 d^-1
+  narrowly principal.  Together with the observed D mod 16 this puts type (b) in a thin
+  2-adic family; case (a) is not affected.

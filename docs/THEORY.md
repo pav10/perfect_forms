@@ -114,6 +114,49 @@ ratio `leibak_ratio` = gamma_K^m / (gamma_m^m D).  This is Leibak's bound (thesi
 attained for gamma_{1,Q(sqrt 3)}, gamma_{2,Q(sqrt 2)}, gamma_{2,Q(sqrt 3)} and gamma_{2,Q(sqrt 6)};
 our computations agree (unary Q(sqrt 3): ratio 1; binary: gamma^4 = (2D)^2 for d = 2, 3, 6).
 
+**PROVED** (equality in Leibak's bound, unary forms).  Let 2 <= m <= 8 and let Lambda_m be
+the critical lattice of dimension m (A_2, A_3, D_4, D_5, E_6, E_7, E_8, unique up to
+similarity), scaled to be even with minimum 2; det Lambda_m = d_m = 3, 4, 4, 4, 3, 2, 1.
+Let d be the different of O = O_K, so d^-1 = {beta : Tr(beta O) in Z}.
+
+(i) gamma_K^m = gamma_m^m D iff there is beta >> 0 in d^-1 with N(beta d) = d_m and
+    Tr(beta x^2) in 2Z for all x in O.
+(ii) In that case 2 ramifies in K, and O/beta d is isomorphic to Lambda_m^#/Lambda_m.
+(iii) m = 3: in that case 2O = p q^2 and beta d = p^2 (p, q of degree 1).
+(iv) m = 2: gamma_K^2 = (4/3) D iff O has a Z-basis (u, v) with N(u) + N(v) + N(u - v) = 0.
+     Then D = 4(A^2 + AC + C^2) with A = N(u), C = N(v), so D = 12 mod 16, i.e.
+     K = Q(sqrt d) with d = 3 mod 4, and 3 is not inert.
+
+*Proof.*  (i) Equality holds iff some q_alpha attains the Hermite inequality, i.e. the
+lattice (O, Tr(alpha x y)) is similar to Lambda_m.  Its Gram matrix in an integral basis
+is rational and that of Lambda_m is primitive with minimum 2, so the similarity factor
+lambda = min(q_alpha)/2 is rational, and beta = alpha/lambda gives an even integral lattice
+(O, Tr(beta x y)) of determinant N(beta) D = N(beta d) = d_m; integrality means beta in
+d^-1.  Conversely, an even positive lattice L of dimension m and determinant d_m has
+min L >= 2 and min L <= gamma_m d_m^(1/m) = 2 (Lambda_m has minimum 2), so L is critical.
+(ii) If 2 is unramified, O/2O is reduced, so the squares span O modulo 2O, and
+z -> Tr(beta z) mod 2 vanishes on O: beta/2 in d^-1.  Then N((beta/2) d) = d_m / 2^m is an
+integer, which fails for 2 <= m <= 8.  The dual of L = (O, Tr(beta x y)) is beta^-1 d^-1, so
+L^#/L = beta^-1 d^-1 / O, isomorphic to O/beta d.
+(iii) A_3^#/A_3 is cyclic of order 4.  An ideal I of norm 4 with O/I cyclic is p^2 with p
+of degree 1 and 2 not in p^2, i.e. p unramified; with (ii), 2O = p q^2.
+(iv) For a basis (u, v) the forms Q_a = a_1 L_1^2 + a_2 L_2^2, L_i(x, y) = sigma_i(x u + y v),
+a_i > 0, are exactly the forms Tr(alpha (x u + y v)^2), alpha >> 0.  They are the positive
+forms apolar to F = L_1 L_2 = N(x u + y v) = A x^2 + B x y + C y^2 (the apolarity condition
+a C - b B/2 + c A = 0 for Q = a x^2 + b x y + c y^2 is linear and holds for L_1^2 and L_2^2), so
+their roots tau in the upper half plane fill the geodesic A |tau|^2 + B Re tau + C = 0.  The
+hexagonal form x^2 + x y + y^2 has root rho = e^(2 pi i/3), and rho lies on that geodesic iff
+A - B/2 + C = 0, i.e. N(u - v) = A - B + C = -(A + C).  Every basis change of O moves rho
+through SL_2(Z) rho, so some q_alpha is hexagonal iff some basis satisfies the condition.
+The discriminant of the norm form is D = B^2 - 4AC = 4(A^2 + AC + C^2); A^2 + AC + C^2 is
+never 2 mod 4, so d = D/4 = 3 mod 4, and by (ii) the ideal beta d has norm 3.  []
+
+Examples: Q(sqrt 3) with (u, v) = (1, 2 + sqrt 3) (norms 1, 1, -2); Q(sqrt 7) with
+(1, 3 + sqrt 7) (norms 1, 2, -3).  Leibak's thesis (Thm 2.2) records only that the bound
+is attained for Q(sqrt 3) (unary) and a few binary cases; the characterisation above is
+not in the papers in the project files.  `analysis/leibak_equality.py` checks (i)-(iv)
+against the exact `leibak_ratio` of the censuses (FINDINGS section 7).
+
 ## 5. Relative minima (engine/relmin.py)
 
 x in O \ 0 is a relative minimum if no y in O \ {0, +-x} has |sigma_i(y)| <= |sigma_i(x)|

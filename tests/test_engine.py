@@ -3,8 +3,9 @@
 Every check must pass before any run is reported.  Sources of the expected values:
 * cubic rows: perfect-unary-cubic.tex (Obs. 5.4-5.6, the table after Obs. 5.6) and
   the certified GP census data/legacy/census_cubic_D20000_gp.jsonl (voronoi_unary.gp);
-* real quadratic: Yasaki, Thm. (manuscript Sec. 1.2): h_d = 1 for squarefree
-  d = (2k+1)^2 + 1;
+* real quadratic: Yasaki, JTNB 25 (2013): h_d = 1 for squarefree d = (2k+1)^2 + 1
+  (proof of Cor. 5.1: l_d = 1, then Thm. 5.1), the examples Q(sqrt 19) and Q(sqrt 23) of
+  Sec. 5.4 and Cor. 3.1 (two or three minimal vectors up to sign);
 * regulator of 3.3.49.1 from the LMFDB.
 """
 import itertools
@@ -111,6 +112,30 @@ def test_yasaki_quadratic_family():
         assert f == [1, 1], (d, f)
 
 
+def test_yasaki_examples():
+    """Yasaki, JTNB 25 (2013), Sec. 5.4: Q(sqrt 19) has four classes and Q(sqrt 23) two, with the
+    minimal vectors listed there (a + b omega, omega = sqrt d); each set is the set of minimal
+    vectors (up to sign) of exactly one class, and the classes found are pairwise distinct."""
+    from engine import linalg
+    from engine.unary import PerfectForm, normalize
+    examples = {19: [[(1, 0), (4, 1)], [(4, 1), (9, 2), (13, 3)], [(13, 3), (48, 11), (61, 14)],
+                     [(61, 14), (170, 39)]],
+                23: [[(1, 0), (5, 1)], [(5, 1), (24, 5)]]}
+    for d, sets in examples.items():
+        O, V, f = run('x^2-%d' % d)
+        assert f[1] == len(sets), (d, f)
+        hit = []
+        for S in sets:
+            S = sorted(normalize(x) for x in S)
+            P = PerfectForm(O, linalg.solve([O.form_row(x) for x in S[:2]], [1, 1]))
+            assert sorted(P.minvecs) == S, (d, S, P.minvecs)
+            js = [j for j in V.by_key.get(O.ideal_key(P.alpha), ())
+                  if V._find_eta(P.alpha, P.minvecs, V.classes[j]) is not None]
+            assert len(js) == 1, (d, S, js)
+            hit += js
+        assert sorted(hit) == list(range(len(sets))), (d, hit)
+
+
 def test_regulator_lmfdb():
     O, V, f = run('x^3-x^2-2*x+1')
     assert abs(O.regulator() - 0.525454682123) < 1e-10
@@ -151,10 +176,32 @@ def test_gamma():
     assert s['gamma_pow'] == 2 * 1708 and s['argmax_eutactic']
 
 
+def test_leibak_equality():
+    """docs/THEORY.md 4: Leibak's bound is attained iff (m = 2) O has a basis u, v with
+    N(u) + N(v) + N(u - v) = 0, (m = 3) some beta >> 0 with (beta) = p^2 d^-1, 2O = p q^2, has
+    Tr(beta x^2) even; in both cases 2 ramifies.  Real quadratic D < 1200 and five cubic fields
+    (attained: 316, 940; 2O = p q^2 but not attained: 568; 2O = q^3: 148; 2 unramified: 49)."""
+    sys.path.insert(0, os.path.join(os.path.dirname(HERE), 'analysis'))
+    import leibak_equality as le
+    att = 0
+    for D in range(5, 1200):
+        if not int(pari.isfundamental(D)) or D < 0:
+            continue
+        O, V, f = run(_quadratic_pol(D))
+        a = extreme.summary(O, V)['leibak_ratio'] == 1
+        assert a == le.quadratic(D), D
+        att += a
+    assert att == 19, att
+    for pol, a in (('x^3-x^2-4*x+2', True), ('x^3-7*x-4', True), ('x^3-x^2-6*x-2', False),
+                   ('x^3-x^2-3*x+1', False), ('x^3-x^2-2*x+1', False)):
+        O, V, f = run(pol)
+        assert (extreme.summary(O, V)['leibak_ratio'] == 1) == a == le.cubic(pol), (pol, O.disc)
+
+
 def test_binary_additive():
     """Binary forms (additive normalisation): equivalence under random GL_2(O) transforms,
-    Galois pairing, and the edge-balance certificate.  Class counts are regression values
-    of this code (not yet compared with Ong / Leibak / Gunnells--Yasaki [REF?])."""
+    Galois pairing, and the edge-balance certificate.  The class counts agree with
+    Gunnells--Yasaki Table 1 (test_gunnells_yasaki_binary)."""
     from engine.binary import BinaryVoronoi, edge_balance, mass_formula
     expected = {'x^2-x-1': 2, 'x^2-2': 2, 'x^2-3': 3, 'x^2-x-3': 9}
     for pol, k in expected.items():
@@ -215,8 +262,8 @@ def test_gunnells_yasaki_binary(slow=False):
 def test_leibak_porter_ling_and_yasaki():
     """Leibak--Porter--Ling, JTNB 35 (2023), Thm 1.2: for real quadratic K = Q(sqrt d),
     n_K = 1 iff d = m^2+1 (m odd), m^2-1 (m even), m^2+4 (m odd) or m^2-4 (m > 3 odd).
-    Yasaki, JTNB 25 (2013) (as quoted by Porter--Mendelsohn): l_d/2 <= n_K <= l_d with l_d the
-    period length of the continued fraction of omega_d."""
+    Yasaki, JTNB 25 (2013), Thm 5.1: l_d/2 <= n_K <= l_d with l_d the period length of the
+    continued fraction of c_d (sqrt d, or (-1 + sqrt d)/2 for d = 1 mod 4), and Cor. 3.1."""
     import math
     from engine.relmin import quadratic_relmin_count
 
@@ -231,8 +278,10 @@ def test_leibak_porter_ling_and_yasaki():
             continue
         D = d if d % 4 == 1 else 4 * d
         O = Order(_quadratic_pol(D))
-        n = len(Voronoi(O).run().classes)
+        V = Voronoi(O).run()
+        n = len(V.classes)
         assert (n == 1) == lpl(d), (d, n)
+        assert all(len(P.minvecs) in (2, 3) for P in V.classes), d       # Yasaki, Cor. 3.1
         ell = quadratic_relmin_count(D)
         assert ell <= 2 * n and n <= ell, (d, n, ell)
 

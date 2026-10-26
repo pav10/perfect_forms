@@ -6,8 +6,8 @@ number of classes up to Gal(K/Q) as well, the eutactic (= extreme) classes and t
 maximum of gamma(A)^(2m) = 1/N(det A) (minimum 1).  Records are written as JSONL.
 
 usage: python analysis/binary_census.py D_MIN D_MAX OUT.jsonl [--jobs J]
-(d ranges over squarefree integers, K = Q(sqrt d); the comparison with Gunnells--Yasaki,
-d <= 66, is pending [REF?])
+(d ranges over squarefree integers, K = Q(sqrt d); the counts for D <= 44 are checked
+against Gunnells--Yasaki, Table 1, in tests/test_engine.py)
 """
 import json
 import os

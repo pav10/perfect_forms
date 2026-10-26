@@ -19,7 +19,7 @@ mathematics behind every step is in [`docs/THEORY.md`](docs/THEORY.md).
 
 ```bash
 pip install -r requirements.txt        # cypari2 (brings PARI), numpy
-python tests/test_engine.py            # 10 checks, ~2 min;  --slow adds the 832-field census
+python tests/test_engine.py            # 18 checks, ~2 min;  --slow adds the 832-field census
 ```
 
 ## Quick start
@@ -71,19 +71,23 @@ python -m engine summary data/census/deg3_D2e4.jsonl.xz
 | Ennola a = 2..12, Shanks a = -1..11 | mu = 1 except Ennola a = 3 (mu = 2); discriminants as in [M, Obs. 5.4] |
 | D = 676829 (x^3-x^2-221x+29) | (mu, n) = (136, 272), all simplicial |
 | census D <= 20000 (`--slow`) | 832 fields, 27 with mu = 1, identical to the GP census |
-| real quadratic, d = (2k+1)^2+1 squarefree (Yasaki) | n = mu = 1 |
+| real quadratic, d = (2k+1)^2+1 squarefree (Yasaki, proof of Cor. 5.1) | n = mu = 1 |
+| Q(sqrt 19), Q(sqrt 23) (Yasaki, Sec. 5.4) | 4 and 2 classes; each listed set of minimal vectors is that of exactly one class |
 | regulator of 3.3.49.1 vs LMFDB | 0.525454682123, agrees to 1e-10 |
 | degree 4 and 5 examples | Euler 0, unit index 1 |
 | relative minima | extreme squares are relative minima, mu <= ell, unit index 1 |
 | gamma_K | Q(sqrt 3): gamma^2 = 16 (Leibak's bound attained); D = 1708: gamma^3 = 2D |
+| equality in Leibak's bound (docs/THEORY.md 4) | criterion = exact gamma_K for all real quadratic D < 1200 (19 equalities) and five cubic fields |
 
 | binary forms over Q(sqrt d) vs Gunnells--Yasaki Table 1 (`--slow`: all D <= 44) | identical class counts (2, 2, 3, 9, 34, 16, 22, 30, 39, 149, 97, 52, 144, 66); Leibak's 22 classes over Q(sqrt 6); edge balance and mass formula |
-| real quadratic, d < 400: Leibak--Porter--Ling Thm 1.2 and Yasaki's bound | n_K = 1 exactly for the types T1--T4; l_d/2 <= n_K <= l_d |
+| real quadratic, d < 400: Leibak--Porter--Ling Thm 1.2, Yasaki Thm 5.1 and Cor. 3.1 | n_K = 1 exactly for the types T1--T4; l_d/2 <= n_K <= l_d; 2 or 3 minimal vectors per form |
 | simplest cubics with monogenic O_K (Leibak--Porter--Ling Thm 1.5) | n_K = 2 |
 | complex cubic v^3 + l v - 1 (Komatsu--Watanabe Thms 3.1--3.2), l = 2, 4, 5, 7, 10 | n_K = 1, the form is a_0, S(a_0) = {+-1, +-v}, unit index 1 |
 
-Not covered: Yasaki's own table (paper not in the project files) and the multiplicative
-(Pohst--Wagner) binary benchmark, which belongs to pav10/hermite-humbert.
+Not covered: Yasaki's global count (10,732,735 perfect forms over the 121,580 fields
+Q(sqrt d), d <= 200000 squarefree, JTNB 25 (2013), Sec. 4; his paper has plots, no table),
+which needs a run of about 3 h, and the multiplicative (Pohst--Wagner) binary benchmark,
+which belongs to pav10/hermite-humbert.
 
 ## Binary forms (additive normalisation, plan H1)
 
@@ -115,6 +119,16 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 * `analysis/sails_elements.py FIELDS DISC_MAX [OUT] [--jobs J]`: element-level comparison
   (extreme squares, relative minima, sail vertices, modulo units); imports pav10/sails
   read-only from `SAILS_PATH` (default `../sails`) without writing bytecode there.
+  `--census CENSUS OUT [JOBS]` reads the extreme squares from census records instead.
+* `analysis/cubic_census.py CENSUS...`: census statistics (Markdown).
+* `analysis/binary_census.py D_MIN D_MAX OUT [--jobs J]`: certified census of perfect binary
+  forms over Q(sqrt d).
+* `analysis/recheck.py CENSUS REPORT [--sample K] [--replace-dirty FIXED] [--jobs J]`:
+  recompute records and compare (provenance repair, spot checks).
+* `analysis/porter_mendelsohn.py CENSUS [OUT]`: n_K against the Porter--Mendelsohn bound
+  (covering radius numerical).
+* `analysis/leibak_equality.py CENSUS...`: the exact criterion for equality in Leibak's
+  bound (docs/THEORY.md section 4) against the census values.
 
 ## Data
 
@@ -123,6 +137,8 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 | `fields/deg3_D1e6.jsonl.xz` | the 54,600 totally real cubic fields with D <= 10^6 (LMFDB labels; identical to nflist) |
 | `fields/deg2_D4e5.jsonl.xz`, `deg4_D1e6`, `deg5_D1e7` | real quadratic (D <= 4*10^5), quartic (D <= 10^6, 13,073), quintic (D <= 10^7, 9,494) |
 | `data/census/deg3_D2e4.jsonl.xz` | certified records (with forms and relative minima) of all 832 cubic fields with D <= 20000 |
+| `data/census/deg3_D1e5.jsonl.xz` | certified records (with forms and relative minima) of all 4804 cubic fields with D <= 10^5; provenance re-checked, see `deg3_D1e5.recheck.json` |
+| `data/census/deg2_D1e5.jsonl.xz` | certified records (no forms; ell from the continued fraction) of all 30,394 real quadratic fields with D <= 10^5 |
 | `data/legacy/census_cubic_D20000_gp.jsonl` | output of `voronoi_unary.gp` on the same fields |
 | `data/derived/sails_vs_perfect_deg3_D2e4.jsonl.xz` | per field: n, e, mu, ell, sail vertices/edges/facets (all sign classes, mod units), positions of the extreme squares |
 | `data/ERRATA.md` | discrepancies between computations, and corrections |
@@ -137,7 +153,7 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 | E4: eutaxy, gamma_K | done, exact |
 | E2: non-totally-real signatures | signature (1,1) done (`engine/complexcubic.py`, Komatsu--Watanabe reproduced); (2,1), (1,2), (0,3) not started |
 | B2: cubic census | D <= 10^5 done (4804 fields, analysis/FINDINGS.md); D <= 10^6 needs a go-ahead |
-| B1: real quadratic census | D <= 10^5 running; LPL and Yasaki's bound confirmed on all fields so far |
+| B1: real quadratic census | D <= 10^5 done (30,394 fields): LPL Thm 1.2 and Yasaki Thm 5.1 confirmed in every field; Yasaki's count for d <= 200000 needs a go-ahead (~3 h) |
 | H1: binary forms | additive normalisation done (complete lists, two certificates); literature benchmarks pending [REF?] |
 | sails link (cubic) | D <= 20000 done (analysis/FINDINGS.md §1); D <= 10^5 next |
 
