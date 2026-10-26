@@ -19,7 +19,7 @@ def _git_hash():
     try:
         h = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=here, capture_output=True, text=True,
                            timeout=10).stdout.strip()
-        dirty = subprocess.run(['git', 'status', '--porcelain', '--', 'engine'], cwd=here,
+        dirty = subprocess.run(['git', 'status', '--porcelain', '--', '.'], cwd=here,
                                capture_output=True, text=True, timeout=10).stdout.strip()
         return (h or 'unknown') + ('+dirty' if dirty else '')
     except Exception:
