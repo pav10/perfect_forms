@@ -146,13 +146,14 @@ def test_binary_additive():
     """Binary forms (additive normalisation): equivalence under random GL_2(O) transforms,
     Galois pairing, and the edge-balance certificate.  Class counts are regression values
     of this code (not yet compared with Ong / Leibak / Gunnells--Yasaki [REF?])."""
-    from engine.binary import BinaryVoronoi, edge_balance
+    from engine.binary import BinaryVoronoi, edge_balance, mass_formula
     expected = {'x^2-x-1': 2, 'x^2-2': 2, 'x^2-3': 3, 'x^2-x-3': 9}
     for pol, k in expected.items():
         O = Order(pol)
         V = BinaryVoronoi(O).run()
         assert len(V.classes) == k, (pol, len(V.classes))
         assert edge_balance(V) == [], pol
+        assert mass_formula(V)[0] == 0, pol
         assert all(V.eutaxy(P) != 'no' for P in V.classes if P.normdet == min(Q.normdet for Q in V.classes))
     random.seed(5)
     O = Order('x^2-x-3')
