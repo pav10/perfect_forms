@@ -14,6 +14,9 @@
   `python tests/test_engine.py --slow` also re-derives the 832-field cubic census
   against `data/legacy/census_cubic_D20000_gp.jsonl`.
 - Runs expected to take much more than an hour need the user's go-ahead.
+- Run long jobs from a frozen worktree (`git worktree add <scratch>/wt HEAD`), never from
+  the working copy you are editing: worker processes import the engine when they start,
+  so edits during a run would change the code mid-run.
 
 ## Rules (PLAN.md section 8)
 
@@ -39,5 +42,7 @@
   `python -m engine fields` and cross-checked (cubic: nflist == LMFDB field by field).
 - `data/census/`: certified records (`*.jsonl.xz`); `analysis/` reads them and never
   edits them.  `data/legacy/`: results of the earlier GP code, kept for regression.
-- The manuscript `paper/perfect-unary-cubic.tex` has no build here (no LaTeX in the
-  sandbox); if LaTeX becomes available build with `pdflatex` twice and commit the PDF.
+- The manuscript `paper/perfect-unary-cubic.tex`: build with `pdflatex` twice (zero errors,
+  no undefined references) and commit `paper/perfect-unary-cubic.pdf` with it.  TeX Live is
+  not preinstalled in a fresh sandbox: `apt-get install -y texlive-latex-extra
+  texlive-fonts-recommended texlive-science` works.

@@ -67,8 +67,18 @@ $\nK\asymp\Reg_K$ up to a factor $(\log D_K)^2$, and $\sup\nK=\infty$ as soon as
 unbounded. This holds unconditionally along suitable orders $\Z+p\mathcal O_K$, and conditionally on the
 Cohen--Martinet heuristics for a positive proportion of maximal orders. Third, we compute $\nK$ and $\muK$ by
 Voronoi's algorithm in exact arithmetic, with an Euler--characteristic check and a certificate for the unit
-group. This covers all $832$ totally real cubic fields with $D_K\le20000$ and fields with $\nK$ up to $3534$.
+group. This covers all $4804$ totally real cubic fields with $D_K\le10^5$ and fields with $\nK$ up to $3534$.
 We find $\muK/\Reg_K\approx0.5$--$0.6$ typically, while Ennola's and Shanks' families sit at $\muK=1$.
+
+Two further results relate perfect forms to other geometric objects. First, relative minima link the squared
+sail to the Klein sails of the lattice $\Ok$: by theorems of Bykovskii and German, every relative minimum is a sail
+vertex or a special point on a triangular facet. Combined with Euler's formula on the sail tori, this shows
+that the numbers of vertices and facets of the Klein sails modulo units are also $\asymp\Reg_\Ok$ up to a
+factor $(\log D_\Ok)^2$, and that $\nK\le2\ell_\Ok$, where $\ell_\Ok$ is the number of relative minima
+modulo units. This is the cubic counterpart of Yasaki's bound $h_d\le\ell_d$. Second, we determine when
+Leibak's bound $\gamma_K^m\le\gamma_m^mD_K$ for the Hermite--Humbert constant is attained. For a real
+quadratic field this happens exactly when $\mathcal O_K$ has a $\Z$--basis $u,v$ with
+$\Nm(u)+\Nm(v)+\Nm(u-v)=0$, and for a totally real cubic field it forces $2\mathcal O_K=\mathfrak p\mathfrak q^2$.
 \end{abstract}
 
 \maketitle
@@ -92,8 +102,8 @@ note is: \emph{how large is $\nK$, and in particular what can be proved from bel
 For real quadratic fields ($d=2$), Yasaki~\cite{Yasaki} bounds the number $h_d$ of classes of perfect unary
 forms above and below in terms of the period of an associated continued fraction \cite[Thm.~5.1]{Yasaki}.
 He shows that $h_d=1$ for the fields $\Q(\sqrt d)$ with $d=(2k+1)^2+1$ squarefree, and that $h_d$ is unbounded.
-Leibak, Porter and Ling~\cite{LPL} determine all real quadratic fields with $h_d=1$, answering a question
-of Yasaki. The first cubic case is due to Komatsu and Watanabe~\cite{KW}: for $\ell\ge2$ with $4\ell^3+27$
+Leibak, Porter and Ling~\cite{LPL} determine all real quadratic fields with $h_d=1$, proving the four
+families found by Yasaki's computations for $d<200000$ \cite[Remark after Cor.~5.1]{Yasaki}. The first cubic case is due to Komatsu and Watanabe~\cite{KW}: for $\ell\ge2$ with $4\ell^3+27$
 squarefree, the cubic field $\Q(v)$, $v^3+\ell v-1=0$, has a single real place ($r_1=r_2=1$, so $d=2$), and
 over it there is exactly one perfect unary form up to homothety and units, i.e.\ $\nK=1$. For arbitrary totally real $K$, Porter and Mendelsohn~\cite{PM} give an upper bound in terms of
 the additive Hermite--Humbert constant and the covering radius of the log--unit lattice. For $d\ge3$ the
@@ -114,7 +124,13 @@ $\bdy K_1(m_\Ok)/\Gamma_\Ok$ is a $2$--torus, $\tfrac12\muK\le\nK\le2\muK$, and 
 $4\Reg_K/(\log2D_K)^2\le\muK\le4\Reg_K/(\log2)^2$. The consequences for $\sup\nK$ are in
 Corollary~\ref{cor:unbounded}, and the analogue in all degrees is~\eqref{eq:general}.
 \item \textbf{Exact computation} (\S\ref{sec:comp}). Voronoi's algorithm in exact arithmetic, with two
-certificates, applied to all totally real cubic fields with $D_K\le20000$ and to large--regulator examples.
+certificates, applied to all totally real cubic fields with $D_K\le10^5$ and to large--regulator examples.
+\item \textbf{Klein sails} (\S\ref{sec:sails}). Extreme squares are sail vertices or German points
+(Corollary~\ref{cor:extsail}); the sails modulo units have $\asymp\Reg_\Ok$ vertices and facets up to
+$(\log D_\Ok)^2$ (Theorem~\ref{thm:sails}); and $\nK\le2\ell_\Ok$ is the cubic analogue of Yasaki's
+$h_d\le\ell_d$ (Remark~\ref{rem:yasaki}).
+\item \textbf{Leibak's bound} (\S\ref{sec:leibak}). Equality $\gamma_K^m=\gamma_m^mD_K$ is characterised for
+$m=2,3$ (Theorem~\ref{thm:leibak}, Corollary~\ref{cor:leibak2}).
 \end{itemize}
 
 \subsection*{Conventions}
@@ -167,11 +183,12 @@ of $K_1(m_\Ok)$ with finitely many orbits of faces in each dimension.
 \end{theorem}
 
 \begin{proof}
-For local finiteness, the identification of vertices with perfect forms, and edge--connectivity, see
-Watanabe--Yano--Hayashi~\cite[Thm.~2.4]{WYH} (totally real case), as quoted in
-Komatsu--Watanabe~\cite[Thm.~2.2]{KW}, and Okuda--Yano~\cite[Thm.~5.1]{OY} (general algebraic lattices).
-For finiteness of the orbits of faces, see~\cite{OY}. The theorem numbers are those verified in the text
-of~\cite{KW}.
+Local finiteness, the identification of the vertices with the perfect forms of minimum~$1$, and
+edge--connectivity are \cite[Thm.~2.2]{KW}, proved by Watanabe--Yano--Hayashi~\cite{WYH}; the
+identification of the vertices is \cite[Thm.~2.4]{WYH}. The finiteness of $\bdy^0K_1(m_\Ok)/\Gamma_\Ok$ is
+Okuda--Yano~\cite[Thm.~5.1]{OY} (quoted in \cite[\S1]{KW}); together with local finiteness it gives
+finitely many orbits of faces in each dimension. The theorem numbers of~\cite{WYH,OY} are as quoted
+in~\cite{KW}.
 \end{proof}
 
 \begin{definition}\label{def:counts}
@@ -442,10 +459,19 @@ minimal vectors up to sign.
 
 \begin{remark}\label{rem:yasaki}
 In the real quadratic case $d=2$ the quotient $\bdy K_1/\Ok^\times$ is a circle, $\chi=0$ gives $V=E$, and
-the cells are indexed by a continued fraction; this is the setting of~\cite{Yasaki}. Theorem~\ref{thm:main}
-is its two--dimensional analogue, with $\muK$ in the role of the period. As in the quadratic case, where the
-period $\ell_d$ and $\log\varepsilon_d$ agree up to a factor $\log d$, $\muK$ is comparable to $\Reg_K$ up
-to a factor $(\log D_K)^2$ (Theorem~\ref{thm:sandwich}).
+the cells are indexed by a continued fraction; this is the setting of~\cite{Yasaki}. There
+$\ell_d/2\le h_d\le\ell_d$ \cite[Thm.~5.1]{Yasaki}, where $\ell_d$, the period length of the continued
+fraction, is the number of relative minima modulo units. Theorem~\ref{thm:main} is the two--dimensional
+analogue of the Euler part of this picture. The analogue of the period is not $\muK$ but the number
+$\ell_\Ok$ of relative minima modulo units (\S\ref{sec:sandwich}). These are the $2$--cells of the
+Minkowski--Voronoi complex, a second torus with $f$--vector $(2\ell_\Ok,3\ell_\Ok,\ell_\Ok)$
+(Proposition~\ref{prop:mv}), and Theorem~\ref{thm:main} with Lemma~\ref{lem:relmin} gives
+$\nK\le2\muK\le2\ell_\Ok$. In degree $2$ the Minkowski--Voronoi complex is a circle with $\ell_d$ vertices,
+so in both degrees $\nK$ is at most the number of its vertices. The census gives
+$\tfrac49\ell_\Ok\le\nK$ for all $D_K\le10^5$ (Observation~\ref{obs:census5}); a proof of a lower bound
+$\nK\ge c\,\ell_\Ok$ would complete the analogy (Problem~\ref{prob:lower}). As in the quadratic case,
+where $\ell_d$ and $\log\varepsilon_d$ agree up to a factor $\log d$, $\muK$ and $\ell_\Ok$ are comparable
+to $\Reg_K$ up to a factor $(\log D_K)^2$ (Theorem~\ref{thm:sandwich}).
 \end{remark}
 
 \begin{corollary}\label{cor:floor}
@@ -460,6 +486,30 @@ Theorem~\ref{thm:wyh}), hence has at least one facet; so $\muK\ge1$. The remaini
 of Theorem~\ref{thm:main} with $F=1$: then $E=V+1$ and $2(V+1)\ge3V$ give $V\le2$, while $2E\ge3F=3$ gives
 $E\ge2$, so $V\ge1$. The realizing complex is the standard one--face hexagonal torus.
 \end{proof}
+
+\begin{proposition}\label{prop:none}
+Let $K$ be totally real cubic and $\Ok$ an order with $\nK=1$. Then either
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
+\item $\muK=1$, the unique vertex class has degree $4$, and $T$ consists of one quadrilateral
+\textup{(}$V=1,E=2,F=1$\textup{)}; or
+\item $\muK=2$, the unique vertex class has degree $6$, and $T$ consists of two triangles \textup{(}$V=1,E=3,F=2$\textup{)}.
+\end{enumerate}
+In case \textup{(b)} the trace lattice $(\Ok,\Tr(\alpha xy))$ of the perfect form is similar to the
+face--centred cubic lattice $A_3$, so $\gamma_K^3=2D_\Ok$; if $\Ok=\mathcal O_K$, then
+$2\mathcal O_K=\mathfrak p\mathfrak q^2$ by Theorem~\ref{thm:leibak}.
+\end{proposition}
+
+\begin{proof}
+With $V=1$, identity~\eqref{eq:defect} reads $1=2\muK-(\delta-3)$, where $\delta$ is the degree of the
+vertex. The degree is the number of extreme minimal vectors up to sign, so $3\le\delta\le6$ (proof of
+Theorem~\ref{thm:main}). Hence $\delta=2\muK+2$ gives $(\muK,\delta)\in\{(1,4),(2,6)\}$, with $E=V+F$. In
+case (b) the positive ternary form $\Tr(\alpha x^2)$ has $12$ minimal vectors. The only $3$--dimensional
+lattice with $12$ minimal vectors is $A_3$, up to similarity, so the form attains $\gamma_3$. Its minimum
+is $1$ and its determinant is $\Nm(\alpha)D_\Ok$, so $\gamma_K^3\ge1/\Nm(\alpha)=\gamma_3^3D_\Ok$. Hermite's
+inequality gives the reverse.
+\end{proof}
+
+No totally real cubic field with $D_K\le10^5$ has $\nK=1$ (Observation~\ref{obs:census5}).
 
 \section{Exact computations}\label{sec:comp}
 
@@ -598,6 +648,22 @@ lies in $[0.24,0.95]$.
 \end{enumerate}
 \end{observation}
 
+\begin{observation}[Census, $D\le10^5$]\label{obs:census5}
+For all $4804$ totally real cubic fields with $D\le10^5$ (the complete list, from PARI's \texttt{nflist},
+identical field by field with the LMFDB), both certificates hold and:
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
+\item $\nK\notin\{1,3\}$; the smallest values are $2,4,5,6,\dots$, and $\muK=1$ for exactly $55$ fields. The
+maximum is $\nK=500$, $\muK=253$, at $D=82657$ \textup{(}$x^3-49x-72$, $\Reg_K=396.0$\textup{)};
+\item the inequalities of Theorem~\ref{thm:sandwich} hold, and $\tfrac49\,\ell_\Ok\le\nK\le2\ell_\Ok$; the
+median of $\nK/\ell_\Ok$ lies between $1.158$ and $1.185$ in each discriminant window of width $2\cdot10^4$;
+\item among the $4112$ fields with $h_K=1$ and $\Reg_K>10$, the median of $\muK/\Reg_K$ is $0.56$ (range
+$[0.13,0.95]$); by window it drifts down, $0.62,0.58,0.56,0.56,0.55$, as does the share of simplicial
+fields, from $68\%$ to $60\%$;
+\item a vertex of degree $6$ occurs in $38$ fields, and Leibak's bound is attained in $306$
+(\S\ref{sec:leibak}).
+\end{enumerate}
+\end{observation}
+
 Larger regulators are equally accessible; the run time grows roughly linearly in $\nK$:
 \[
 \renewcommand{\arraystretch}{1.15}
@@ -651,7 +717,7 @@ $|\sigma_i(y)|\le|\sigma_i(x)|$ for $i=1,2,3$. Let $\ell_\Ok$ be the number of $
 relative minima.
 \end{definition}
 
-Relative minima of the lattice $\psi(\Ok)$ are the objects enumerated by Voronoi's algorithm for cubic
+Relative minima of the lattice $\iota(\Ok)$ are the objects enumerated by Voronoi's algorithm for cubic
 fields~\cite{Voronoi1896,DF}; see Buchmann~\cite{Buchmann85,Buchmann87} for its generalisations and period
 lengths. The following lemma is the precise link between the squared sail and that genuinely linear
 object. The map $q$ is not additive, but it preserves coordinatewise domination.
@@ -776,6 +842,254 @@ is a minimal vector. Theorem~\ref{thm:sandwich} therefore shows that a unit--red
 field satisfies $\Reg_K\le\tfrac14(\log2D_K)^2$.
 \end{remark}
 
+\section{Relative minima, Klein sails and the Minkowski--Voronoi complex}\label{sec:sails}
+
+Throughout this section $K$ is a totally real cubic field, $\Ok$ an order of $K$, and
+$\Lambda_\Ok=\iota(\Ok)\subset\R^3$. Lemma~\ref{lem:relmin} places the extreme squares among the relative
+minima of $\Lambda_\Ok$. We now compare the relative minima with the classical \emph{Klein sails} of
+$\Lambda_\Ok$, and record the cell structure of the relative minima themselves.
+
+\subsection{Klein sails}
+For $\theta\in\{\pm1\}^3$ let $C_\theta=\{x\in\R^3:\theta_ix_i>0\}$ be the open orthant and
+$\mathcal K_\theta=\conv(\Lambda_\Ok\cap C_\theta)$ the \emph{Klein polyhedron}; its boundary $\bdy\mathcal K_\theta$
+is the \emph{sail} of $\theta$. The unit group acts on the union of the sails: $u\in\Ok^\times$ maps
+$\mathcal K_\theta$ onto $\mathcal K_{\theta'}$, $\theta'_i=\theta_i\operatorname{sign}\sigma_i(u)$. We write
+$V_\Ok$, $E_\Ok$, $F_\Ok$ for the numbers of $\Ok^\times$--classes of vertices, edges and facets (compact
+faces) of all the sails. No lattice point lies on a coordinate plane, since $\Nm(x)\ne0$ for $x\ne0$.
+
+\begin{proposition}\label{prop:sailtorus}
+Modulo $\Ok^\times$ the union of the sails is a finite disjoint union of $2$--tori, with a cell structure
+whose face numbers satisfy
+\[
+V_\Ok-E_\Ok+F_\Ok=0,\qquad \tfrac12V_\Ok\le F_\Ok\le2V_\Ok .
+\]
+\end{proposition}
+
+\begin{proof}
+Fix $\theta$. Every point of $\mathcal K_\theta$ has $\prod_i|x_i|\ge1$, because $\prod_i|x_i|^{1/3}$ is
+concave on $C_\theta$ and is at least $1$ on $\Lambda_\Ok\cap C_\theta$. The set $\mathcal K_\theta$ is a
+generalised polyhedron with recession cone $\overline{C_\theta}$ and finitely many faces modulo the
+totally positive units (see~\cite{Karpenkov}). Hence every open ray from $0$ in $C_\theta$
+meets $\bdy\mathcal K_\theta$ exactly once, and radial projection identifies $\bdy\mathcal K_\theta$ with
+$C_\theta/\R_{>0}\cong\R^2$. In the logarithmic chart of Lemma~\ref{lem:chart} the stabiliser of $\theta$ in
+$\Ok^\times/\{\pm1\}$, the totally positive units, acts by translations through a lattice of finite index in
+$L(\Ok^\times)$. This action is free, properly discontinuous and cocompact, and the faces of the sail are
+bounded, so as in the proof of Theorem~\ref{thm:main} the quotient is a torus with an honest finite cell
+structure. Each orbit of orthants under $\Ok^\times$ contributes one such torus. Every vertex of a sail has
+degree at least $3$ and every facet has at least $3$ sides. The inequalities follow from Euler's formula
+exactly as \eqref{eq:counts} gives $\tfrac12\muK\le\nK\le2\muK$.
+\end{proof}
+
+The next two results are due to Bykovskii and German; we state them in our setting. Bykovskii and German
+use the term ``local minimum'' and the closed orthant, respectively. Both coincide with our definitions for
+$\Lambda_\Ok$: $|\sigma_i(y)|=|\sigma_i(x)|$ forces $y=\pm x$, and no lattice point lies on a coordinate
+plane.
+
+\begin{theorem}[Bykovskii~\cite{Bykovskii}; German~\cite{German}]\label{thm:bg}
+Let $K$ be totally real cubic and $\Ok$ an order of $K$.
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
+\item Every vertex of every sail is a relative minimum of $\Ok$ \textup{\cite[Theorem]{Bykovskii}}.
+\item Every relative minimum lies on the sail of its orthant \textup{\cite[Thm.~1]{German}}.
+\item A relative minimum $x$ that is not a sail vertex is a \emph{German point}: there are a triangular facet
+$\conv(u_1,u_2,u_3)$ of its sail and an integer $k\ge1$ with
+\[
+x=\frac{k}{2k+1}(u_1+u_2)+\frac1{2k+1}u_3,
+\]
+and the lattice points of the facet are exactly $u_1,u_2,u_3$ and $u_3+\tfrac mk(x-u_3)$, $1\le m\le k$.
+Conversely every such point is a relative minimum \textup{\cite[Cor.~2, Thm.~2, Cor.~3]{German}}.
+\end{enumerate}
+\end{theorem}
+
+The hypotheses of \cite[Thm.~1, Cor.~3]{German} are satisfied. German's exceptional lattices have
+nonzero points on the coordinate axes, and $\Lambda_\Ok$ has no nonzero point on any coordinate plane.
+In dimension $2$ the analogue is classical: for a real quadratic field the sail vertices modulo units are
+exactly the relative minima \cite{Bykovskii}, i.e.\ the $\ell_d$ convergents of one period.
+
+\begin{corollary}\label{cor:extsail}
+Every extreme square is a sail vertex or a German point.
+\end{corollary}
+
+\begin{proof}
+Combine Lemma~\ref{lem:relmin} with Theorem~\ref{thm:bg}.
+\end{proof}
+
+\begin{theorem}\label{thm:sails}
+Let $G_\Ok$ be the number of $\Ok^\times$--classes of German points. Then $\ell_\Ok=V_\Ok+G_\Ok$, each facet
+contains at most one German point, and
+\[
+\tfrac13\,\ell_\Ok\ \le\ V_\Ok\ \le\ \ell_\Ok,\qquad
+\frac{4\Reg}{3(\log2D)^2}\ \le\ V_\Ok\ \le\ \frac{4\Reg}{(\log2)^2},\qquad
+\frac{2\Reg}{3(\log2D)^2}\ \le\ F_\Ok\ \le\ \frac{8\Reg}{(\log2)^2}.
+\]
+Moreover $\nK\le2\muK\le2\ell_\Ok\le6V_\Ok$.
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:bg} the relative minima are the sail vertices together with the German points, and
+distinct classes of vertices are distinct classes of relative minima; so $\ell_\Ok=V_\Ok+G_\Ok$ and
+$V_\Ok\le\ell_\Ok$. A German point determines $k$ as the number of lattice points of its facet minus $3$.
+For $k=1$ it is the barycentre. For $k\ge2$ the interior lattice points of the facet span a segment of the
+median through a single vertex $u_3$, and the point is the end of that segment opposite to $u_3$. So a
+facet carries at most one German point, and $G_\Ok\le F_\Ok\le2V_\Ok$ by Proposition~\ref{prop:sailtorus}.
+Hence $\ell_\Ok\le3V_\Ok$. The bounds in terms of $\Reg$ follow from Theorem~\ref{thm:sandwich}, which gives
+$4\Reg/(\log2D)^2\le\muK\le\ell_\Ok\le4\Reg/(\log2)^2$, together with $\tfrac12V_\Ok\le F_\Ok\le2V_\Ok$.
+The last chain is Theorem~\ref{thm:main}, Lemma~\ref{lem:relmin} and $\ell_\Ok\le3V_\Ok$.
+\end{proof}
+
+\begin{remark}
+For sails, the volume of the region under the sail gives a bound of order $\sqrt D\,\Reg$ on the
+number of facets modulo totally positive units. That region lies in $\{\prod_i|x_i|\le 2D/27\}$, by
+Hermite's inequality for the facet functionals, and the cone over each facet has volume at least
+$\sqrt D/6$. Theorem~\ref{thm:sails} replaces
+this, for cubic fields, by a bound linear in $\Reg$ with an absolute constant, and supplies the matching
+lower bound up to $(\log D)^2$. The bridge in both directions is the set of relative minima: it contains
+the extreme squares and the sail vertices, and it is separated in logarithmic space
+(Lemma~\ref{lem:sep}).
+\end{remark}
+
+\begin{lemma}\label{lem:indec}
+A totally positive relative minimum $x$ of $\Ok$ is indecomposable, i.e.\ not a sum of two totally positive
+elements of $\Ok$. In particular every totally positive extreme square, sail vertex and German point is
+indecomposable.
+\end{lemma}
+
+\begin{proof}
+If $x=y+z$ with $y,z\gg0$, then $0<\sigma_i(y)<\sigma_i(x)$ for $i=1,2,3$, so $y\ne0,\pm x$ is dominated by
+$x$, contradicting minimality.
+\end{proof}
+
+\subsection{The Minkowski--Voronoi complex}
+Following Karpenkov--Ustinov~\cite[\S2]{KU}, call relative minima $x,y$ \emph{adjacent} if the box
+$\{z:|\sigma_i(z)|\le\max(|\sigma_i(x)|,|\sigma_i(y)|)\}$ contains no lattice point other than $0,\pm x,\pm y$,
+and call $\{x,y,z\}$ a \emph{minimal triple} if the box of $x,y,z$ contains no other nonzero lattice point up
+to sign and each of $x,y,z$ attains one of the three coordinate maxima. The Minkowski--Voronoi complex has
+the relative minima as $2$--cells, the adjacent pairs as edges and the minimal triples as vertices
+\cite[Def.~2.5]{KU}.
+
+\begin{proposition}\label{prop:mv}
+Modulo $\Ok^\times$ the Minkowski--Voronoi complex of $\Lambda_\Ok$ is a $2$--torus with $f$--vector
+\[
+(V,E,F)=(2\ell_\Ok,\ 3\ell_\Ok,\ \ell_\Ok).
+\]
+\end{proposition}
+
+\begin{proof}
+Let $S=\{(|\sigma_i(x)|)_i:0\ne x\in\Ok\}+\R^3_{\ge0}$. The complex is the cell structure of the staircase
+$\bdy S$ \cite[Def.~2.8, Prop.~2.11]{KU}. Its outer corners are the relative minima and its inner corners
+the minimal triples. These descriptions are local, and KU state them for finite sets in general position.
+The set $\{(|\sigma_i(x)|)_i\}$ is in general position because $|\sigma_i(y)|=|\sigma_i(x)|$ forces
+$y=\pm x$. The set $S$ is closed under scaling up, every point of $S$ has coordinate product at least $1$, and
+every open ray in $\R^3_{>0}$ meets $S$ by Minkowski's convex body theorem. So radial projection identifies
+$\bdy S$ with $\R^2$, and $\Ok^\times$ acts on it by the translations
+$L(u)$. As in Theorem~\ref{thm:main} the quotient is a torus, and $V-E+F=0$. In general position the three
+$2$--subsets of a minimal triple are adjacent pairs, the three edges at that vertex \cite[\S2.3.1]{KU}; so
+every vertex has degree $3$ and $2E=3V$. Hence $V=2F$ and $E=3F$, with $F=\ell_\Ok$.
+\end{proof}
+
+\begin{observation}\label{obs:sails}
+These are certified computations.
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
+\item For all $832$ fields with $D\le20000$, a direct count of the minimal triples and adjacent pairs gives
+$(V,E,F)=(2\ell,3\ell,\ell)$. The relative minima that are not sail vertices are German points with
+$k=1,\dots,7$. Their facets have integer distance $1$ from the origin, except for $17$ barycentres on
+facets at distance $3$.
+\item For all $4804$ fields with $D\le10^5$, $\muK\le V_\Ok\le\ell_\Ok$ and $V_\Ok\ge\tfrac12\ell_\Ok$. Of the
+$202{,}071$ classes of extreme squares, $201{,}948$ are sail vertices; the other $123$ are German points, $121$
+with $k=1$ and $2$ with $k=2$ \textup{(}$D=61108$, $75425$\textup{)}, all on facets at distance $1$.
+\end{enumerate}
+\end{observation}
+
+\section{Equality in Leibak's bound}\label{sec:leibak}
+
+Let $K$ be totally real of degree $m$, $\mathcal O_K$ its ring of integers, $\mathfrak d$ its different and
+\[
+\gamma_K=\sup_a\frac{m_{\mathcal O_K}(a)}{(a_1\cdots a_m)^{1/m}}
+\]
+its additive Hermite--Humbert constant (Remark~\ref{rem:hermitehumbert}). The form
+$x\mapsto\langle a,q(x)\rangle$ on $\mathcal O_K\cong\Z^m$ has determinant $a_1\cdots a_mD_K$, so Hermite's
+inequality gives Leibak's bound $\gamma_K^m\le\gamma_m^mD_K$ \cite[Thm.~6]{Leibak}, quoted as
+\cite[Thm.~2.2]{LeibakThesis}. Leibak notes that it is attained for $\Q(\sqrt3)$ \cite[after
+Thm.~2.2]{LeibakThesis}. On a face of $\bdy K_1(m_{\mathcal O_K})$ one has $m_{\mathcal O_K}(a)=1$, and
+$a\mapsto(a_1\cdots a_m)^{1/m}$ is concave. So the supremum, which is a maximum by compactness modulo
+units, is attained at a vertex, i.e.\ a perfect form $a=\iota(\alpha)$. Then $\gamma_K^m=1/\min\Nm(\alpha)$
+over the perfect forms of minimum $1$. Let $\Lambda_2=A_2$
+and $\Lambda_3=A_3$, scaled to be even with minimum $2$, so that $\det\Lambda_2=3$ and $\det\Lambda_3=4$.
+
+\begin{theorem}\label{thm:leibak}
+Let $m\in\{2,3\}$. The following are equivalent:
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.2em]
+\item $\gamma_K^m=\gamma_m^mD_K$;
+\item there is a totally positive $\beta\in\mathfrak d^{-1}$ with $\Nm(\beta\mathfrak d)=\det\Lambda_m$ and
+$\Tr(\beta x^2)\in2\Z$ for all $x\in\mathcal O_K$.
+\end{enumerate}
+In that case $2$ ramifies in $K$ and $\mathcal O_K/\beta\mathfrak d\cong\Lambda_m^\#/\Lambda_m$. For $m=2$ the
+ideal $\beta\mathfrak d$ is a prime of norm $3$. For $m=3$ one has $2\mathcal O_K=\mathfrak p\mathfrak q^2$ and
+$\beta\mathfrak d=\mathfrak p^2$, with $\mathfrak p,\mathfrak q$ of degree~$1$.
+\end{theorem}
+
+\begin{proof}
+(i)$\Rightarrow$(ii). Equality means that the lattice $L_\alpha=(\mathcal O_K,\Tr(\alpha xy))$ of some
+perfect $\alpha$ attains $\gamma_m$. The critical lattice is unique up to similarity: the hexagonal lattice
+for $m=2$ and the face--centred cubic lattice for $m=3$. So $L_\alpha\cong\lambda\Lambda_m$. The Gram matrix
+of $L_\alpha$ is rational and that of $\Lambda_m$ is primitive with a diagonal entry $2$, so
+$\lambda=\tfrac12\min L_\alpha\in\Q$. Then $\beta=\alpha/\lambda$ has $\Tr(\beta xy)\in\Z$ for all $x,y$, that
+is $\beta\in\mathfrak d^{-1}$; it has $\Tr(\beta x^2)\in2\Z$; and $\Nm(\beta)D_K=\Nm(\beta\mathfrak d)=\det\Lambda_m$.
+
+(ii)$\Rightarrow$(i). The lattice $(\mathcal O_K,\Tr(\beta xy))$ is even, positive and of determinant
+$\det\Lambda_m$. Hence its minimum is at least $2$, and by Hermite's inequality at most
+$\gamma_m(\det\Lambda_m)^{1/m}=2$. So it attains $\gamma_m$, and $\gamma_K^m\ge\gamma_m^mD_K$.
+
+Now assume (ii). If $2$ were unramified, $\mathcal O_K/2\mathcal O_K$ would be reduced, so squaring would be
+bijective on it and the squares would span $\mathcal O_K$ modulo $2\mathcal O_K$. Then $\Tr(\beta z)\in2\Z$
+for all $z\in\mathcal O_K$, i.e.\ $\beta/2\in\mathfrak d^{-1}$, and $2^m$ would divide
+$\Nm(\beta\mathfrak d)=\det\Lambda_m\in\{3,4\}$. This is impossible. The dual lattice of
+$(\mathcal O_K,\Tr(\beta xy))$ is $\beta^{-1}\mathfrak d^{-1}$, whence
+$\Lambda_m^\#/\Lambda_m\cong\beta^{-1}\mathfrak d^{-1}/\mathcal O_K\cong\mathcal O_K/\beta\mathfrak d$. For
+$m=2$ this group is $\Z/3$, so $\beta\mathfrak d$ is a prime of norm $3$. For $m=3$ it is $\Z/4$. An integral
+ideal $I$ of norm $4$ with $\mathcal O_K/I$ cyclic has the form $\mathfrak p^2$ with $\mathfrak p$ of degree
+$1$ and $2\notin\mathfrak p^2$, i.e.\ $\mathfrak p$ unramified. As $2$ ramifies, $2\mathcal O_K=\mathfrak p\mathfrak q^2$.
+\end{proof}
+
+\begin{corollary}\label{cor:leibak2}
+Let $K$ be real quadratic. Then $\gamma_K^2=\tfrac43D_K$ if and only if $\mathcal O_K$ has a $\Z$--basis
+$(u,v)$ with
+\[
+\Nm(u)+\Nm(v)+\Nm(u-v)=0 .
+\]
+In that case $D_K=4(A^2+AC+C^2)$ with $A=\Nm(u)$, $C=\Nm(v)$. In particular $D_K\equiv12\bmod16$, i.e.\
+$K=\Q(\sqrt d)$ with $d\equiv3\bmod4$.
+\end{corollary}
+
+\begin{proof}
+For a basis $(u,v)$ put $L_j(x,y)=\sigma_j(xu+yv)$ and $F=L_1L_2=Ax^2+Bxy+Cy^2$, the norm form, of
+discriminant $D_K$. The forms $\Tr(\alpha(xu+yv)^2)$, $\alpha\gg0$, are the forms $a_1L_1^2+a_2L_2^2$ with
+$a_1,a_2>0$. These are exactly the positive forms $ax^2+bxy+cy^2$ apolar to $F$, i.e.\ with
+$aC-\tfrac12bB+cA=0$: this condition is linear and holds for $L_1^2$ and $L_2^2$. So their roots $\tau$ in
+the upper half plane fill the geodesic $A|\tau|^2+B\operatorname{Re}\tau+C=0$. Some $\Tr(\alpha x^2)$ is
+hexagonal iff, for some basis, the root $\rho=e^{2\pi i/3}$ of $x^2+xy+y^2$ lies on this geodesic, i.e.\
+$A-\tfrac12B+C=0$. Since $\Nm(u-v)=A-B+C$, this is the stated condition. Then
+$D_K=B^2-4AC=4(A^2+AC+C^2)$. Since $A^2+AC+C^2\not\equiv2\bmod4$, $D_K/4\equiv3\bmod4$.
+\end{proof}
+
+For example $(u,v)=(1,2+\sqrt3)$ for $\Q(\sqrt3)$, with norms $1,1,-2$, and $(1,3+\sqrt7)$ for $\Q(\sqrt7)$,
+with norms $1,2,-3$.
+
+\begin{observation}\label{obs:leibak}
+The criteria of Theorem~\ref{thm:leibak} and Corollary~\ref{cor:leibak2} agree with the exact values of
+$\gamma_K$ for all $30{,}394$ real quadratic fields with $D_K\le10^5$, of which $983$ attain the bound. They
+also agree for all $4804$ totally real cubic fields with $D_K\le10^5$, of which $306$ attain it. In the cubic
+case the test whether $\mathfrak p^2\mathfrak d^{-1}$ has a totally positive generator used \texttt{bnfinit},
+so that half of the check assumes GRH. Every attaining field has $D_K\equiv12\bmod16$. In the cubic case
+$959$ further fields have $2\mathcal O_K=\mathfrak p\mathfrak q^2$ without attaining the bound. The
+$38$ cubic fields with a vertex of degree $6$ attain it, as in Proposition~\ref{prop:none}.
+\end{observation}
+
+\begin{remark}
+The same proof works for $4\le m\le8$, given the classical list of critical lattices $D_4,D_5,E_6,E_7,E_8$.
+These are unique up to similarity, and their even forms have determinants $4,4,3,2,1$, all less than
+$2^m$. In each case equality forces $2$ to ramify in $K$.
+\end{remark}
+
 \section{Further directions}\label{sec:forward}
 
 \subsection{Other degrees}
@@ -816,9 +1130,12 @@ together with a bound on the number of vertices per facet.
 The extreme squares are a non--linear cousin of the additively indecomposable totally positive integers,
 whose sail is studied by Kala--Man~\cite{KalaMan} and Kala--Sgallov\'a--Tinkov\'a~\cite{KST}; see also
 Karpenkov~\cite{Karpenkov} for Klein sails. The set $q(\Ok)$ is not a lattice. By Lemma~\ref{lem:relmin},
-however, the squared sail is controlled by the relative minima of the genuine lattice $\psi(\Ok)$. This is
+however, the squared sail is controlled by the relative minima of the genuine lattice $\iota(\Ok)$. This is
 Voronoi's multidimensional continued fraction, not the Jacobi--Perron algorithm, and it is the reason why
-lattice methods do apply, contrary to what an earlier draft suggested.
+lattice methods do apply, contrary to what an earlier draft suggested. Section~\ref{sec:sails} makes the
+link explicit: the relative minima are the Klein sail vertices together with German's points
+\cite{Bykovskii,German}. The totally positive ones are indecomposable (Lemma~\ref{lem:indec}). Their cell
+structure is the Minkowski--Voronoi complex of Karpenkov--Ustinov~\cite{KU}.
 
 \subsection{Open problems}
 \begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.2em]
@@ -829,9 +1146,25 @@ growing, as in Yasaki's explicit long--period quadratic families. The explicit--
 $x(x-a)(x-2a)-1$ and $x(x-a)(x+a+1)-1$ that we tested stay on or near the floor; when $\Reg_K\asymp(\log D_K)^2$ the lower bound of
 Theorem~\ref{thm:sandwich} is $O(1)$ and forces nothing. A successful family presumably needs fundamental
 units that are long products of elements of small norm.
-\item Determine $\lim\muK/\Reg_K$ in distribution, if it exists. The census median is $0.62$, and the three
-large fields above give about $0.47$. This is the cubic analogue of Lévy's constant for continued fractions.
+\item Determine $\lim\muK/\Reg_K$ in distribution, if it exists. The median over $h_K=1$ falls from $0.62$
+for $D\le20000$ to $0.55$ for $8\cdot10^4<D\le10^5$, and the three large fields above give about $0.47$. This
+is the cubic analogue of Lévy's constant for continued fractions; for real quadratic fields the census gives
+$\ell_d/\Reg$ with median $0.841$ over the fields with $D\le10^5$ and $\Reg>20$, against Lévy's
+$12\log2/\pi^2=0.8428$.
 \item Prove $\muK=1$ for all Ennola fields with $a\ge4$ and all Shanks fields.
+\item\label{prob:lower} Prove a lower bound $\nK\ge c\,\ell_\Ok$ with an absolute $c>0$, the cubic analogue of
+$h_d\ge\ell_d/2$ \cite[Thm.~5.1]{Yasaki}. The census suggests $c=\tfrac49$
+(Observation~\ref{obs:census5}). In all $832$ fields with $D\le20000$ every relative minimum is an extreme
+square or adjacent to one; that is, the extreme squares dominate the adjacency graph of the relative
+minima. This is a cubic form of Yasaki's observation that the minimal vectors of consecutive perfect forms
+never skip two consecutive convergents. The degrees in that graph are not bounded in the data (they reach
+$26$ in a sample of fields with $D\le20000$), so this does not by itself give a linear bound. The stronger
+statement that every minimal triple contains an extreme square fails, for $135$ of the $50{,}176$ minimal
+triples in this range.
+\item Exclude the two configurations of Proposition~\ref{prop:none}, i.e.\ prove $\nK\ge2$; and explain why
+$\nK=3$ does not occur for $D\le10^5$.
+\item Can an extreme square be a German point with $k\ge3$, or lie on a facet at integer distance greater
+than $1$? Relative minima of both kinds occur (Observation~\ref{obs:sails}).
 \end{enumerate}
 
 \section*{Computational note}
@@ -839,7 +1172,12 @@ The code (PARI/GP, file \texttt{voronoi\_unary.gp}) implements \S\ref{sec:vorono
 \S\ref{sec:comp} passed both certificates. An independent reimplementation for totally real fields of any
 degree (Python on PARI, repository \texttt{pav10/perfect\_forms}) reproduces all $832$ census records
 (counts, vertex degrees and norms of the extreme squares) and the three large fields of
-\S\ref{sec:comp}, with both certificates.
+\S\ref{sec:comp}, with both certificates. It produced Observation~\ref{obs:census5} and the data of
+\S\S\ref{sec:sails}--\ref{sec:leibak}; the sails were computed with the code of the repository
+\texttt{pav10/sails}. As a test in degree $2$, it gives exactly Yasaki's total of $10{,}732{,}735$ perfect
+unary forms over the $121{,}580$ fields $\Q(\sqrt d)$, $d\le200000$ squarefree \cite[\S4]{Yasaki}, and
+confirms \cite[Thm.~5.1]{Yasaki} and \cite[Thm.~1.2]{LPL} in all of them. The field lists were
+cross--checked against the LMFDB (\texttt{https://www.lmfdb.org}).
 
 \begin{thebibliography}{99}
 
@@ -854,6 +1192,10 @@ J. Reine Angew. Math. \textbf{361} (1985), 27--34.
 \bibitem{Buchmann87}
 J.~Buchmann, \emph{On the period length of the generalized Lagrange algorithm}, J. Number Theory \textbf{26}
 (1987), 31--37.
+
+\bibitem{Bykovskii}
+V.~A.~Bykovskii, \emph{Local minima of lattices and vertices of Klein polyhedra}, Funct. Anal. Appl.
+\textbf{40} (2006), 56--57.
 
 \bibitem{Cohen}
 H.~Cohen, \emph{A Course in Computational Algebraic Number Theory}, Grad. Texts in Math. \textbf{138},
@@ -871,6 +1213,10 @@ Monographs \textbf{10}, Amer. Math. Soc., Providence, RI, 1964.
 V.~Ennola, \emph{Cubic number fields with exceptional units}, in: Computational Number Theory (Debrecen,
 1989), de Gruyter, Berlin, 1991, pp.~103--128.
 
+\bibitem{German}
+O.~N.~German, \emph{Klein polyhedra and relative minima of lattices}, Math. Notes \textbf{79} (2006),
+505--510.
+
 \bibitem{GY}
 P.~E.~Gunnells and D.~Yasaki, \emph{Perfect forms over totally real number fields}, arXiv:0908.3130.
 
@@ -886,9 +1232,17 @@ Pythagoras, and indecomposables}, J. Number Theory \textbf{273} (2025), 37--95.
 O.~Karpenkov, \emph{Geometry of Continued Fractions}, Algorithms and Computation in Mathematics, vol.~26,
 Springer, Berlin, 2013.
 
+\bibitem{KU}
+O.~Karpenkov and A.~Ustinov, \emph{Geometry and combinatorics of Minkowski--Voronoi $3$--dimensional
+continued fractions}, J. Number Theory \textbf{176} (2017), 375--419.
+
 \bibitem{Leibak}
 A.~Leibak, \emph{On additive generalization of Vorono\"i's theory for algebraic number fields}, Proc.
 Estonian Acad. Sci. Phys. Math. \textbf{54} (2005), 195--211.
+
+\bibitem{LeibakThesis}
+A.~Leibak, \emph{On additive generalisation of Vorono\"i's theory of perfect forms over algebraic number
+fields}, PhD thesis, Tallinn University of Technology, 2006.
 
 \bibitem{KW}
 H.~Komatsu and T.~Watanabe, \emph{Perfect unary forms over certain cubic fields}, Int. J. Number Theory
