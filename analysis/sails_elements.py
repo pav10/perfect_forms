@@ -33,8 +33,10 @@ from sails import compute_field                   # noqa: E402
 
 def sail_vertex_keys(O, pol):
     """Sail data of all sign classes, keyed by HNF(xO): vertices, lattice points on edges
-    (ridges) and all lattice points of facets; and the number of facets and of edges
-    (ridges, each shared by two facets) modulo units."""
+    (ridges) and all lattice points of facets; the number of facets and of edges (ridges,
+    each shared by two facets) modulo units; and the lattice barycentres of the triangular
+    facets at integer distance 1 only (`barycentres` in the output; German points in
+    general, any k and distance, come from --facets)."""
     coeffs = [int(c) for c in reversed(list(pari.Vec(pari(pol))))]
     r = compute_field(coeffs).record()
     basis = [pari(b.replace('a', 'x')) for b in r['integral_basis']]

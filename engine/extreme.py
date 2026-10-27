@@ -15,8 +15,9 @@ For a perfect form the cone is full dimensional, with facet normals beta_F
 Tr(beta_F alpha^{-1}) > 0 for every facet F.  Voronoi's theorem in this setting
 (extreme <=> perfect and eutactic, the argument of Bavard for a minimum of linear
 forms divided by a strictly log-concave homogeneous function) is recorded in
-docs/THEORY.md; Leibak's thesis is cited for it only after its theorem numbers
-are checked [REF?].
+docs/THEORY.md, section 4, which also records what Leibak's thesis (Thm 2.1, checked
+against the text) does and does not cover: its eutaxy statement is the weak one, vacuous
+for unary forms.
 
 gamma is maximal at a perfect form, so gamma_K = max over the perfect classes of
 N(alpha)^(-1/m) (minimum 1): gamma_K^m = 1 / min N(alpha) is rational and computed

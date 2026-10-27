@@ -167,7 +167,7 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 | E2: non-totally-real signatures | signature (1,1) done (`engine/complexcubic.py`, Komatsu--Watanabe reproduced); (2,1), (1,2), (0,3) not started |
 | B2: cubic census | D <= 10^5 done (4804 fields, analysis/FINDINGS.md); D <= 10^6 needs a go-ahead |
 | B1: real quadratic census | D <= 10^5 done (30,394 fields): LPL Thm 1.2 and Yasaki Thm 5.1 confirmed in every field; d <= 200000 squarefree (121,580 fields) done: Yasaki's total of 10,732,735 perfect forms reproduced exactly |
-| H1: binary forms | additive normalisation done (complete lists, two certificates); literature benchmarks pending [REF?] |
+| H1: binary forms | additive normalisation done (complete lists, two certificates); Gunnells--Yasaki Table 1 (D <= 44) and Leibak's 22 classes over Q(sqrt 6) reproduced |
 | sails link (cubic) | D <= 10^5 done (analysis/FINDINGS.md §1): three hulls, Minkowski--Voronoi complex (V, E, F) = (2 ell, 3 ell, ell) |
 
 ## Layout

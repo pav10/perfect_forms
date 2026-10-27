@@ -39,3 +39,16 @@ the integral basis (norm 53) lies in the triangle with vertices (1, 0, 0), (5, 1
 The second counterexample in this range is 3.3.75425.1, of the same type; the other 121
 extreme squares off the sail vertices are barycentres.  The certified data for D <= 20000
 are unchanged; the conjecture is replaced by the weaker statement in FINDINGS section 1.
+
+## 2026-10: relative minima off the sail vertices (FINDINGS section 1)
+
+An earlier version of FINDINGS section 1 stated as CERTIFIED (D <= 20000) that the relative
+minima that are not sail vertices lie in triangular facets at integer distance 1, with
+barycentric coordinates (1/3, 1/3, 1/3), (1/5, 2/5, 2/5) or (1/7, 3/7, 3/7).  A complete
+classification of these 220 classes (174 fields) shows German points (O. N. German, Math.
+Notes 79 (2006), Thm 2) with k = 1..7, and 17 barycentres on faces at integer distance 3
+(listed in FINDINGS).  The distance-1 claim had not been checked as stated:
+`analysis/sails_elements.py` collects barycentres of distance-1 triangles only.  The number
+710 of 832 ("relative minima = vertices and barycentres") referred to that collection and
+also required every collected barycentre to be a relative minimum; the corrected statement
+(non-vertex relative minima all have k = 1) holds in 763 fields.

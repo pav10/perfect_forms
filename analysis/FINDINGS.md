@@ -30,56 +30,59 @@ stable across discriminant windows of width 2*10^4 (mu/V 0.61, 0.59, 0.59, 0.59,
 The statements below marked D <= 20000 use the relative minima as elements, which the
 D <= 10^5 run does not recompute.
 
-* **PROVED.**  Every sail vertex is a relative minimum, so V <= ell.
-  *Proof.*  Let v be a vertex of the Klein polyhedron of its orthant and y != +-v a
-  lattice point with |sigma_i(y)| <= |sigma_i(v)| for all i (strictly, since equality at
-  one place forces y = +-v).  Then v + y and v - y lie in the open orthant of v, and v is
-  their midpoint, so v is not a vertex.  []
-  *Prior art.*  The relation between Klein polyhedra and relative minima is the subject of
-  V. A. Bykovskii, "Local minima of lattices and vertices of Klein polyhedra", Funktsional.
-  Anal. i Prilozhen. 40 (2006) 69-71, and O. N. German, "Klein polyhedra and relative minima
-  of lattices", Math. Notes 79 (2006) 505-510, cited for exactly this connection by
-  Karpenkov--Ustinov (JNT 176 (2017), refs. [10], [23]); this statement is presumably
-  among their results [REF?: texts not in the project files].
-* **PROVED** ([M, Lemma 6.3]).  Every extreme square is a relative minimum: mu <= ell.
-* **CERTIFIED** (D <= 20000).  mu <= V <= ell in every field; hence (Euler bound
-  [M, Thm 4.3]) n <= 2 mu <= 2 V.  V = ell in 658 of 832 fields; V/ell in [0.5, 1].
+*Literature (checked against the texts).*  [By] V. A. Bykovskii, Local minima of lattices
+and vertices of Klein polyhedra, Funct. Anal. Appl. 40 (2006) 56-57; [Ge] O. N. German,
+Klein polyhedra and relative minima of lattices, Math. Notes 79 (2006) 505-510.  Both work
+with a lattice in R^n and the Klein polyhedron K of an orthant; "local" = "relative"
+minimum (for psi(O), K totally real, the definitions agree: |sigma_i(y)| = |sigma_i(x)|
+forces y = +-x).  [Ge]'s exceptional lattices (the orbit L^3_{1/2}) have points on the
+coordinate axes, so psi(O) is never exceptional, and psi(O) has no nonzero point on a
+coordinate plane (N(y) != 0), so [Ge, Cor. 3] applies to every sign class.
+
+* **PROVED** ([By, Theorem]; also [Ge, Cor. 1]).  Every sail vertex is a relative minimum,
+  so V <= ell.  (Our proof: if y != +-v has |sigma_i(y)| <= |sigma_i(v)| for all i, then
+  v +- y lie in the open orthant of v and v is their midpoint.)  In dimension 2 the two
+  sets coincide ([By], "well known"; [Ge, Prop. 1]): for real quadratic fields the sail
+  vertices of the two sign classes mod units are the ell convergents.
+* **PROVED** ([Ge, Lemma 1]).  A lattice point x in the open orthant C is a relative minimum
+  iff no w != 0 has x + w and x - w both in C (equivalently 2x is not a sum of two lattice
+  points of C other than x, x).  Consequently a lattice point in the relative interior of
+  a sail edge is never a relative minimum (its two lattice neighbours on the edge are
+  x +- w).
+* **PROVED** ([Ge, Thm 1]).  Every relative minimum lies on the sail of its sign class.
+  (CERTIFIED independently for D <= 20000: each is a lattice point of some facet.)
+* **PROVED** ([Ge, Thm 2 and Cor. 3]).  The relative minima in an orthant are exactly the
+  sail vertices and German's points Xi: v = (k(u1 + u2) + u3)/(2k + 1), k >= 1, in a
+  triangular face F = conv(u1, u2, u3) whose lattice points are u1, u2, u3 and the k points
+  u3 + (m/k)(v - u3), m = 1..k (on the median from u3; v is the last).  Barycentric
+  coordinates (k, k, 1)/(2k + 1): the barycentre for k = 1 (4 lattice points on F),
+  (2/5, 2/5, 1/5) for k = 2 (5 points), (3/7, 3/7, 1/7) for k = 3 (6 points).
+* **CERTIFIED** (D <= 20000; 174 fields have relative minima that are not sail vertices).
+  These are German points with k = 1 (148 classes), 2 (49), 3 (14), 4 (4), 5 (2), 6 (2)
+  and 7 (1; 3.3.19089.1, a 10-point triangle); e.g. k = 2 in 3.3.404.1, k = 3 in
+  3.3.1257.1.  Their faces have integer distance 1, except for 17 barycentres (k = 1) on
+  faces at distance 3 (3.3.3356.1, 6556.1, 7528.1, 9281.1, 10172.1, 10641.1, 10712.1,
+  10949.1, 12092.1, 12284.1, 14165.1, 14316.1, 14360.1, 14769.1, 16689.1, 17581.1,
+  19605.1).  Relative minima = sail vertices and barycentres (k = 1) in 763 of 832
+  fields.
+* **PROVED** ([Ge, Cor. 3] and [M, Lemma 6.3]).  Every extreme square is a sail vertex or a
+  German point.
 * **CERTIFIED** (D <= 20000).  Of the 15,090 classes of extreme squares, 15,083 are sail
   vertices.  The other 7 (one in each of 3.3.4001.1, 13877.1, 14388.1, 14408.1, 15124.1,
-  17144.1, 17581.1) are each the barycentre (v1 + v2 + v3)/3 of a triangular facet of the
-  sail of their sign class at integer distance 1; none lies on a sail edge.  Example:
+  17144.1, 17581.1) are German points with k = 1, the barycentre (v1 + v2 + v3)/3 of a
+  triangular facet of the sail of their sign class at integer distance 1.  Example:
   3.3.4001.1 (x^3 - 11x - 7), x = -t^2 + t + 12 of norm 13: a totally positive unit
   multiple of x is (1 + v2 + v3)/3 for the facet {1, v2, v3} of the totally positive sail,
   yet q(x) is a vertex of the squared sail (the centroid of the three perfect forms at x
   has x as its only minimal vector).  So "extreme squares are sail vertices" is false.
-* **CERTIFIED** (D <= 20000).  Every extreme square is a sail vertex or the barycentre of a
-  triangular sail facet at integer distance 1 (all 832 fields).  Such barycentres are
-  rarely extreme: of the 190 classes of triangular distance-1 facets containing their
-  barycentre, 7 give extreme squares.
-* **Refuted** (the conjecture of the previous version).  "Every extreme square is a sail
-  vertex or the barycentre of a triangular facet at distance 1" fails for 3.3.61108.1
-  (x^3 - x^2 - 63x - 167): the extreme square x = 8 - t^2 (norm 53) lies in a 5-point
-  triangular facet at distance 1 of the totally positive sail with barycentric
-  coordinates (2/5, 2/5, 1/5) (data/ERRATA.md).
-* **CONJECTURE.**  For every totally real cubic field, every relative minimum (hence every
-  extreme square) that is not a sail vertex lies in the relative interior of a triangular
-  sail facet at integer distance 1.  (Checked for relative minima up to D = 20000 and for
-  extreme squares up to D = 10^5.)
-* **PROVED** (relative minima on a sail).  A lattice point x in the open orthant C is a
-  relative minimum iff no w != 0 has x + w and x - w both in C, iff
-  K ∩ (2x - K) ∩ L = {x} for the Klein polyhedron K of C.  Consequently (i) a lattice point
-  in the relative interior of a sail edge is never a relative minimum (its two lattice
-  neighbours on the edge are x +- w); (ii) a lattice point x in the relative interior of a
-  facet F is a relative minimum iff F ∩ (2x - F) contains no lattice point besides x
-  (if x +- w are both in C, then c.w = 0 for the facet functional c, since no lattice point
-  of C lies below the facet plane).
-* **CERTIFIED** (D <= 20000).  The relative minima that are not sail vertices lie in the
-  interior of triangular facets at distance 1; besides barycentres they occur e.g. at
-  barycentric coordinates (1/5, 2/5, 2/5) (3.3.404.1, a 5-point triangle) and
-  (1/7, 3/7, 3/7) (3.3.1257.1, a 6-point triangle).  "Relative minima = vertices and
-  barycentres" holds in 710 of 832 fields only.
-* **CERTIFIED** (D <= 20000).  Every relative minimum lies on the sail of its sign class
-  (it is a lattice point of some facet).
+  Such barycentres are rarely extreme: of the 190 classes of 4-point triangular
+  distance-1 facets, 7 give extreme squares.
+* **CERTIFIED** (D <= 10^5, summary above).  Extreme German points with k = 2 occur
+  (3.3.61108.1, 3.3.75425.1), so the earlier conjecture "every extreme square is a sail
+  vertex or a barycentre" is false (data/ERRATA.md); no extreme square with k >= 3 occurs.
+* Open: can an extreme square be a German point with k >= 3, or lie on a face at integer
+  distance > 1?  Relative minima of both kinds occur (above); for D <= 10^5 the 123
+  non-vertex extreme squares all have k <= 2 and distance 1.
 * **CERTIFIED** (D <= 20000), ratios: mu/V in [0.22, 1] (median 0.61); n/V in [0.44, 2]
   (median 1.2); n/F in [0.33, 1.53] (median 0.91); n/E in [0.19, 0.87].
   n <= F fails in 109 fields, n <= E holds in all.
