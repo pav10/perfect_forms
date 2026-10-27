@@ -210,9 +210,15 @@ checked against relmin.py for D < 200).
   classes per field has median 0.97; no weakly eutactic class occurs.
 * Leibak's bound gamma_K^2 = (4/3) D is attained in 983 fields, all with d = 3 mod 4; the
   exact criterion is section 7.
-* Pending (needs a go-ahead, about 3 h): Yasaki's global count of 10,732,735 perfect forms
-  over the 121,580 fields Q(sqrt d), d <= 200000 squarefree (Sec. 4), the only tabulated
-  number in his paper (the rest are plots).
+* **CERTIFIED** (Yasaki's global count; `analysis/yasaki_count.py` on `deg2_D1e5.jsonl.xz`
+  and `deg2_d2e5_rest.jsonl.xz`).  The 121,580 fields Q(sqrt d), 2 <= d <= 200000
+  squarefree, carry exactly 10,732,735 classes of perfect unary forms in total, the number
+  stated by Yasaki (JTNB 25 (2013), Secs. 1 and 4; the only number his paper tabulates,
+  the rest being plots), from independent code: every one of the 121,580 records is
+  CERTIFIED.  By d mod 4: 3,648,331 (d = 1), 3,247,134 (d = 2), 3,837,270 (d = 3);
+  max h_d = 888 at d = 196771.  On this whole range his Thm 5.1 (l_d/2 <= h_d <= l_d) and
+  Leibak--Porter--Ling's Thm 1.2 hold in every field (h_d = 1 in 685 fields, exactly the
+  types T1-T4).
 
 ## 6. The cubic analogue of Yasaki's bound (plan Goal 1)
 
