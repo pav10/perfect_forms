@@ -128,6 +128,9 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 * `analysis/cubic_census.py CENSUS...`: census statistics (Markdown).
 * `analysis/binary_census.py D_MIN D_MAX OUT [--jobs J]`: certified census of perfect binary
   forms over Q(sqrt d).
+* `analysis/binary_compare.py CENSUS [HH_TSV]`: a binary census against Gunnells--Yasaki
+  Table 1, Leibak's bound gamma^4 <= 4 D^2, and the multiplicative constant of
+  pav10/hermite-humbert (read-only; gamma_add >= 2 sqrt(gamma_mult) by AM-GM).
 * `analysis/recheck.py CENSUS REPORT [--sample K] [--replace-dirty FIXED] [--jobs J]`:
   recompute records and compare (provenance repair, spot checks).
 * `analysis/porter_mendelsohn.py CENSUS [OUT]`: n_K against the Porter--Mendelsohn bound
