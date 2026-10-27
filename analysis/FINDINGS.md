@@ -91,6 +91,24 @@ coordinate plane (N(y) != 0), so [Ge, Cor. 3] applies to every sign class.
   the 7 Ennola fields a = 4..10 (D = 697, ..., 16609), and (4, 4) for the other 10
   (D = 985, 2597, 5521, 6809, 7249, 10309, 13801, 14945, 16357, 17609).
 
+* **PROVED** (Bykovskii, German, Euler; manuscript Thm 7.4).  ell = V + G, where G is the
+  number of German points mod units; each sail facet carries at most one German point
+  (k is fixed by the number of lattice points of the facet, and for k >= 2 the interior
+  points lie on one median), so G <= F <= 2V (Euler on the sail tori: V - E + F = 0, every
+  facet has >= 3 sides).  Hence ell/3 <= V <= ell and, with the regulator sandwich,
+  4 Reg/(3 (log 2D)^2) <= V <= 4 Reg/(log 2)^2, 2 Reg/(3 (log 2D)^2) <= F <= 8 Reg/(log 2)^2,
+  and n <= 2 mu <= 2 ell <= 6V.  (For sails the volume argument alone gives facets
+  O(sqrt(D) Reg); this is linear in Reg with an absolute constant, plus a lower bound.)
+  CERTIFIED (D <= 10^5): E = V + F, F <= 2V, V >= ell/2 in every field.
+* **PROVED** (manuscript Lemma 7.6).  A totally positive relative minimum is indecomposable
+  (if x = y + z with y, z >> 0, y is dominated by x).  So totally positive extreme squares,
+  sail vertices and German points are indecomposable.
+* **CERTIFIED** (D <= 20000, all 832 fields).  Every relative minimum is an extreme square or
+  adjacent to one (the extreme squares dominate the adjacency graph of relative minima);
+  the stronger "every minimal triple contains an extreme square" fails for 135 of the
+  50,176 minimal triples.  This is the local statement behind a possible lower bound
+  n >= c ell (manuscript, open problem 4); the graph degrees are not bounded (26 occurs).
+
 ### Three hulls of one point set
 
 Let P = {(|sigma_i(y)|)_i : y in O \ 0} in R^3_{>0} (all orthants folded together);

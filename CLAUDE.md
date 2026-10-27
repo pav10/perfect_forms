@@ -42,5 +42,7 @@
   `python -m engine fields` and cross-checked (cubic: nflist == LMFDB field by field).
 - `data/census/`: certified records (`*.jsonl.xz`); `analysis/` reads them and never
   edits them.  `data/legacy/`: results of the earlier GP code, kept for regression.
-- The manuscript `paper/perfect-unary-cubic.tex` has no build here (no LaTeX in the
-  sandbox); if LaTeX becomes available build with `pdflatex` twice and commit the PDF.
+- The manuscript `paper/perfect-unary-cubic.tex`: build with `pdflatex` twice (zero errors,
+  no undefined references) and commit `paper/perfect-unary-cubic.pdf` with it.  TeX Live is
+  not preinstalled in a fresh sandbox: `apt-get install -y texlive-latex-extra
+  texlive-fonts-recommended texlive-science` works.
