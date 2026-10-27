@@ -133,6 +133,9 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
   (covering radius numerical).
 * `analysis/leibak_equality.py CENSUS...`: the exact criterion for equality in Leibak's
   bound (docs/THEORY.md section 4) against the census values.
+* `analysis/yasaki_count.py CENSUS...`: Yasaki's global count (10,732,735 perfect forms over
+  the 121,580 fields Q(sqrt d), d <= 200000 squarefree) from certified records, with his
+  Thm 5.1 and Leibak--Porter--Ling Thm 1.2 on the whole range.
 
 ## Data
 
