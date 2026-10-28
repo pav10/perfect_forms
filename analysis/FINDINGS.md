@@ -318,6 +318,26 @@ nonexistence proof) one in which every indecomposable is a unit?  Ind = indecomp
 elements of O_K^+ (totally positive, not a sum of two totally positive integers).  Data: the
 sails summaries of pav10/sails (read-only), all 54,600 fields with D <= 10^6.
 
+* **PROVED (answer to the square-class version; docs/THEORY.md section 7, manuscript
+  Theorem 9.4).**  In every totally real cubic field some indecomposable is not the square
+  of a unit, i.e. Ind / U^2 has at least two elements.  The proof is perfect-form
+  theoretic.  Lemma: if alpha >> 0 lies in the codifferent, Tr(alpha x^2) >= 1 on O \ 0 and
+  Tr(alpha u_i^2) = 1 for three units with distinct squares, then (Tr(alpha u_j u_k)) is the
+  identity (integral entries of absolute value <= 1/2), so {u_i} is a Z-basis and
+  N(alpha) D = 1: alpha generates the codifferent, and two such alpha differ by a totally
+  positive unit.  If Ind = U^2, then U+ = U^2, the totally positive sail has one vertex
+  class (V = 1), its facets are empty lattice polygons, Euler gives two triangles or one
+  quadrilateral, the quadrilateral forces (1 - a)(1 - b) = 0, and both triangles are
+  unimodular (the half-open parallelepiped argument).  Each triangle conv(u_1^2, u_2^2,
+  u_3^2) then has its functional in the codifferent with min Tr(gamma x^2) = 1, so by the
+  lemma both functionals generate the codifferent and the two triangles are equivalent
+  under U+: contradiction.  The real quadratic analogue is false (Q(sqrt 5)), because the
+  sail modulo U+ is a circle with one edge.
+* **CERTIFIED** (`analysis/one_square_class.py`, cubic census D <= 10^5).  Exactly 15 of the
+  4804 fields have an integral perfect form whose minimal vectors are units; each has one
+  class, the Gram matrix of the minimal vectors is I_3, they form a Z-basis and
+  N(alpha) D = 1.  The 15 fields are the simplest cubic fields with O_K = Z[theta_t] and
+  D <= 10^5 (t = -1, 0, 1, 2, 4 and 6 <= t <= 16, t != 12), i.e. the ell = 1 fields and D = 81.
 * **PROVED.**  (i) Every unit is a relative minimum (if |sigma_i(y)| <= |sigma_i(u)| for all
   i, then |N(y)| <= 1, so y is a unit with all |sigma_i(y/u)| = 1, i.e. y = +-u).  (ii) Every
   totally positive relative minimum is indecomposable (manuscript Lemma 7.6).
@@ -338,13 +358,22 @@ sails summaries of pav10/sails (read-only), all 54,600 fields with D <= 10^6.
 * **CERTIFIED** (sails data).  Each of these fields has a non-unit totally positive
   indecomposable (norm 2t + 3 for t >= 1, e.g. up to units theta - 1, N(theta - 1) =
   -P_t(1) = 2t + 3; norm 7 for t = -1).  No field with D <= 10^6 has only unit indecomposables.
-* **CONJECTURE.**  ell_K = 1 iff K is a simplest cubic field with O_K = Z[theta_t], t != 0.
-  With it, and with the existence of a non-unit indecomposable in these fields (expected to be
-  in the literature on indecomposables of simplest cubic fields [REF?]), no totally real
-  cubic field has one indecomposable square class.  Proof idea: ell = 1 means the six
-  Minkowski--Voronoi neighbours of 1 are units forming one hexagon; the emptiness of the
-  boxes of the six adjacent pairs and of the two minimal triples are explicit inequalities
-  between the absolute conjugates of two units, which should force a cyclic Galois symmetry.
+* **CONJECTURE.**  ell_K = 1 iff K is a simplest cubic field with O_K = Z[theta_t], t != 0, -3.
+  No longer needed for the square-class question (Theorem 9.4), but still open.  Partial
+  results (PROVED, THEORY section 7): every minimal triple of the Minkowski--Voronoi complex is
+  a Z-basis of O or degenerate, z = +-x +- y (Lemma 7.5, manuscript Lemma 7.8); if eps = N_k(1) has one positive and
+  one negative small conjugate and 1 - eps is a unit, then eps is a root of P_t(x - 1), so
+  K = K_t and Z[theta_t] is contained in O (Lemma 7.6).  So the "only if" part, up to
+  O_K = Z[theta_t], reduces to: ell = 1 forces 1 - N_k(1) to be a relative minimum.  The data
+  (CERTIFIED, D <= 10^6): in all 27 candidate fields every N_k(1) has that sign pattern and
+  1 - N_k(1) is a unit adjacent to 1, and N_k(1) has characteristic polynomial P_t(x - 1)
+  (`ell_one.py --structure`, stored in the candidates file); each ell = 1 field has one basis
+  and one degenerate class of minimal triples, and D = 81 has four basis classes.  All 832
+  fields with D <= 20000 (`minkowski_voronoi.py`, column V_degenerate): every one of the
+  50,176 minimal triple classes is a basis or degenerate, 12,903 (25.7%) are degenerate, at
+  most half in each field, and only D = 81 has none.  In general fields 1 - N_k(1)
+  need not be a relative minimum (scratch check of the first 400 fields: 12 of 204
+  mixed-pattern unit neighbours), but in those cases it was dominated only by non-units.
 * **PROVED** (all indecomposables units, the stronger property).  Let S+ be the total cone
   determinant of the totally positive sail modulo totally positive units (`S` of pav10/sails,
   totally positive class).  Then S+ >= 2, and every indecomposable is a unit iff S+ = 2, iff
@@ -366,7 +395,11 @@ sails summaries of pav10/sails (read-only), all 54,600 fields with D <= 10^6.
   units; every totally positive lattice point is a non-negative integer combination of the
   vertices of its cone, so the indecomposables are the vertices.  []
   Consequence: O_K = Z + Za + Zab = Z + Zb + Zab, hence b = +-a + m + n ab with m, n in Z: a
-  linear relation among three totally positive units.
+  linear relation among three totally positive units.  Sharper (PROVED): the facet functionals
+  L_A, L_B are integral (they are 1 on a Z-basis), and L_A(b) >= 2, L_B(a) >= 2 give the sign
+  -1 and m + n >= 3: b = -a + m + n ab.  By Theorem 9.4 moreover U+ != U^2.  The
+  quadrilateral case (one facet 1, a, ab, b) is impossible, since an empty lattice
+  quadrilateral is a parallelogram and 1 + ab = a + b means (1 - a)(1 - b) = 0.
 * **CERTIFIED** (sails data, D <= 10^6).  S+ >= 3 in every field; S+ = 3 only for D = 49, then
   S+ = 4 (D = 257), 5 (D = 81, 697), ...  So "all indecomposables are units" is equivalent to
   the extremal value S+ = 2, which does not occur; a proof of S+ >= 3, or of the

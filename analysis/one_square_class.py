@@ -50,28 +50,32 @@ def tp_mod_squares(O):
     return 8 // len(signs)
 
 
-def check(r):
-    O = Order(r['pol'])
+def integral_unit_forms(O, forms):
+    """forms: (alpha, minimal vectors) pairs.  For each alpha that, rescaled to minimum 1,
+    lies in the codifferent and has only units as minimal vectors: whether the Gram matrix
+    of the minimal vectors is I_3, whether they form a Z-basis, and N(alpha) D."""
     D = O.disc
+    basis = [tuple(int(i == j) for i in range(O.m)) for j in range(O.m)]
     out = []
-    for f in r['forms']:
-        alpha = [Fraction(t) for t in f['alpha_coords']]
-        x0 = tuple(f['minvecs'][0])
-        mn = O.trace_pair(alpha, O.sq(x0))
-        alpha = [t / mn for t in alpha]
-        integral = all(O.trace_pair(alpha, w).denominator == 1 for w in
-                       [tuple(int(i == j) for i in range(O.m)) for j in range(O.m)])
-        units = all(abs(n) == 1 for n in f['minvec_norms'])
-        if not (integral and units):
+    for alpha, V in forms:
+        V = [tuple(v) for v in V]
+        if not all(abs(O.norm(v)) == 1 for v in V):
+            continue
+        mn = O.trace_pair(alpha, O.sq(V[0]))
+        alpha = [Fraction(t) / mn for t in alpha]
+        if not all(O.trace_pair(alpha, w).denominator == 1 for w in basis):
             continue
         G = O.gram(alpha)
-        V = [tuple(v) for v in f['minvecs']]
-        GV = [[sum(V[a][j] * G[j][k] * V[b][k] for j in range(O.m) for k in range(O.m))
-               for b in range(len(V))] for a in range(len(V))]
-        identity = len(V) == 3 and all(GV[a][b] == (a == b) for a in range(3) for b in range(3))
-        basis = len(V) == 3 and abs(linalg.det([list(v) for v in V])) == 1
-        nd = abs(O.norm(alpha)) * D
-        out.append({'identity': identity, 'basis': basis, 'N_alpha_D': str(nd)})
+        GV = [[sum(a[j] * G[j][k] * b[k] for j in range(O.m) for k in range(O.m)) for b in V] for a in V]
+        out.append({'identity': len(V) == 3 and all(GV[i][j] == (i == j) for i in range(3) for j in range(3)),
+                    'basis': len(V) == 3 and abs(linalg.det([list(v) for v in V])) == 1,
+                    'N_alpha_D': str(abs(O.norm(alpha)) * D)})
+    return out
+
+
+def check(r):
+    O = Order(r['pol'])
+    out = integral_unit_forms(O, [([Fraction(t) for t in f['alpha_coords']], f['minvecs']) for f in r['forms']])
     return out, (tp_mod_squares(O) if out else None)
 
 

@@ -13,6 +13,7 @@
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
 \theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{remark}[theorem]{Remark}
@@ -70,7 +71,7 @@ Voronoi's algorithm in exact arithmetic, with an Euler--characteristic check and
 group. This covers all $4804$ totally real cubic fields with $D_K\le10^5$ and fields with $\nK$ up to $3534$.
 We find $\muK/\Reg_K\approx0.5$--$0.6$ typically, while Ennola's and Shanks' families sit at $\muK=1$.
 
-Two further results relate perfect forms to other geometric objects. First, relative minima link the squared
+Three further results relate perfect forms to other objects. First, relative minima link the squared
 sail to the Klein sails of the lattice $\Ok$: by theorems of Bykovskii and German, every relative minimum is a sail
 vertex or a special point on a triangular facet. Combined with Euler's formula on the sail tori, this shows
 that the numbers of vertices and facets of the Klein sails modulo units are also $\asymp\Reg_\Ok$ up to a
@@ -79,6 +80,9 @@ modulo units. This is the cubic counterpart of Yasaki's bound $h_d\le\ell_d$. Se
 Leibak's bound $\gamma_K^m\le\gamma_m^mD_K$ for the Hermite--Humbert constant is attained. For a real
 quadratic field this happens exactly when $\mathcal O_K$ has a $\Z$--basis $u,v$ with
 $\Nm(u)+\Nm(v)+\Nm(u-v)=0$, and for a totally real cubic field it forces $2\mathcal O_K=\mathfrak p\mathfrak q^2$.
+Third, an integral perfect form whose minimal vectors are units is the cubic lattice $I_3$, and its
+functional generates the codifferent. Combined with Euler's formula on the totally positive sail, this shows
+that in no totally real cubic field are all additively indecomposable integers squares of units.
 \end{abstract}
 
 \maketitle
@@ -131,6 +135,11 @@ $(\log D_\Ok)^2$ (Theorem~\ref{thm:sails}); and $\nK\le2\ell_\Ok$ is the cubic a
 $h_d\le\ell_d$ (Remark~\ref{rem:yasaki}).
 \item \textbf{Leibak's bound} (\S\ref{sec:leibak}). Equality $\gamma_K^m=\gamma_m^mD_K$ is characterised for
 $m=2,3$ (Theorem~\ref{thm:leibak}, Corollary~\ref{cor:leibak2}).
+\item \textbf{Indecomposables} (\S\ref{sec:indecsq}). Every totally real cubic field has an indecomposable
+that is not the square of a unit (Theorem~\ref{thm:onesquare}). The proof combines the sail torus with the
+fact that an integral perfect form with unit minimal vectors is $I_3$ (Lemma~\ref{lem:intform}). Minimal triples
+of relative minima are bases or degenerate (Lemma~\ref{lem:triples}), and we conjecture that
+$\ell_{\mathcal O_K}=1$ only for monogenic simplest cubic fields (Conjecture~\ref{conj:ellone}).
 \end{itemize}
 
 \subsection*{Conventions}
@@ -986,6 +995,39 @@ $2$--subsets of a minimal triple are adjacent pairs, the three edges at that ver
 every vertex has degree $3$ and $2E=3V$. Hence $V=2F$ and $E=3F$, with $F=\ell_\Ok$.
 \end{proof}
 
+\begin{lemma}\label{lem:triples}
+A minimal triple $\{x,y,z\}$ of $\Lambda_\Ok$ is either a $\Z$--basis of $\Ok$ or, after changing the signs
+of its members, satisfies $z=x+y$.
+\end{lemma}
+
+\begin{proof}
+Let $m_i=\max(|x_i|,|y_i|,|z_i|)$. Then $x,y,z$ attain different maxima, say $|x_1|=m_1$, $|y_2|=m_2$,
+$|z_3|=m_3$, and all other entries are strictly smaller in absolute value. The box
+$B=\prod_i[-m_i,m_i]$ contains no lattice point besides $0,\pm x,\pm y,\pm z$, and these lie on its
+boundary. Suppose first that $x,y,z$ are independent and let $L=\Z x+\Z y+\Z z$. By Minkowski's theorem
+$8m_1m_2m_3\le8\operatorname{covol}(\Lambda_\Ok)$, and $|\det(x,y,z)|\le4m_1m_2m_3$, because a determinant
+with entries bounded by $1$ in absolute value is at most $4$. Hence $[\Ok:L]\le4$. An element of order $2$ of
+$\Ok/L$ is represented by $(ax+by+cz)/2$ with $a,b,c\in\{0,1\}$, not all $0$, and arbitrary signs. With one or
+two nonzero terms this point lies in the interior of $B$. With three, coordinate $i$ of $x+sy+tz$ reaches
+$2m_i$ in absolute value only if its three terms have the same sign, which happens for one choice of
+$(s,t)$ at most. So one of the four choices gives an interior point. An element of order $3$ is
+represented by $(ax+by+cz)/3$ with $a,b,c\in\{-1,0,1\}$, again an interior point. So $[\Ok:L]$ is prime to $6$
+and at most $4$, i.e.\ $L=\Ok$.
+
+Suppose now that $z=px+qy$ with $p,q\in\Q$. The pair $x,y$ is adjacent, and the same argument in the plane
+shows that it is a basis of $\Ok\cap(\Q x+\Q y)$; so $p,q\in\Z$, and after changing signs $p,q\ge0$. If $q=0$
+or $p=0$, then $z$ is dominated by $x$ or $y$. If $p,q\ge1$ and $(p,q)\ne(1,1)$, then
+\[
+x+y=\tfrac{q-1}{p+q-1}\,x+\tfrac{p-1}{p+q-1}\,y+\tfrac1{p+q-1}\,z
+\]
+is a convex combination with at least two positive weights, hence an interior point of $B$. So $z=x+y$.
+\end{proof}
+
+In the $832$ fields with $D_K\le20000$, all $50{,}176$ classes of minimal triples are of the two kinds, as the
+lemma says, and $12{,}903$ of them ($25.7\%$) are degenerate. In every field at most half are degenerate, and
+only $D_K=81$ has none. Each of the $26$ fields with $\ell_\Ok=1$ and $D_K\le10^6$ has one basis class and one
+degenerate class, both made of units. $D_K=81$ ($\ell=2$) has four basis classes.
+
 \begin{observation}\label{obs:sails}
 These are certified computations.
 \begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
@@ -1090,6 +1132,151 @@ These are unique up to similarity, and their even forms have determinants $4,4,3
 $2^m$. In each case equality forces $2$ to ramify in $K$.
 \end{remark}
 
+\section{Indecomposables and squares of units}\label{sec:indecsq}
+
+In this section $K$ is a totally real cubic field, $\mathcal O=\mathcal O_K$, $D=D_K$, $U=\mathcal O^\times$,
+$U^+$ the totally positive units and $U^2$ the squares of units. An element of $\mathcal O^+$ (the totally
+positive integers) is \emph{indecomposable} if it is not a sum of two elements of $\mathcal O^+$; let $\mathrm{Ind}$
+be the set of indecomposables. It contains $1$ and is stable under multiplication by $U^+$. Let
+$\mathcal O^\vee=\{\beta\in K:\Tr(\beta\mathcal O)\subseteq\Z\}$ be the codifferent, of norm $1/D$. Let
+$\mathcal K=\mathcal K_{(+,+,+)}$ be the totally positive Klein polyhedron of \S\ref{sec:sails}. Its boundary
+modulo $U^+$ is a torus (Proposition~\ref{prop:sailtorus}). Every facet $F$ is a compact lattice polygon with a
+functional $L_F(x)=\Tr(\gamma_Fx)$, $\gamma_F\in K$ totally positive, such that $L_F\ge1$ on $\mathcal K$ and
+$L_F=1$ on $F$. The cone determinant of a triangle $\conv(v_1,v_2,v_3)$, $v_i\in\mathcal O$, is
+$[\mathcal O:\Z v_1+\Z v_2+\Z v_3]$.
+
+The question is whether $\mathrm{Ind}$ can consist of one class modulo $U^2$, which is then $U^2$ itself, or more
+weakly of units only.
+
+\begin{lemma}\label{lem:indecfacts}
+\textup{(a)} Totally positive units are indecomposable. \textup{(b)} Vertices of $\mathcal K$ are indecomposable.
+\textup{(c)} If $x\in\mathcal O^+$ and $L_F(x)<2$ for some facet $F$, then $x$ is indecomposable.
+\end{lemma}
+
+\begin{proof}
+(a) If $0<\sigma_i(y)<\sigma_i(u)$ for all $i$, then $0<\Nm(y)<1$. (b) If a vertex is $v=y+z$ with
+$y,z\in\mathcal O^+$, then $y$ and $y+2z$ lie in $\mathcal K$, and $v$ is their midpoint. (c) A sum $y+z$ has
+$L_F(y+z)\ge2$.
+\end{proof}
+
+\begin{lemma}\label{lem:intform}
+Let $\alpha\in\mathcal O^\vee$ be totally positive with $\Tr(\alpha x^2)\ge1$ for all $x\in\mathcal O\smallsetminus0$, and
+let $u_1,u_2,u_3$ be units with distinct squares and $\Tr(\alpha u_i^2)=1$. Then $\Tr(\alpha u_ju_k)=\delta_{jk}$,
+$\{u_1,u_2,u_3\}$ is a $\Z$--basis of $\mathcal O$, and $\Nm(\alpha)D=1$, i.e.\ $\alpha\mathcal O=\mathcal O^\vee$. In
+particular two such $\alpha$ differ by a totally positive unit.
+\end{lemma}
+
+\begin{proof}
+The form $b(x,y)=\Tr(\alpha xy)$ is integral on $\mathcal O$, because $\alpha\in\mathcal O^\vee$, and its
+determinant is $\Nm(\alpha)D$, a positive integer. For $j\ne k$ we have $u_j\pm u_k\ne0$, so
+$1\le b(u_j\pm u_k,u_j\pm u_k)=2\pm2b(u_j,u_k)$. Hence $|b(u_j,u_k)|\le\tfrac12$, and so $b(u_j,u_k)=0$. The
+$u_j$ are orthonormal, hence independent, and $L=\sum_j\Z u_j$ has determinant $1=[\mathcal O:L]^2\Nm(\alpha)D$.
+\end{proof}
+
+In the language of \S\ref{sec:framework}: a perfect form that is integral (in the codifferent) and whose minimal
+vectors are units is the cubic lattice $I_3$ with an orthonormal basis of units.
+
+\begin{lemma}\label{lem:unitfacet}
+Let $F=\conv(u_1^2,u_2^2,u_3^2)$ be a triangular facet of $\mathcal K$ with $u_i\in U$ and cone determinant $1$. Then
+$\gamma_F\mathcal O=\mathcal O^\vee$. All such facets form a single $U^+$--orbit.
+\end{lemma}
+
+\begin{proof}
+$L_F=1$ on the $\Z$--basis $u_1^2,u_2^2,u_3^2$, so $L_F(\mathcal O)\subseteq\Z$ and $\gamma_F\in\mathcal O^\vee$. For
+$x\ne0$ the square $x^2$ lies in $\mathcal O^+\subset\mathcal K$, so $\Tr(\gamma_Fx^2)=L_F(x^2)\ge1$. Lemma~\ref{lem:intform}
+applies. If $F'$ is another such facet, then $\gamma_{F'}=\eta\gamma_F$ with $\eta\in U^+$. Since $\mathcal K$ is
+$U^+$--invariant, the facet with functional $\Tr(\eta\gamma_F\,\cdot)$ is $\eta^{-1}F$; so $F'=\eta^{-1}F$.
+\end{proof}
+
+\begin{theorem}\label{thm:onesquare}
+In every totally real cubic field some indecomposable is not the square of a unit. Equivalently,
+$\mathrm{Ind}$ has at least two classes modulo multiplication by $U^2$.
+\end{theorem}
+
+\begin{proof}
+Suppose $\mathrm{Ind}=U^2$.
+\begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.2em]
+\item $U^+=U^2$, by Lemma~\ref{lem:indecfacts}(a).
+\item The vertices of $\mathcal K$ are units, by Lemma~\ref{lem:indecfacts}(b). They form a non--empty
+$U^+$--invariant subset of $U^+$, so they are all of $U^+$ and $V=1$ modulo $U^+$.
+\item A facet contains no lattice point besides its vertices. Such a point $p$ would lie in $\mathcal O^+$ with
+$L_F(p)=1$, hence be indecomposable, and it is not a unit, since the units are vertices.
+\item Let $F_k$ be the number of facet classes with $k$ vertices. Euler's formula $V-E+F=0$ with $V=1$ and
+$2E=\sum_kkF_k$ gives $\sum_k(k-2)F_k=2$. So there are two triangle classes or one quadrilateral class.
+\item There is no quadrilateral. By (3) it would be an empty lattice quadrilateral in the lattice plane
+$\{L_F=1\}$, hence a parallelogram. By Pick's theorem it has area $1$, the two triangles cut off by a
+diagonal are unimodular, and with $p_2=(0,0)$, $p_1=(1,0)$, $p_3=(0,1)$ the fourth vertex is $(1+k,1-k)$,
+convex only for $k=0$. On the torus with $V=1$, $E=2$, $F=1$ the sides are glued as $aba^{-1}b^{-1}$, since the
+torus is orientable and the totally positive units preserve orientation. So the vertices are
+$1,a,ab,b$ in cyclic order, with $a,b\in U^+\smallsetminus\{1\}$. The parallelogram condition $1+ab=a+b$ gives
+$(1-a)(1-b)=0$, which is impossible.
+\item Both triangles have cone determinant $1$. Otherwise the half--open parallelepiped
+$\{\sum\lambda_iv_i:0\le\lambda_i<1\}$ of a triangle $F=\conv(v_1,v_2,v_3)$ contains a lattice point $x\ne0$. It lies in
+$\mathcal O^+$, and so does $x'=v_1+v_2+v_3-x$, so $1\le L_F(x)=3-L_F(x')\le2$. If $L_F(x)>1$ then $x$ is not on the
+sail, hence not a unit, and if moreover $L_F(x)<2$ it is indecomposable by Lemma~\ref{lem:indecfacts}(c). If
+$L_F(x)=1$, then $x$ is a lattice point of $F$ other than a vertex, and if $L_F(x)=2$, then $x'$ is one. Both
+contradict (3).
+\item By (1), (2) and (6) both triangle classes satisfy Lemma~\ref{lem:unitfacet}. So they form one
+$U^+$--orbit, contradicting (4).\qedhere
+\end{enumerate}
+\end{proof}
+
+\begin{remark}\label{rem:onlyunits}
+(a) The perfect forms enter through Lemma~\ref{lem:intform}. Under the hypothesis of the proof the squared sail
+and $\mathcal K$ coincide, since both are $\conv(U^+)+\R^3_{\ge0}$. So each facet is a perfect form, and
+Lemma~\ref{lem:intform} identifies it with the integral form $I_3$. Two classes of such forms cannot coexist.
+(b) The real quadratic analogue of Theorem~\ref{thm:onesquare} is false: $\mathrm{Ind}=U^2$ for $\Q(\sqrt5)$. There
+the sail modulo $U^+$ is a circle, made of a single edge.
+(c) If every indecomposable is a unit, steps (2)--(6) still hold with $U^+$ in place of $U^2$. The sail then
+consists of two unimodular triangles $\conv(1,a,ab)$ and $\conv(1,b,ab)$ with $a,b\in U^+$. From
+$\mathcal O=\Z+\Z a+\Z ab=\Z+\Z b+\Z ab$ and the integrality of $L_F$ one gets $b=-a+m+n\,ab$ with $m+n\ge3$, and
+Theorem~\ref{thm:onesquare} adds $U^+\ne U^2$. We do not know whether this configuration occurs. It does not
+for $D\le10^6$ (Observation~\ref{obs:indec}).
+(d) In degree $m\ge4$, Lemmas~\ref{lem:intform} and~\ref{lem:unitfacet} hold verbatim, with Gram matrix $I_m$.
+Steps (4)--(6) do not: empty lattice simplices of dimension at least $3$ need not be unimodular, the
+parallelepiped only gives $1\le L_F(x)\le m-1$, and a torus of dimension at least $3$ can have one cell.
+\end{remark}
+
+\begin{lemma}\label{lem:signpattern}
+Let $\varepsilon$ be a unit with $\sigma_1(\varepsilon)>1$, $0<\sigma_2(\varepsilon)<1$ and $-1<\sigma_3(\varepsilon)<0$, such
+that $1-\varepsilon$ is also a unit. Then $\varepsilon$ is a root of $P_t(x-1)$, where
+$P_t(x)=x^3-tx^2-(t+3)x-1$ and $t=\Tr(\varepsilon)-3$. So $K$ is the simplest cubic field $K_t$ and
+$\Z[\theta_t]\subseteq\mathcal O$ with $\theta_t=\varepsilon-1$.
+\end{lemma}
+
+\begin{proof}
+Let $x^3-Ax^2+Bx-C$ be the minimal polynomial of $\varepsilon$. Then $C=\Nm(\varepsilon)<0$, so $C=-1$. Its value
+at $1$ is $\Nm(1-\varepsilon)=\prod_i(1-\sigma_i(\varepsilon))<0$, so $2-A+B=-1$. With $t=A-3$ this polynomial is
+$x^3-(t+3)x^2+tx+1=P_t(x-1)$.
+\end{proof}
+
+\begin{observation}\label{obs:indec}
+These are certified computations.
+\begin{enumerate}[label=\textup{(\alph*)},leftmargin=2.2em]
+\item Among the $4804$ fields with $D\le10^5$, exactly $15$ have an integral perfect form with unit minimal vectors
+(Lemma~\ref{lem:intform}). There is one class in each, and the fields are the simplest cubic fields $K_t$ with
+$\mathcal O_K=\Z[\theta_t]$ and $D_K\le10^5$, including $t=0$.
+\item For $D\le10^6$, $\ell_{\mathcal O_K}=1$ holds exactly for the $26$ simplest cubic fields with
+$\mathcal O_K=\Z[\theta_t]$, $t=-1$ and $1\le t\le29$. In each of them the neighbour $\varepsilon=N_k(1)$ of $1$ in each
+direction $k$ is a unit with the sign pattern of Lemma~\ref{lem:signpattern}, up to a permutation of the places,
+and $1-\varepsilon$ is a unit adjacent to $1$. For $t=0$ ($D=81$) the neighbours $N_k(1)$ behave in the same way, but $\ell=2$.
+\item Sails data (pav10/sails): the total cone determinant $S^+$ of the totally positive sail modulo $U^+$ is at
+least $3$ for every field with $D\le10^6$. So no such field has only units as indecomposables.
+\end{enumerate}
+\end{observation}
+
+\begin{conjecture}\label{conj:ellone}
+$\ell_{\mathcal O_K}=1$ if and only if $K=K_t$ is a simplest cubic field with $\mathcal O_K=\Z[\theta_t]$ and $t\ne0,-3$.
+\end{conjecture}
+
+By Lemma~\ref{lem:signpattern}, the ``only if'' part, apart from the equality $\mathcal O_K=\Z[\theta_t]$, would
+follow from this statement: if $\ell_{\mathcal O_K}=1$, then for some direction $k$ the neighbour
+$\varepsilon=N_k(1)$, normalised by $\sigma_k(\varepsilon)>0$, has one positive and one negative small conjugate, and
+$1-\varepsilon$ is a relative minimum. Both small conjugates cannot be positive, since then $\varepsilon-1$ would
+contradict the minimality of $\varepsilon$. In the census both conditions hold in every direction
+(Observation~\ref{obs:indec}(b)), and $\{1,\varepsilon,1-\varepsilon\}$ is the degenerate minimal triple of
+Lemma~\ref{lem:triples}.
+
 \section{Further directions}\label{sec:forward}
 
 \subsection{Other degrees}
@@ -1135,7 +1322,8 @@ Voronoi's multidimensional continued fraction, not the Jacobi--Perron algorithm,
 lattice methods do apply, contrary to what an earlier draft suggested. Section~\ref{sec:sails} makes the
 link explicit: the relative minima are the Klein sail vertices together with German's points
 \cite{Bykovskii,German}. The totally positive ones are indecomposable (Lemma~\ref{lem:indec}). Their cell
-structure is the Minkowski--Voronoi complex of Karpenkov--Ustinov~\cite{KU}.
+structure is the Minkowski--Voronoi complex of Karpenkov--Ustinov~\cite{KU}. Section~\ref{sec:indecsq} uses
+perfect forms in the other direction, to constrain the indecomposables themselves.
 
 \subsection{Open problems}
 \begin{enumerate}[label=\textup{(\arabic*)},leftmargin=2.2em]
@@ -1165,6 +1353,11 @@ triples in this range.
 $\nK=3$ does not occur for $D\le10^5$.
 \item Can an extreme square be a German point with $k\ge3$, or lie on a facet at integer distance greater
 than $1$? Relative minima of both kinds occur (Observation~\ref{obs:sails}).
+\item Is there a totally real cubic field in which every indecomposable is a unit? By
+Remark~\ref{rem:onlyunits}(c) its totally positive sail would be two unimodular triangles
+$\conv(1,a,ab)$, $\conv(1,b,ab)$ with $b=-a+m+n\,ab$, $m+n\ge3$, and $U^+\ne U^2$.
+\item Prove Conjecture~\ref{conj:ellone}. By Lemma~\ref{lem:signpattern} the main step is to show that
+$\ell_{\mathcal O_K}=1$ forces $1-N_k(1)$ to be a relative minimum.
 \end{enumerate}
 
 \section*{Computational note}

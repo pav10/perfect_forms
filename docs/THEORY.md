@@ -191,3 +191,128 @@ eutaxy, signs) use exact integer/rational arithmetic, PARI's exact routines (HNF
 error bound.  Floating point is otherwise used only to choose starting points and
 representatives.  PARI's `bnfinit` units are used for size reduction and for the unit
 index certificate only.
+
+## 7. Indecomposables of totally real cubic fields
+
+K totally real cubic, O = O_K, D = disc K, O+ the totally positive elements, U = O^x, U+
+the totally positive units, U^2 the squares of units, O^v = {beta : Tr(beta O) in Z} the
+codifferent (N(O^v) = 1/D).  x in O+ is *indecomposable* if it is not y + z with
+y, z in O+; Ind is the set of indecomposables (1 in Ind).  P = conv(O+) is the Klein
+polyhedron of the totally positive orthant; U+ acts freely on its boundary (the sail)
+with quotient a 2-torus with finitely many cells (manuscript Prop. 7.1).  Every facet F
+is a compact polygon with an outer functional L_F(x) = Tr(gamma_F x), gamma_F >> 0 in K,
+L_F >= 1 on P and L_F = 1 on F.  The cone determinant of a triangle conv(v1, v2, v3)
+with v_i in O is [O : Z v1 + Z v2 + Z v3].
+
+**PROVED** (Lemma 7.1).  (a) Totally positive units are indecomposable.  (b) Sail vertices
+are indecomposable.  (c) If x in O+ and L_F(x) < 2 for some facet F, then x is
+indecomposable.  *Proof.*  (a) y < u coordinatewise forces N(y) < 1.  (b) If v = y + z,
+then y and y + 2z lie in P (z is in the recession cone) and v is their midpoint.
+(c) L_F(y + z) = L_F(y) + L_F(z) >= 2.  []
+
+**PROVED** (Lemma 7.2, integral perfect forms with unit minimal vectors).  Let alpha >> 0
+lie in O^v, with Tr(alpha x^2) >= 1 for all x in O \ 0 and Tr(alpha u_i^2) = 1 for three
+units u_1, u_2, u_3 with distinct squares.  Then Tr(alpha u_j u_k) = delta_jk, {u_1, u_2, u_3}
+is a Z-basis of O, and N(alpha) D = 1, i.e. alpha O = O^v.  Consequently any two such
+alpha differ by a totally positive unit.
+*Proof.*  b(x, y) = Tr(alpha x y) is integral on O (xy in O, alpha in O^v), and its
+determinant on O is N(alpha) D, a positive integer.  For j != k, u_j +- u_k != 0, so
+1 <= b(u_j +- u_k, u_j +- u_k) = 2 +- 2 b(u_j, u_k), hence |b(u_j, u_k)| <= 1/2, hence
+b(u_j, u_k) = 0.  The u_j are orthonormal, so independent, and L = Z u_1 + Z u_2 + Z u_3 has
+determinant 1 = [O : L]^2 N(alpha) D.  Both factors are positive integers.  If alpha' is
+another one, alpha' O = alpha O, so alpha'/alpha is a unit, totally positive.  []
+
+In the census language: an integral perfect form whose minimal vectors are units is
+the cubic lattice I_3 with an orthonormal basis of units; there are at most [U+ : U^2]
+classes of them.  `analysis/one_square_class.py` checks this on the cubic census
+(FINDINGS section 9).
+
+**PROVED** (Lemma 7.3, unit-square facets).  Let F = conv(u_1^2, u_2^2, u_3^2) be a
+triangular facet of P, u_i units, with cone determinant 1.  Then gamma_F satisfies the
+hypotheses of Lemma 7.2: L_F = 1 on the Z-basis u_1^2, u_2^2, u_3^2 of O, so L_F(O) is in
+Z, i.e. gamma_F in O^v; and Tr(gamma_F x^2) = L_F(x^2) >= 1 because x^2 in O+ lies in P.
+Hence gamma_F O = O^v, and all such facets lie in one U+-orbit: if gamma_F' = eta gamma_F
+with eta in U+, then F' = eta^-1 F, since F_{eta gamma} = {y in P : Tr(gamma eta y) = 1}
+= eta^-1 F_gamma.
+
+**PROVED** (Theorem 7.4).  In every totally real cubic field some indecomposable is not
+the square of a unit; i.e. Ind / U^2 has at least two elements.
+*Proof.*  Suppose Ind = U^2 (one class, the class of 1).
+1. U+ = U^2: totally positive units are indecomposable (7.1a), hence squares.
+2. The vertex set of P is U+ and V = 1: vertices are indecomposable (7.1b), hence units;
+   the vertex set is a non-empty U+-invariant subset of the single orbit U+.
+3. Facets contain no lattice points other than their vertices: such a point p is in O+
+   with L_F(p) = 1, so indecomposable (7.1c), and not a unit, since units are vertices.
+4. Euler on the sail torus: V - E + F = 0 with V = 1 and 2E = sum_k k F_k (F_k facet
+   classes with k vertices) gives sum_k (k - 2) F_k = 2: two triangle classes, or one
+   quadrilateral class.
+5. No quadrilateral.  An empty lattice quadrilateral (step 3; the lattice points of the
+   facet plane form a 2-dimensional affine lattice) is a parallelogram: by Pick it has
+   area 1, its two triangles across a diagonal are unimodular, and in coordinates
+   p_2 = (0,0), p_1 = (1,0), p_3 = (0,1) the fourth vertex is (1 + k, 1 - k), convex only
+   for k = 0.  On the torus with V = 1, E = 2, F = 1 the gluing is a b a^-1 b^-1
+   (orientable, and units preserve orientation), so the vertices are 1, a, ab, b in
+   cyclic order with a, b in U+.  Then 1 + ab = a + b, i.e. (1 - a)(1 - b) = 0: impossible.
+6. Both triangles have cone determinant 1.  Otherwise the half-open parallelepiped
+   {sum lambda_i v_i : 0 <= lambda_i < 1} of a triangle F = conv(v1, v2, v3) contains a
+   lattice point x != 0.  It is totally positive, and so is x' = v1 + v2 + v3 - x, so
+   1 <= L_F(x) = 3 - L_F(x') <= 2.  If L_F(x) < 2, x is indecomposable (7.1c) and not a
+   unit: if L_F(x) > 1 it is not on the sail, and if L_F(x) = 1 it is a lattice point of F
+   other than a vertex.  If L_F(x) = 2, x' is a lattice point of F other than a vertex,
+   against step 3.
+7. By steps 1, 2 and 6 both triangle classes satisfy Lemma 7.3 (their vertices are in
+   U+ = U^2), so they lie in one U+-orbit, against step 4.  []
+
+Remarks.  (i) The perfect forms enter through Lemma 7.2: in the situation of Theorem 7.4
+the squared sail coincides with P (both are conv(U+) + R^3_{>=0}), each facet is a
+perfect form, and Lemma 7.2 says it would be the integral form I_3; two classes of I_3
+facets cannot coexist.  (ii) The real quadratic analogue fails, as it must (Q(sqrt 5) has
+Ind = U^2): the sail modulo U+ is a circle, which needs only one edge.  (iii) "Every
+indecomposable is a unit" (Ind = U+): steps 2-6 go through with U+ in place of U^2
+(FINDINGS section 9: S+ = 2, two unimodular triangles conv(1, a, ab), conv(1, b, ab),
+b = -a + m + n ab with m + n >= 3 by convexity), and Theorem 7.4 adds that U+ != U^2, so
+the units do not have all signatures.  This version is open.  (iv) Degree >= 4: Lemmas
+7.2 and 7.3 hold verbatim (Gram matrix I_m, alpha O = O^v), but steps 4-6 do not: empty
+lattice simplices of dimension >= 3 need not be unimodular, the parallelepiped argument
+only gives 1 <= L_F(x) <= m - 1, and a torus of dimension >= 3 can have a single cell.
+
+**PROVED** (Lemma 7.5, minimal triples; any order O of a totally real cubic field).  A
+minimal triple {x, y, z} of the Minkowski-Voronoi complex (manuscript Prop. 7.7) is either
+a Z-basis of O or, after changing signs, z = x + y.
+*Proof.*  Let m_i = max of |x_i|, |y_i|, |z_i|; each of x, y, z attains a different m_i,
+say |x_1| = m_1, |y_2| = m_2, |z_3| = m_3, and all other entries are smaller in absolute
+value (equality |a_i| = |b_i| forces a = +-b).  The closed box B = prod [-m_i, m_i]
+contains no lattice point other than 0, +-x, +-y, +-z.
+Independent case.  Let L = Z x + Z y + Z z.  Minkowski: 8 m_1 m_2 m_3 <= 8 covol(O), and
+|det(x, y, z)| <= 4 m_1 m_2 m_3 (the determinant is affine in each entry, so on the box
+of matrices with |entries| <= m it is maximal at sign matrices, where it is at most 4),
+so [O : L] <= 4.  O/L has no element of order 2: such an element is represented by
+(a x + b y + c z)/2 with a, b, c in {0, 1} not all 0, with any signs.  One or two nonzero
+terms already lie strictly inside B.  With three terms, coordinate i of x + s y + t z
+reaches 2 m_i only if the three terms in it have one sign, which fixes (s, t) uniquely
+for each i.  So of the four sign choices at least one has all |coordinates| < 2 m_i, and
+half of it is a lattice point strictly inside B.  O/L has no element of order 3: it is
+represented by (a x + b y + c z)/3 with a, b, c in {-1, 0, 1}, and
+|a x_i + b y_i + c z_i| < 3 m_i.  So [O : L] is prime to 6 and at most 4, hence 1.
+Dependent case.  x, y are adjacent, so (x +- y)/2 is not in O (it lies strictly inside
+B(x v y)), and {x, y} is a basis of O cap (Q x + Q y) by the same argument in dimension 2.
+Write z = p x + q y with p, q in Z; changing signs of x, y, p >= 0 and q >= 0.  q = 0 or
+p = 0 makes z a multiple of x or y, not a relative minimum unless z = +-x, +-y.  If
+p, q >= 1 and (p, q) != (1, 1), then x + y = (q - 1)/(p + q - 1) x + (p - 1)/(p + q - 1) y +
+1/(p + q - 1) z is a convex combination with at least two positive weights, hence strictly
+inside B, so x + y in {+-x, +-y, +-z}: impossible.  So z = x + y.  []
+
+`analysis/minkowski_voronoi.py` checks |det(x, y, z)| in {0, 1} for every minimal triple
+and counts the degenerate classes: for the 832 fields with D <= 20000, 12,903 of the 50,176
+classes are degenerate (at most half in each field; none only for D = 81).  In each of the 26 fields with ell = 1 (D <= 10^6) one of the two triple classes is
+a basis and the other is degenerate, z = +-x +- y with x, y, z units (through 1 it is
+{1, eps, 1 - eps}, eps = N_k(1)); D = 81 (ell = 2) has four basis classes and no degenerate
+one.
+
+**PROVED** (Lemma 7.6, sign pattern).  Let eps be a unit with |eps_1| > 1 > |eps_2|, |eps_3|,
+signs (+, +, -), such that 1 - eps is also a unit.  Then eps is a root of
+x^3 - (t + 3) x^2 + t x + 1 = P_t(x - 1), P_t(x) = x^3 - t x^2 - (t + 3) x - 1, so K is the
+simplest cubic field K_t and Z[theta_t] is contained in O with theta_t = eps - 1.
+*Proof.*  Write the minimal polynomial as x^3 - A x^2 + B x - C.  C = N(eps) < 0, so
+C = -1; N(1 - eps) = (1 - eps_1)(1 - eps_2)(1 - eps_3) < 0 equals the value at 1, so
+1 - A + B + 1 = -1, B = A - 3.  With t = A - 3 this is P_t(x - 1).  []
