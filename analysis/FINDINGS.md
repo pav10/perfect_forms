@@ -309,3 +309,67 @@ numerical (Reg/2 in degree 2), so these are numerical checks, not certificates.
   the bound and the conjectured bound hold in every field.  log(bound/n_K) has median 38
   (min 4.18 at D = 49); the conjectured bound is tightest for D = 49, 81, 169, 148, 257 (log
   slack 2.24, 2.68, 3.85, 4.23, 4.78), i.e. for the smallest fields, as in degree 2.
+
+## 9. Indecomposables and the "one square class" problem (cubic)
+
+Question (user, open problem): is there a totally real cubic field with only one class of
+indecomposables modulo squares of units, or (stronger, and the better target for a
+nonexistence proof) one in which every indecomposable is a unit?  Ind = indecomposable
+elements of O_K^+ (totally positive, not a sum of two totally positive integers).  Data: the
+sails summaries of pav10/sails (read-only), all 54,600 fields with D <= 10^6.
+
+* **PROVED.**  (i) Every unit is a relative minimum (if |sigma_i(y)| <= |sigma_i(u)| for all
+  i, then |N(y)| <= 1, so y is a unit with all |sigma_i(y/u)| = 1, i.e. y = +-u).  (ii) Every
+  totally positive relative minimum is indecomposable (manuscript Lemma 7.6).
+* **PROVED** (one square class forces ell = 1).  If Ind = {u^2 : u in O^x} (one square class;
+  1 is always indecomposable), then every totally positive unit is a square, so the sign map
+  O^x -> {+-1}^3 is onto (U/U^2 has order 8), so every relative minimum is a unit times a
+  totally positive one, which is indecomposable, hence a unit.  So ell_K = 1, and then:
+  mu_K = 1 (K is unit reducible in the sense of Leibak--Porter--Ling), n_K <= 2, the
+  Minkowski--Voronoi complex is one hexagon, every sail vertex is a unit (V = 1, F <= 2), and
+  Reg_K <= (log 2D)^2/4 (regulator sandwich with mu = 1).
+* **CERTIFIED** (D <= 10^6; `analysis/ell_one.py` run on the 27 fields with at most 2 sail
+  facets modulo units, which by Prop. 7.1 and V = 1 contain every field with ell = 1;
+  `data/derived/ell_one_candidates_deg3_D1e6.json`).  ell_K = 1 holds for exactly 26 fields,
+  and they are exactly the simplest cubic fields x^3 - t x^2 - (t+3) x - 1 with O_K = Z[theta]
+  for t = -1 and 1 <= t <= 29 (t = 3, 5, 12, 21 are not monogenic and do not occur).  The
+  remaining candidate, t = 0 (D = 81), is monogenic but has ell = 2: its second class is a
+  German point.  In all 26 fields 1 has exactly 6 Minkowski--Voronoi neighbours.
+* **CERTIFIED** (sails data).  Each of these fields has a non-unit totally positive
+  indecomposable (norm 2t + 3 for t >= 1, e.g. up to units theta - 1, N(theta - 1) =
+  -P_t(1) = 2t + 3; norm 7 for t = -1).  No field with D <= 10^6 has only unit indecomposables.
+* **CONJECTURE.**  ell_K = 1 iff K is a simplest cubic field with O_K = Z[theta_t], t != 0.
+  With it, and with the existence of a non-unit indecomposable in these fields (expected to be
+  in the literature on indecomposables of simplest cubic fields [REF?]), no totally real
+  cubic field has one indecomposable square class.  Proof idea: ell = 1 means the six
+  Minkowski--Voronoi neighbours of 1 are units forming one hexagon; the emptiness of the
+  boxes of the six adjacent pairs and of the two minimal triples are explicit inequalities
+  between the absolute conjugates of two units, which should force a cyclic Galois symmetry.
+* **PROVED** (all indecomposables units, the stronger property).  Let S+ be the total cone
+  determinant of the totally positive sail modulo totally positive units (`S` of pav10/sails,
+  totally positive class).  Then S+ >= 2, and every indecomposable is a unit iff S+ = 2, iff
+  the totally positive sail modulo totally positive units is the one-vertex torus made of two
+  unimodular triangles conv(1, a, ab), conv(1, b, ab), where a, b generate the totally
+  positive units.  *Proof.*  A triangulation of the sail torus (Euler) has 2V triangles,
+  each with cone determinant >= 1, so S+ >= 2V >= 2.  If all indecomposables are units, the
+  sail vertices (totally positive relative minima by Bykovskii, hence indecomposable) are
+  units, so V = 1 (the totally positive units form one orbit).  If a triangle tau of a facet
+  with height function s had cone determinant > 1, its half-open parallelepiped would contain
+  a lattice point x != 0 with 1 <= s(x) <= 2, since s >= 1 on totally positive lattice points
+  and x' = u1 + u2 + u3 - x is one too.  If s(x) < 2, x is indecomposable (a sum has s >= 2),
+  and it is not a unit, because units are relative minima, which lie on the sail (German), and
+  a unit on the sail is a vertex (if one totally positive unit is a vertex, all are).  If
+  s(x) = 2, then x' is a non-vertex lattice point of the facet, again a non-unit
+  indecomposable.  So all cones are unimodular, S+ = 2V = 2.  Conversely, if S+ = 2 the
+  sail is two unimodular triangles with one vertex class; 1 is on the sail and a unimodular
+  triangle has no lattice points besides its vertices, so 1 is a vertex and all vertices are
+  units; every totally positive lattice point is a non-negative integer combination of the
+  vertices of its cone, so the indecomposables are the vertices.  []
+  Consequence: O_K = Z + Za + Zab = Z + Zb + Zab, hence b = +-a + m + n ab with m, n in Z: a
+  linear relation among three totally positive units.
+* **CERTIFIED** (sails data, D <= 10^6).  S+ >= 3 in every field; S+ = 3 only for D = 49, then
+  S+ = 4 (D = 257), 5 (D = 81, 697), ...  So "all indecomposables are units" is equivalent to
+  the extremal value S+ = 2, which does not occur; a proof of S+ >= 3, or of the
+  impossibility of the unit relation together with the two convexity conditions, would
+  settle the problem.
+
