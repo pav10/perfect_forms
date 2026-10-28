@@ -52,3 +52,18 @@ Notes 79 (2006), Thm 2) with k = 1..7, and 17 barycentres on faces at integer di
 710 of 832 ("relative minima = vertices and barycentres") referred to that collection and
 also required every collected barycentre to be a relative minimum; the corrected statement
 (non-vertex relative minima all have k = 1) holds in 763 fields.
+
+## 2026-10: Gunnells--Yasaki, Table 1, D = 184
+
+Gunnells--Yasaki, *Perfect forms over totally real number fields* (arXiv:0908.3130), Table 1,
+gives N_D = 4306 GL_2(O)-classes of perfect binary forms over Q(sqrt 46) (D = 184, h = 1).
+`engine/binary.py` finds 4308 classes, with both certificates (edge balance and the mass
+formula).  An independent recheck (`analysis/binary_verify.py 46`, run twice, including once after a
+machine restart) reproduced 4308. That recheck grouped the classes by invariants that do
+not use qfisom: N(det A), the number of minimal vectors, |Aut A|, the denominator, and
+vector counts of the trace forms. It then ran qfisom in both directions on all 5400 pairs
+the invariants do not separate: no two classes are isometric.  Every class is an exactly
+perfect form of minimum 1, so there are at least 4308 inequivalent classes, and the
+certificates indicate the list is complete.  All other 39 entries of Table 1 agree with
+this engine.  The certified count 4308 is used (rule 4).
+

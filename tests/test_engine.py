@@ -237,7 +237,9 @@ def test_binary_additive():
 
 
 # Gunnells--Yasaki, Perfect forms over totally real number fields (arXiv:0908.3130), Table 1:
-# number of GL_2(O)-classes of perfect binary forms over Q(sqrt d), by discriminant D
+# number of GL_2(O)-classes of perfect binary forms over Q(sqrt d), by discriminant D, as printed.
+# The entry for D = 184 (4306) disagrees with this engine's certified 4308 (data/ERRATA.md); the
+# tests below use only D <= 44.
 GY_TABLE = {5: 2, 8: 2, 12: 3, 13: 9, 17: 34, 21: 16, 24: 22, 28: 30, 29: 39, 33: 149, 37: 97, 40: 52,
             41: 144, 44: 66, 53: 93, 56: 144, 57: 515, 60: 89, 61: 206, 65: 301, 76: 404, 88: 645, 92: 343,
             104: 326, 120: 524, 124: 1473, 136: 1135, 140: 487, 152: 995, 156: 941, 168: 918, 172: 2683,

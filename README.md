@@ -128,6 +128,11 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 * `analysis/cubic_census.py CENSUS...`: census statistics (Markdown).
 * `analysis/binary_census.py D_MIN D_MAX OUT [--jobs J]`: certified census of perfect binary
   forms over Q(sqrt d).
+* `analysis/binary_verify.py d`: independent recheck of one binary census field (classes
+  separated by qfisom-free invariants, qfisom both ways on the rest).
+* `analysis/binary_compare.py CENSUS [HH_TSV]`: a binary census against Gunnells--Yasaki
+  Table 1, Leibak's bound gamma^4 <= 4 D^2, and the multiplicative constant of
+  pav10/hermite-humbert (read-only; gamma_add >= 2 sqrt(gamma_mult) by AM-GM).
 * `analysis/recheck.py CENSUS REPORT [--sample K] [--replace-dirty FIXED] [--jobs J]`:
   recompute records and compare (provenance repair, spot checks).
 * `analysis/porter_mendelsohn.py CENSUS [OUT]`: n_K against the Porter--Mendelsohn bound
@@ -147,6 +152,7 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 | `data/census/deg3_D2e4.jsonl.xz` | certified records (with forms and relative minima) of all 832 cubic fields with D <= 20000 |
 | `data/census/deg3_D1e5.jsonl.xz` | certified records (with forms and relative minima) of all 4804 cubic fields with D <= 10^5; provenance re-checked, see `deg3_D1e5.recheck.json` |
 | `data/census/deg2_D1e5.jsonl.xz` | certified records (no forms; ell from the continued fraction) of all 30,394 real quadratic fields with D <= 10^5 |
+| `data/census/binary_deg2.jsonl.xz` | certified binary census (perfect binary forms mod GL_2(O_K), additive normalisation) for all squarefree d <= 100 and d = 105, 113, 129, 141; per class: A, |Aut|, minimal vectors, gamma, eutaxy |
 | `data/census/deg2_d2e5_rest.jsonl.xz` | the other 91,186 fields Q(sqrt d), d <= 200000 squarefree (D up to 799,996), same format; with the previous file, Yasaki's range |
 | `data/legacy/census_cubic_D20000_gp.jsonl` | output of `voronoi_unary.gp` on the same fields |
 | `data/derived/sails_vs_perfect_deg3_D2e4.jsonl.xz` | per field: n, e, mu, ell, sail vertices/edges/facets (all sign classes, mod units), positions of the extreme squares |
@@ -167,7 +173,7 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 | E2: non-totally-real signatures | signature (1,1) done (`engine/complexcubic.py`, Komatsu--Watanabe reproduced); (2,1), (1,2), (0,3) not started |
 | B2: cubic census | D <= 10^5 done (4804 fields, analysis/FINDINGS.md); D <= 10^6 needs a go-ahead |
 | B1: real quadratic census | D <= 10^5 done (30,394 fields): LPL Thm 1.2 and Yasaki Thm 5.1 confirmed in every field; d <= 200000 squarefree (121,580 fields) done: Yasaki's total of 10,732,735 perfect forms reproduced exactly |
-| H1: binary forms | additive normalisation done (complete lists, two certificates); Gunnells--Yasaki Table 1 (D <= 44) and Leibak's 22 classes over Q(sqrt 6) reproduced |
+| H1: binary forms | additive normalisation: census of all squarefree d <= 100 (126,321 classes, certified); Gunnells--Yasaki Table 1 reproduced except D = 184 (4308 vs 4306, ERRATA); rank-2 conjectures in analysis/FINDINGS.md section 3 |
 | sails link (cubic) | D <= 10^5 done (analysis/FINDINGS.md §1): three hulls, Minkowski--Voronoi complex (V, E, F) = (2 ell, 3 ell, ell) |
 
 ## Layout

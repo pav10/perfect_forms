@@ -164,24 +164,45 @@ simplicial; mu/Reg median 0.616 in [0.238, 0.948] over h = 1, Reg > 10).  New:
 
 ## 3. Binary forms over real quadratic fields, additive normalisation (CERTIFIED)
 
-**Agreement with the literature.**  Every count computed so far equals Gunnells--Yasaki,
-*Perfect forms over totally real number fields* (arXiv:0908.3130), Table 1 (GL_2(O)-classes
-by discriminant D): D = 5, 8, 12, 13, 17, 24, 28, 40, 44 give 2, 2, 3, 9, 34, 22, 30, 52, 66;
-and Leibak's thesis Thm 3.1 (exactly 22 classes over Q(sqrt 6)).  Leibak's Thm 2.2 remark
-(the bound gamma_{2,K} <= gamma_4 D^(1/2) is attained for d = 2, 3, 6) agrees with
-gamma^4 = (2D)^2 below.
+Census: the GL_2(O_K)-classes of perfect binary forms Tr(v^T A v) for all 60 squarefree
+d <= 100, plus d = 105, 113, 129, 141 (`data/census/binary_deg2.jsonl.xz`, 126,321 classes;
+`analysis/binary_census.py`, certificates: edge balance and the mass formula
+sum (-1)^dim/|Stab| = 0, both passed in every field).  Largest: d = 94 (D = 376), 18,610
+classes.  This is the additive (trace) normalisation of Koecher, Leibak and Gunnells--Yasaki;
+the multiplicative (Icaza) constant of pav10/hermite-humbert evaluates S1[v1] S2[v2]
+instead of S1[v1] + S2[v2] and is a different theory.
 
-Perfect binary forms Tr(v^T A v) modulo GL_2(O_K) (engine/binary.py; certificates: edge
-balance and the mass formula sum (-1)^dim/|Stab| = 0):
-
-| d | 5 | 2 | 3 | 13 | 17 | 6 | 7 | 10 (h = 2) | 11 |
-|---|---|---|---|---|---|---|---|---|---|
-| perfect classes mod GL_2(O_K) | 2 | 2 | 3 | 9 | 34 | 22 | 30 | 52 | 66 |
-| ... up to Galois as well | 2 | 2 | 3 | 6 | | 13 | 17 | 29 | 36 |
-
-Classes with equal invariants are Galois conjugates (Gal(K/Q) is not in GL_2(O_K)).
-For d = 2 (mod 4) and 3 (mod 4) in this range the maximum is gamma^4 = (2D)^2, i.e.
-gamma_{2,K} = gamma_4 D^(1/2) (a trace lattice similar to D_4); not for d = 5, 13.
+* **CERTIFIED** (literature).  Gunnells--Yasaki, *Perfect forms over totally real number
+  fields* (arXiv:0908.3130), Table 1, all 40 entries (D <= 264): 39 agree; for D = 184
+  (d = 46) this census has 4308 classes where the table has 4306.  Rechecked independently
+  (`analysis/binary_verify.py 46`: 5400 pairs not separated by qfisom-free invariants, no
+  isometry in either direction); recorded in data/ERRATA.md.  Leibak's thesis Thm 3.1
+  (22 classes over Q(sqrt 6)) agrees.
+* **CERTIFIED** (Leibak's bound in rank 2, thesis Thm 2.2: gamma_{2,K}^4 <= gamma_4^4 D^2 =
+  4 D^2).  Never violated.  Equality (a trace lattice similar to D_4) holds for all 41 fields
+  with d not = 1 mod 4 (d <= 100) and, among d = 1 mod 4, exactly for d = 33, 57, 105, 129.
+  Unlike rank 1 (manuscript Thm 8.1), equality does not force 2 to ramify (d = 33).
+* **CONJECTURE.**  gamma_{2,K}^4 = 4 D^2 iff d is not 1 mod 4 or d = 9 mod 24 (2 split and
+  3 | d).  It predicted d = 105, 129 (yes) and 113, 141 (no) before they were computed.
+  Equivalently: D_4 (scaled) carries a self-adjoint endomorphism with the minimal polynomial
+  of a generator of O_K that makes it a free O_K-module of rank 2; a proof would go through
+  the Hurwitz-quaternion structure of D_4.
+* **CERTIFIED** (pav10/hermite-humbert, read-only, `analysis/binary_compare.py`).  The
+  additive constant and Icaza's multiplicative constant satisfy gamma_add >= 2 sqrt(gamma_mult)
+  (AM-GM; Leibak's thesis Prop. 2.1 with n = 2).  In all 57 fields where both are certified,
+  gamma_add^4 / (16 gamma_mult^2) lies in [1.56, 46.1] (min at d = 5, max at d = 73), never
+  1: the additive and multiplicative extreme forms are different.
+* **CONJECTURE** (rank-2 volume law).  n_2(K) is comparable to zeta_K(-1) Reg_K, which up to a
+  constant is the volume of GL_2(O_K) \ {positive binary forms over K (x) R} / R_{>0} (the
+  Hilbert modular surface times the log-unit line [REF?: volume formula of the Hilbert
+  modular group]).  n_2/(zeta_K(-1) Reg_K) has median 33.7 over the 53 fields with D >= 40
+  and lies in [30.2, 35.7] for the 19 fields with D > 200; the log-log slope of n_2 against
+  zeta_K(-1) Reg_K is 1.03 (against zeta_K(-1) alone 1.29).  zeta_K(-1) from the classical
+  formula (1/60) sum_{b^2 < D, b = D mod 2} sigma_1((D - b^2)/4), checked against PARI's
+  lfun for D = 5, 8, 12, 13.  This is the rank-2 analogue of n_K comparable to Reg_K in
+  rank 1, and suggests a lower bound by a covering argument as in the regulator sandwich.
+* Classes with equal invariants are typically Galois conjugates (Gal(K/Q) is not in
+  GL_2(O_K)); the census records the number of classes up to Galois as well.
 
 ## 4. The floor: is n_K >= 2 for totally real cubic fields? (plan C1)
 
