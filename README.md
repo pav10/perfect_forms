@@ -124,7 +124,9 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
   `--facets CENSUS CENSUS_OUT OUT` lists the facets (shape, distance, exact barycentric
   coordinates) of the extreme squares that are not sail vertices.
 * `analysis/minkowski_voronoi.py CENSUS [LIMIT] [OUT] [JOBS]`: cells (V, E, F) of the
-  Minkowski--Voronoi complex modulo units (relative minima, adjacent pairs, minimal triples).
+  Minkowski--Voronoi complex modulo units (relative minima, adjacent pairs, minimal triples),
+  and `V_degenerate`, the classes of linearly dependent minimal triples (every other minimal
+  triple is checked to be a Z-basis of O, docs/THEORY.md Lemma 7.5).
 * `analysis/cubic_census.py CENSUS...`: census statistics (Markdown).
 * `analysis/binary_census.py D_MIN D_MAX OUT [--jobs J]`: certified census of perfect binary
   forms over Q(sqrt d).
@@ -139,6 +141,11 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
   (covering radius numerical).
 * `analysis/leibak_equality.py CENSUS...`: the exact criterion for equality in Leibak's
   bound (docs/THEORY.md section 4) against the census values.
+* `analysis/ell_one.py FIELDS DMAX OUT JOBS`: whether all relative minima are units
+  (ell = 1); see analysis/FINDINGS.md section 9 (indecomposables).
+* `analysis/one_square_class.py CENSUS`: the integral perfect forms (in the codifferent)
+  whose minimal vectors are units, with the checks of docs/THEORY.md Lemma 7.2 (Gram matrix
+  I_3, Z-basis, N(alpha) D = 1, at most [U+ : U^2] classes); FINDINGS section 9.
 * `analysis/yasaki_count.py CENSUS...`: Yasaki's global count (10,732,735 perfect forms over
   the 121,580 fields Q(sqrt d), d <= 200000 squarefree) from certified records, with his
   Thm 5.1 and Leibak--Porter--Ling Thm 1.2 on the whole range.
@@ -158,7 +165,7 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 | `data/derived/sails_vs_perfect_deg3_D2e4.jsonl.xz` | per field: n, e, mu, ell, sail vertices/edges/facets (all sign classes, mod units), positions of the extreme squares |
 | `data/derived/sails_vs_perfect_deg3_D1e5.jsonl.xz` | the same for all 4804 cubic fields with D <= 10^5 (`--census`; no relative minima as elements) |
 | `data/derived/sails_nonvertex_extreme_deg3_D1e5.jsonl.xz` | the 123 extreme squares (D <= 10^5) that are not sail vertices: facet shape, distance, exact barycentric coordinates |
-| `data/derived/minkowski_voronoi_deg3_D2e4.jsonl.xz` | (V, E, F) of the Minkowski--Voronoi complex mod units, all 832 cubic fields with D <= 20000 |
+| `data/derived/minkowski_voronoi_deg3_D2e4.jsonl.xz` | (V, E, F) of the Minkowski--Voronoi complex mod units and the number `V_degenerate` of degenerate minimal triple classes, all 832 cubic fields with D <= 20000 |
 | `data/derived/porter_mendelsohn_deg{2,3}_D1e5.jsonl.xz` | n_K against the Porter--Mendelsohn bound (covering radius numerical, 6 digits) |
 | `data/ERRATA.md` | discrepancies between computations, and corrections |
 
@@ -175,6 +182,7 @@ Results so far are in [`analysis/FINDINGS.md`](analysis/FINDINGS.md) §3.
 | B1: real quadratic census | D <= 10^5 done (30,394 fields): LPL Thm 1.2 and Yasaki Thm 5.1 confirmed in every field; d <= 200000 squarefree (121,580 fields) done: Yasaki's total of 10,732,735 perfect forms reproduced exactly |
 | H1: binary forms | additive normalisation: census of all squarefree d <= 100 (126,321 classes, certified); Gunnells--Yasaki Table 1 reproduced except D = 184 (4308 vs 4306, ERRATA); rank-2 conjectures in analysis/FINDINGS.md section 3 |
 | sails link (cubic) | D <= 10^5 done (analysis/FINDINGS.md §1): three hulls, Minkowski--Voronoi complex (V, E, F) = (2 ell, 3 ell, ell) |
+| indecomposables (cubic) | PROVED (docs/THEORY.md §7, manuscript Thm 9.4): no totally real cubic field has only squares of units as indecomposables; "only units" and the classification of ell = 1 open (FINDINGS §9) |
 
 ## Layout
 

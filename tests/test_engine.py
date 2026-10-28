@@ -198,6 +198,36 @@ def test_leibak_equality():
         assert (extreme.summary(O, V)['leibak_ratio'] == 1) == a == le.cubic(pol), (pol, O.disc)
 
 
+def test_one_square_class():
+    """docs/THEORY.md 7 (manuscript Sec. 9).  Lemma 7.2: an integral perfect form with unit
+    minimal vectors is I_3 and generates the codifferent (N(alpha) D = 1); one such class in
+    the simplest cubic fields with O = Z[theta_t] (D = 49, 81, 169), none in 3.3.148.1.
+    Lemma 7.5: minimal triples are bases or degenerate (checked inside counts); degenerate
+    classes: D = 49 and 169 (ell = 1) one, D = 81 none, D = 148 two.  Lemma 7.6: for D = 169,
+    eps = N_k(1) and 1 - eps are units and eps is a root of P_1(x - 1)."""
+    sys.path.insert(0, os.path.join(os.path.dirname(HERE), 'analysis'))
+    import one_square_class as osc
+    import minkowski_voronoi as mv
+    for pol, k in (('x^3-x^2-2*x+1', 1), ('x^3-3*x-1', 1), ('x^3-x^2-4*x-1', 1), ('x^3-x^2-3*x+1', 0)):
+        O, V, f = run(pol)
+        res = osc.integral_unit_forms(O, [(P.alpha, P.minvecs) for P in V.classes])
+        assert len(res) == k, (pol, res)
+        assert all(r['identity'] and r['basis'] and r['N_alpha_D'] == '1' for r in res), (pol, res)
+    for pol, ell, dg in (('x^3-x^2-2*x+1', 1, 1), ('x^3-x^2-4*x-1', 1, 1), ('x^3-3*x-1', 2, 0),
+                         ('x^3-x^2-3*x+1', 3, 2)):
+        c = mv.counts(pol)
+        assert (c['ell'], c['V'], c['V_degenerate'], c['euler']) == (ell, 2 * ell, dg, 0), (pol, c)
+    O = Order('x^3-x^2-4*x-1')
+    M = RelativeMinima(O)
+    for k in range(3):
+        e = M.single_neighbour(O.one, k)
+        if O.embed_accurate(e)[k] < 0:
+            e = tuple(-t for t in e)
+        one_minus = tuple(-e[i] + (i == 0) for i in range(3))
+        assert abs(O.norm(e)) == 1 and abs(O.norm(one_minus)) == 1
+        assert str(pari.charpoly(O.to_alg(e))) == 'x^3 - 4*x^2 + x + 1'
+
+
 def test_binary_additive():
     """Binary forms (additive normalisation): equivalence under random GL_2(O) transforms,
     Galois pairing, and the edge-balance certificate.  The class counts agree with

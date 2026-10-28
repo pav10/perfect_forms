@@ -11,7 +11,9 @@ minimal triple a box max_i X_i/c_i supporting {(|sigma_i(y)|)} at 3 points.
 For each class of relative minima x (relmin.py), the triples through x are counted among
 the lattice points of the box B* that relmin.py enumerates to find the neighbours of x
 (Pi(x, y, z) lies in B* for neighbours y, z).  Counts modulo units: F = ell, E = (sum of
-the neighbour counts)/2, V = (sum of the triple counts)/3.
+the neighbour counts)/2, V = (sum of the triple counts)/3.  V_degenerate counts the classes of
+linearly dependent minimal triples (z = +-x +- y); all others are Z-bases of O (manuscript
+Lemma lem:triples, checked for every triple).
 
 usage: python analysis/minkowski_voronoi.py CENSUS.jsonl[.xz] [LIMIT (0 = all)] [OUT.jsonl] [JOBS]
 """
@@ -28,8 +30,16 @@ from engine.field import Order                        # noqa: E402
 from engine.relmin import RelativeMinima, _Pts, _neg  # noqa: E402
 
 
+def _det3(a, b, c):
+    return (a[0] * (b[1] * c[2] - b[2] * c[1]) - a[1] * (b[0] * c[2] - b[2] * c[0])
+            + a[2] * (b[0] * c[1] - b[1] * c[0]))
+
+
 def triples_at(M, x):
-    """Number of minimal triples {x, y, z} (y, z neighbours of x up to sign)."""
+    """(number of minimal triples {x, y, z} (y, z neighbours of x up to sign), number of
+    neighbours, number of degenerate triples).  Coordinates are in a Z-basis of O, so
+    |det(x, y, z)| = [O : Zx + Zy + Zz]; by the manuscript's Lemma lem:triples it is 0 or 1,
+    which is checked."""
     O = M.O
     Ns = [M.single_neighbour(x, k) for k in range(O.m)]
     ab = [abs(O.embed_accurate(Ns[k])[k]) for k in range(O.m)]
@@ -50,7 +60,7 @@ def triples_at(M, x):
                 b = a
         return b
 
-    count = 0
+    count = degenerate = 0
     for a in range(1, k + 1):
         for b in range(a + 1, k + 1):
             idx = (0, a, b)
@@ -64,23 +74,29 @@ def triples_at(M, x):
                 if all(not P.less(top[i], z, i) for i in range(m)):
                     empty = False
                     break
-            count += empty
-    return count, k
+            if empty:
+                count += 1
+                d = abs(_det3(P.pts[0], P.pts[a], P.pts[b]))
+                if d not in (0, 1):
+                    raise ArithmeticError('minimal triple of index %d' % d)
+                degenerate += d == 0
+    return count, k, degenerate
 
 
 def counts(pol):
     O = Order(pol)
     M = RelativeMinima(O).run()
-    tri, deg = 0, 0
+    tri, deg, dg = 0, 0, 0
     for x in M.reps:
-        t, k = triples_at(M, x)
+        t, k, g = triples_at(M, x)
         tri += t
         deg += k
+        dg += g
     ell = M.count()
-    if deg % 2 or tri % 3:
-        raise ArithmeticError('incidence counts not divisible: %d, %d' % (deg, tri))
+    if deg % 2 or tri % 3 or dg % 3:
+        raise ArithmeticError('incidence counts not divisible: %d, %d, %d' % (deg, tri, dg))
     V, E, F = tri // 3, deg // 2, ell
-    return {'ell': ell, 'V': V, 'E': E, 'F': F, 'euler': V - E + F}
+    return {'ell': ell, 'V': V, 'E': E, 'F': F, 'euler': V - E + F, 'V_degenerate': dg // 3}
 
 
 def _one(r):

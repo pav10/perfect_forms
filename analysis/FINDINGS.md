@@ -309,3 +309,100 @@ numerical (Reg/2 in degree 2), so these are numerical checks, not certificates.
   the bound and the conjectured bound hold in every field.  log(bound/n_K) has median 38
   (min 4.18 at D = 49); the conjectured bound is tightest for D = 49, 81, 169, 148, 257 (log
   slack 2.24, 2.68, 3.85, 4.23, 4.78), i.e. for the smallest fields, as in degree 2.
+
+## 9. Indecomposables and the "one square class" problem (cubic)
+
+Question (user, open problem): is there a totally real cubic field with only one class of
+indecomposables modulo squares of units, or (stronger, and the better target for a
+nonexistence proof) one in which every indecomposable is a unit?  Ind = indecomposable
+elements of O_K^+ (totally positive, not a sum of two totally positive integers).  Data: the
+sails summaries of pav10/sails (read-only), all 54,600 fields with D <= 10^6.
+
+* **PROVED (answer to the square-class version; docs/THEORY.md section 7, manuscript
+  Theorem 9.4).**  In every totally real cubic field some indecomposable is not the square
+  of a unit, i.e. Ind / U^2 has at least two elements.  The proof is perfect-form
+  theoretic.  Lemma: if alpha >> 0 lies in the codifferent, Tr(alpha x^2) >= 1 on O \ 0 and
+  Tr(alpha u_i^2) = 1 for three units with distinct squares, then (Tr(alpha u_j u_k)) is the
+  identity (integral entries of absolute value <= 1/2), so {u_i} is a Z-basis and
+  N(alpha) D = 1: alpha generates the codifferent, and two such alpha differ by a totally
+  positive unit.  If Ind = U^2, then U+ = U^2, the totally positive sail has one vertex
+  class (V = 1), its facets are empty lattice polygons, Euler gives two triangles or one
+  quadrilateral, the quadrilateral forces (1 - a)(1 - b) = 0, and both triangles are
+  unimodular (the half-open parallelepiped argument).  Each triangle conv(u_1^2, u_2^2,
+  u_3^2) then has its functional in the codifferent with min Tr(gamma x^2) = 1, so by the
+  lemma both functionals generate the codifferent and the two triangles are equivalent
+  under U+: contradiction.  The real quadratic analogue is false (Q(sqrt 5)), because the
+  sail modulo U+ is a circle with one edge.
+* **CERTIFIED** (`analysis/one_square_class.py`, cubic census D <= 10^5).  Exactly 15 of the
+  4804 fields have an integral perfect form whose minimal vectors are units; each has one
+  class, the Gram matrix of the minimal vectors is I_3, they form a Z-basis and
+  N(alpha) D = 1.  The 15 fields are the simplest cubic fields with O_K = Z[theta_t] and
+  D <= 10^5 (t = -1, 0, 1, 2, 4 and 6 <= t <= 16, t != 12), i.e. the ell = 1 fields and D = 81.
+* **PROVED.**  (i) Every unit is a relative minimum (if |sigma_i(y)| <= |sigma_i(u)| for all
+  i, then |N(y)| <= 1, so y is a unit with all |sigma_i(y/u)| = 1, i.e. y = +-u).  (ii) Every
+  totally positive relative minimum is indecomposable (manuscript Lemma 7.6).
+* **PROVED** (one square class forces ell = 1).  If Ind = {u^2 : u in O^x} (one square class;
+  1 is always indecomposable), then every totally positive unit is a square, so the sign map
+  O^x -> {+-1}^3 is onto (U/U^2 has order 8), so every relative minimum is a unit times a
+  totally positive one, which is indecomposable, hence a unit.  So ell_K = 1, and then:
+  mu_K = 1 (K is unit reducible in the sense of Leibak--Porter--Ling), n_K <= 2, the
+  Minkowski--Voronoi complex is one hexagon, every sail vertex is a unit (V = 1, F <= 2), and
+  Reg_K <= (log 2D)^2/4 (regulator sandwich with mu = 1).
+* **CERTIFIED** (D <= 10^6; `analysis/ell_one.py` run on the 27 fields with at most 2 sail
+  facets modulo units, which by Prop. 7.1 and V = 1 contain every field with ell = 1;
+  `data/derived/ell_one_candidates_deg3_D1e6.json`).  ell_K = 1 holds for exactly 26 fields,
+  and they are exactly the simplest cubic fields x^3 - t x^2 - (t+3) x - 1 with O_K = Z[theta]
+  for t = -1 and 1 <= t <= 29 (t = 3, 5, 12, 21 are not monogenic and do not occur).  The
+  remaining candidate, t = 0 (D = 81), is monogenic but has ell = 2: its second class is a
+  German point.  In all 26 fields 1 has exactly 6 Minkowski--Voronoi neighbours.
+* **CERTIFIED** (sails data).  Each of these fields has a non-unit totally positive
+  indecomposable (norm 2t + 3 for t >= 1, e.g. up to units theta - 1, N(theta - 1) =
+  -P_t(1) = 2t + 3; norm 7 for t = -1).  No field with D <= 10^6 has only unit indecomposables.
+* **CONJECTURE.**  ell_K = 1 iff K is a simplest cubic field with O_K = Z[theta_t], t != 0, -3.
+  No longer needed for the square-class question (Theorem 9.4), but still open.  Partial
+  results (PROVED, THEORY section 7): every minimal triple of the Minkowski--Voronoi complex is
+  a Z-basis of O or degenerate, z = +-x +- y (Lemma 7.5, manuscript Lemma 7.8); if eps = N_k(1) has one positive and
+  one negative small conjugate and 1 - eps is a unit, then eps is a root of P_t(x - 1), so
+  K = K_t and Z[theta_t] is contained in O (Lemma 7.6).  So the "only if" part, up to
+  O_K = Z[theta_t], reduces to: ell = 1 forces 1 - N_k(1) to be a relative minimum.  The data
+  (CERTIFIED, D <= 10^6): in all 27 candidate fields every N_k(1) has that sign pattern and
+  1 - N_k(1) is a unit adjacent to 1, and N_k(1) has characteristic polynomial P_t(x - 1)
+  (`ell_one.py --structure`, stored in the candidates file); each ell = 1 field has one basis
+  and one degenerate class of minimal triples, and D = 81 has four basis classes.  All 832
+  fields with D <= 20000 (`minkowski_voronoi.py`, column V_degenerate): every one of the
+  50,176 minimal triple classes is a basis or degenerate, 12,903 (25.7%) are degenerate, at
+  most half in each field, and only D = 81 has none.  In general fields 1 - N_k(1)
+  need not be a relative minimum (scratch check of the first 400 fields: 12 of 204
+  mixed-pattern unit neighbours), but in those cases it was dominated only by non-units.
+* **PROVED** (all indecomposables units, the stronger property).  Let S+ be the total cone
+  determinant of the totally positive sail modulo totally positive units (`S` of pav10/sails,
+  totally positive class).  Then S+ >= 2, and every indecomposable is a unit iff S+ = 2, iff
+  the totally positive sail modulo totally positive units is the one-vertex torus made of two
+  unimodular triangles conv(1, a, ab), conv(1, b, ab), where a, b generate the totally
+  positive units.  *Proof.*  A triangulation of the sail torus (Euler) has 2V triangles,
+  each with cone determinant >= 1, so S+ >= 2V >= 2.  If all indecomposables are units, the
+  sail vertices (totally positive relative minima by Bykovskii, hence indecomposable) are
+  units, so V = 1 (the totally positive units form one orbit).  If a triangle tau of a facet
+  with height function s had cone determinant > 1, its half-open parallelepiped would contain
+  a lattice point x != 0 with 1 <= s(x) <= 2, since s >= 1 on totally positive lattice points
+  and x' = u1 + u2 + u3 - x is one too.  If s(x) < 2, x is indecomposable (a sum has s >= 2),
+  and it is not a unit, because units are relative minima, which lie on the sail (German), and
+  a unit on the sail is a vertex (if one totally positive unit is a vertex, all are).  If
+  s(x) = 2, then x' is a non-vertex lattice point of the facet, again a non-unit
+  indecomposable.  So all cones are unimodular, S+ = 2V = 2.  Conversely, if S+ = 2 the
+  sail is two unimodular triangles with one vertex class; 1 is on the sail and a unimodular
+  triangle has no lattice points besides its vertices, so 1 is a vertex and all vertices are
+  units; every totally positive lattice point is a non-negative integer combination of the
+  vertices of its cone, so the indecomposables are the vertices.  []
+  Consequence: O_K = Z + Za + Zab = Z + Zb + Zab, hence b = +-a + m + n ab with m, n in Z: a
+  linear relation among three totally positive units.  Sharper (PROVED): the facet functionals
+  L_A, L_B are integral (they are 1 on a Z-basis), and L_A(b) >= 2, L_B(a) >= 2 give the sign
+  -1 and m + n >= 3: b = -a + m + n ab.  By Theorem 9.4 moreover U+ != U^2.  The
+  quadrilateral case (one facet 1, a, ab, b) is impossible, since an empty lattice
+  quadrilateral is a parallelogram and 1 + ab = a + b means (1 - a)(1 - b) = 0.
+* **CERTIFIED** (sails data, D <= 10^6).  S+ >= 3 in every field; S+ = 3 only for D = 49, then
+  S+ = 4 (D = 257), 5 (D = 81, 697), ...  So "all indecomposables are units" is equivalent to
+  the extremal value S+ = 2, which does not occur; a proof of S+ >= 3, or of the
+  impossibility of the unit relation together with the two convexity conditions, would
+  settle the problem.
+
